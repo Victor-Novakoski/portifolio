@@ -1,18 +1,18 @@
 // Styles
-import { Container, Flex } from "@/styles/Global";
-import { Text } from "@/styles/Text";
-import { Button } from "@/styles/Buttons";
+import { Container, Flex } from '@/styles/Global'
+import { Text } from '@/styles/Text'
+import { Button } from '@/styles/Buttons'
 
 // Components
-import { Stack } from "@/components/Stack";
-import { Project } from "@/components/Project";
-import { Contacts } from "@/components/Contacts";
+import { Stack } from '@/components/Stack'
+import { Project } from '@/components/Project'
+import { Contacts } from '@/components/Contacts'
 
 // Data
-import { stackData } from "@/utils/stackData";
-import { userData } from "@/utils/userData";
+import { stackData } from '@/utils/stackData'
+import { userData } from '@/utils/userData'
 
-import { FaGithub } from "react-icons/fa";
+import { FaGithub } from 'react-icons/fa'
 
 // Page Style
 import {
@@ -25,11 +25,11 @@ import {
   ProjectsAreaSocialMediaMessage,
   ProjectAreaWrapperColumns,
   ProjectsAreaContent,
-} from "./style";
+} from './style'
 
 export const Home = (): JSX.Element => {
-  const gihubUrl = `https://github.com/${userData.githubUser}`;
-  const portfolioUrl = `https://github.com/${userData.githubUser}/my-portfolio`;
+  const gihubUrl = `https://github.com/${userData.githubUser}`
+  const portfolioUrl = `https://github.com/${userData.githubUser}/portifolio`
 
   return (
     <main id="home">
@@ -41,37 +41,38 @@ export const Home = (): JSX.Element => {
                 src={`https://github.com/${userData.githubUser}.png`}
                 alt={userData.nameUser}
                 title={userData.nameUser}
-                width={"48px"}
-                height={"48px"}
+                width={'48px'}
+                height={'48px'}
               />
-              <Text color="grey4">Hello, my name is {userData.nameUser}</Text>
+              <Text color="grey4">olá, meu nome é {userData.nameUser}</Text>
             </Flex>
             <Text as="h1" type="heading1" color="grey5">
-            I{" "}
+              Eu{' '}
               <Text as="span" type="heading1" color="brand1">
-                love
-              </Text>{" "}
-              creating and{" "}
+                Amo
+              </Text>{' '}
+              criar e{' '}
               <Text as="span" type="heading1" color="brand1">
-                developing
-              </Text>{" "}
-              projects
+                desenvolver
+              </Text>{' '}
+              projetos
             </Text>
             <Text type="body1" color="grey2">
-              Discover here in this environment, created especially for you, all
-              my projects and technologies
+              Sou estudante de programação na Kenzie Academy Brasil, participei
+              de diversos projetos resolvendo problemas de alto nível e
+              desenvolvendo habilidades
             </Text>
             <HeaderButtonsArea>
               <Button as="a" type="primary" href="#projects">
-                See Projects
+                ver projetos
               </Button>
               <Button as="a" type="outline" target="_blank" href={portfolioUrl}>
-                See my portfolio source code
+                Veja o código-fonte do meu portfólio
               </Button>
               <Button
                 color="grey5"
                 as="a"
-                css={{ "&:hover": { color: "$grey1" } }}
+                css={{ '&:hover': { color: '$grey1' } }}
                 type="circle"
                 target="_blank"
                 href={gihubUrl}
@@ -92,12 +93,12 @@ export const Home = (): JSX.Element => {
           <ProjectAreaWrapperColumns>
             <ProjectsAreaSocialMediaMessage>
               <Text as="h2" type="heading4" color="grey4">
-                My projects
+                Meus projetos
               </Text>
               <Text as="p" type="body1" color="grey2">
-                Some of my{" "}
+                Alguns dos meus{' '}
                 <Text as="span" color="brand5">
-                  side projects
+                  projetos paralelos
                 </Text>
               </Text>
             </ProjectsAreaSocialMediaMessage>
@@ -109,5 +110,5 @@ export const Home = (): JSX.Element => {
       </ProjectsArea>
       <Contacts />
     </main>
-  );
-};
+  )
+}

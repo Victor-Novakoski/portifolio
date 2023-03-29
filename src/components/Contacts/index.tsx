@@ -1,6 +1,6 @@
-import { Container } from "@/styles/Global";
-import { Text } from "@/styles/Text";
-import { motion, useTransform, useViewportScroll } from "framer-motion";
+import { Container } from '@/styles/Global'
+import { Text } from '@/styles/Text'
+import { motion, useTransform, useViewportScroll } from 'framer-motion'
 
 import {
   ContactSection,
@@ -10,19 +10,19 @@ import {
   ContactCard,
   ContactCardImage,
   ContactCardContent,
-} from "./style";
+} from './style'
 
-import { FaWhatsapp, FaEnvelopeOpen, FaLinkedin } from "react-icons/fa";
-import { useRef } from "react";
-import { userData } from "@/utils/userData";
+import { FaWhatsapp, FaEnvelopeOpen, FaLinkedin } from 'react-icons/fa'
+import { useRef } from 'react'
+import { userData } from '@/utils/userData'
 
 export const Contacts = () => {
-  const ref = useRef(null);
+  const ref = useRef(null)
 
-  const linkedInUrl = `https://www.linkedin.com/in/${userData.linkedinUser}`;
+  const linkedInUrl = `https://www.linkedin.com/in/${userData.linkedinUser}`
 
-  const { scrollYProgress } = useViewportScroll();
-  const scale = useTransform(scrollYProgress, [0, 1], [0.1, 0.9]);
+  const { scrollYProgress } = useViewportScroll()
+  const scale = useTransform(scrollYProgress, [0, 1], [0.1, 0.9])
 
   return (
     <ContactSection id="contact">
@@ -31,11 +31,11 @@ export const Contacts = () => {
           <motion.div style={{ scale }}>
             <ContactSectionText>
               <Text type="heading2" color="grey4">
-                Let's talk and{" "}
+                Vamos conversar e{' '}
                 <Text as="span" type="heading2" color="brand1">
-                  develop solutions for your company
+                  desenvolver soluções para sua empresa
                 </Text>
-                , together!
+                , juntos!
               </Text>
             </ContactSectionText>
           </motion.div>
@@ -46,11 +46,11 @@ export const Contacts = () => {
               </ContactCardImage>
               <ContactCardContent>
                 <Text type="heading4" color="grey4">
-                  My Whatsapp
+                  Meu Whatsapp
                 </Text>
                 <Text color="grey2" type="body2">
-                  I'm available for a voice chat, let's about creativity
-                  together?
+                  Estou disponível para um bate-papo por voz, vamos falar sobre
+                  criatividade juntos?
                 </Text>
                 <Text
                   as="a"
@@ -73,7 +73,7 @@ export const Contacts = () => {
                   My email
                 </Text>
                 <Text color="grey2" type="body2">
-                  Send me an email reporting feedbacks, suggestions and ideas
+                  Envie-me um e-mail relatando feedbacks, sugestões e ideias
                 </Text>
 
                 <Text
@@ -83,7 +83,7 @@ export const Contacts = () => {
                   target="_blank"
                   href={`mailto=${userData.emailUser}`}
                   onClick={() =>
-                    (window.location.href = "mailto:nekelpatrick.com")
+                    (window.location.href = 'mailto:nekelpatrick.com')
                   }
                 >
                   Send me an email
@@ -99,8 +99,8 @@ export const Contacts = () => {
                   My LinkedIn
                 </Text>
                 <Text color="grey2" type="body2">
-                  We can create more constant interactions as well as a sharing
-                  network
+                  Podemos criar interações mais constantes assim como uma rede
+                  de compartilhamento
                 </Text>
                 <Text
                   as="a"
@@ -117,5 +117,5 @@ export const Contacts = () => {
         </ContactSectionContent>
       </Container>
     </ContactSection>
-  );
-};
+  )
+}
