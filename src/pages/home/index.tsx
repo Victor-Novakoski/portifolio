@@ -58,9 +58,12 @@ export const Home = (): JSX.Element => {
               projetos
             </Text>
             <Text type="body1" color="grey2">
-              Sou estudante de programação na Kenzie Academy Brasil, participei
-              de diversos projetos resolvendo problemas de alto nível e
-              desenvolvendo habilidades
+              Sou uma pessoa analítica, atenta à detalhes, tenho facilidade em
+              trabalhos lógicos e gosto muito de aprender coisas novas e
+              entender como funcionam. Atualmente estou estudando
+              Desenvolvimento Full Stack na Kenzie Academy Brasil e, além disso,
+              também estou me aprofundando em outras linguagens e ferramentas e
+              desenvolvendo projetos pessoais.
             </Text>
             <HeaderButtonsArea>
               <Button as="a" type="primary" href="#projects">
