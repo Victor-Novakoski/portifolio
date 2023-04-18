@@ -5,50 +5,50 @@ import {
   ProjectStackTech,
   ProjectLink,
   ProjectLinks,
-} from "./style";
+} from './style'
 
-import { Text } from "@/styles/Text";
-import { useEffect, useState } from "react";
-import { FaGithub, FaShare } from "react-icons/fa";
-import { userData } from "@/utils/userData";
+import { Text } from '@/styles/Text'
+import { useEffect, useState } from 'react'
+import { FaGithub, FaShare } from 'react-icons/fa'
+import { userData } from '@/utils/userData'
 
 interface ReposType {
-  id: number;
-  name: string;
-  language: string;
-  description: string;
-  html_url: string;
-  homepage: string;
+  id: number
+  name: string
+  language: string
+  description: string
+  html_url: string
+  homepage: string
 }
 
 export const Project = (): JSX.Element => {
-  const [repositories, setRepositories] = useState<ReposType[]>([]);
+  const [repositories, setRepositories] = useState<ReposType[]>([])
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await fetch(
         `https://api.github.com/users/${userData.githubUser}/repos?sort=created&direction=desc`
-      );
+      )
 
-      const json = await data.json();
+      const json = await data.json()
 
-      setRepositories(json);
+      setRepositories(json)
 
-      return json;
-    };
+      return json
+    }
 
-    fetchData();
-  }, []);
+    fetchData()
+  }, [])
 
   return (
     <>
       {repositories &&
-        repositories?.map?.((repository) => (
+        repositories?.map?.(repository => (
           <ProjectWrapper key={repository.id}>
             <ProjectTitle
               as="h2"
               type="heading3"
-              css={{ marginBottom: "$3" }}
+              css={{ marginBottom: '$3' }}
               color="grey4"
             >
               {repository.name}
@@ -81,10 +81,7 @@ export const Project = (): JSX.Element => {
                 <FaGithub /> Github Code
               </ProjectLink>
               {repository.homepage && (
-                <ProjectLink
-                  target="_blank"
-                  href={`https://${repository.homepage}`}
-                >
+                <ProjectLink target="_blank" href={`${repository.homepage}`}>
                   <FaShare /> See demo
                 </ProjectLink>
               )}
@@ -92,5 +89,5 @@ export const Project = (): JSX.Element => {
           </ProjectWrapper>
         ))}
     </>
-  );
-};
+  )
+}
