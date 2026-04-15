@@ -7,9 +7,6 @@
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
-  "engines": {
-    "node": "24.x"
-  },
   "dependencies": {
     "framer-motion": "^12.38.0",
     "gsap": "^3.15.0",
