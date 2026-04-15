@@ -6,11 +6,14 @@
     "allowJs": false,
     "baseUrl": "src",
     "paths": {
+      "@/*": ["*"],
+      "@/app/*": ["app/*"],
       "@/components/*": ["components/*"],
+      "@/data/*": ["data/*"],
+      "@/lib/*": ["lib/*"],
       "@/styles/*": ["styles/*"],
       "@/pages/*": ["pages/*"],
-      "@/public/*": ["public/*"],
-      "@/utils/*": ["utils/*"]
+      "@/assets/*": ["assets/*"]
     },
     "skipLibCheck": true,
     "esModuleInterop": false,

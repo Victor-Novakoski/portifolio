@@ -1,0 +1,336 @@
+import { type ReactNode, useEffect, useMemo, useRef, useState } from 'react'
+
+import { contact } from '@/data/contact'
+import { experienceMilestones } from '@/data/experience'
+import { narrative } from '@/data/narrative'
+import { projects } from '@/data/projects'
+import { skills } from '@/data/skills'
+import { trials } from '@/data/trials'
+
+type RegionDetailsProps = {
+  regionId: string
+}
+
+const cardClasses = 'rounded-lg border border-slate-800 bg-slate-900/75 p-3'
+
+type SkillDomain = 'frontend' | 'backend' | 'platform' | 'future'
+
+const domainLabel: Record<SkillDomain, string> = {
+  frontend: 'Front-end',
+  backend: 'Back-end',
+  platform: 'Plataforma',
+  future: 'Futuro',
+}
+
+const domainOrder: SkillDomain[] = ['frontend', 'platform', 'backend', 'future']
+
+function HubPanel() {
+  return (
+    <div className="space-y-4">
+      <p className="text-sm leading-relaxed text-slate-200">{narrative.intro}</p>
+      <div className="grid gap-3 sm:grid-cols-3">
+        <article className={cardClasses}>
+          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Foco</p>
+          <p className="mt-2 text-sm text-slate-100">Engenharia front-end com visão de produto</p>
+        </article>
+        <article className={cardClasses}>
+          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Stack base</p>
+          <p className="mt-2 text-sm text-slate-100">React, TypeScript, arquitetura modular</p>
+        </article>
+        <article className={cardClasses}>
+          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Direção</p>
+          <p className="mt-2 text-sm text-slate-100">Qualidade, performance e escala sustentável</p>
+        </article>
+      </div>
+      <div className="space-y-2">
+        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Princípios de engenharia</p>
+        <div className="grid gap-2">
+          {narrative.codex.principles.map(item => (
+            <article key={item} className={cardClasses}>
+              <p className="text-sm text-slate-200">{item}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function BattlefieldPanel() {
+  const [selectedProjectId, setSelectedProjectId] = useState(projects[0]?.id ?? '')
+  const selectedProject =
+    projects.find(project => project.id === selectedProjectId) ?? projects[0] ?? null
+
+  if (!selectedProject) return null
+
+  return (
+    <div className="space-y-3">
+      <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Projetos em destaque</p>
+      <div className="grid gap-2">
+        {projects.map(project => (
+          <button
+            key={project.id}
+            type="button"
+            onClick={() => setSelectedProjectId(project.id)}
+            className={`rounded-md border px-3 py-2 text-left text-sm transition ${
+              project.id === selectedProject.id
+                ? 'border-souls-ember/70 bg-souls-ember/10 text-souls-ember'
+                : 'border-slate-700 bg-slate-900/60 text-slate-200 hover:bg-slate-800'
+            }`}
+          >
+            {project.name}
+          </button>
+        ))}
+      </div>
+
+      <article className={cardClasses}>
+        <p className="font-medium text-slate-100">{selectedProject.name}</p>
+        <p className="mt-1 text-sm text-slate-300">{selectedProject.context}</p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {selectedProject.stack.map(item => (
+            <span
+              key={item}
+              className="rounded-full border border-slate-700 bg-slate-950 px-2 py-0.5 text-[11px] text-slate-300"
+            >
+              {item}
+            </span>
+          ))}
+        </div>
+      </article>
+
+      <div className="grid gap-2 sm:grid-cols-2">
+        {selectedProject.challenges.slice(0, 2).map(challenge => (
+          <article key={challenge} className={cardClasses}>
+            <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Desafio</p>
+            <p className="mt-1 text-sm text-slate-200">{challenge}</p>
+          </article>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap gap-2">
+        <a
+          href={selectedProject.repoUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-md bg-souls-ember px-3 py-2 text-xs font-semibold text-black transition hover:brightness-110"
+        >
+          Ver repositório
+        </a>
+        {selectedProject.demoUrl ? (
+          <a
+            href={selectedProject.demoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-md border border-slate-700 px-3 py-2 text-xs text-slate-200 transition hover:bg-slate-800"
+          >
+            Ver demo
+          </a>
+        ) : null}
+      </div>
+    </div>
+  )
+}
+
+function CodexPanel() {
+  return (
+    <div className="space-y-3">
+      <article className={cardClasses}>
+        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Resumo de experiência</p>
+        <p className="mt-1 text-sm text-slate-200">{narrative.codex.origin}</p>
+      </article>
+      <article className={cardClasses}>
+        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Missão</p>
+        <p className="mt-1 text-sm text-slate-200">{narrative.codex.mission}</p>
+      </article>
+      <div className="space-y-2 rounded-lg border border-slate-800 bg-slate-900/60 p-3">
+        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Linha do tempo</p>
+        <ol className="space-y-2">
+          {experienceMilestones.map(item => (
+            <li key={item.id} className="rounded-md border border-slate-800 bg-slate-950/70 px-3 py-2">
+              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-400">{item.period}</p>
+              <p className="mt-1 text-sm font-medium text-slate-100">{item.title}</p>
+              <p className="mt-1 text-sm text-slate-300">{item.summary}</p>
+              <ul className="mt-2 space-y-1">
+                {item.highlights.map(highlight => (
+                  <li key={highlight} className="text-xs text-slate-400">
+                    • {highlight}
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </div>
+  )
+}
+
+function SkillTreePanel() {
+  const grouped = useMemo(() => {
+    return domainOrder.map(domain => ({
+      domain,
+      label: domainLabel[domain],
+      items: skills.filter(skill => skill.domain === domain),
+    }))
+  }, [])
+
+  return (
+    <div className="space-y-3">
+      {grouped.map(group => (
+        <section key={group.domain} className={cardClasses}>
+          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">{group.label}</p>
+          <div className="mt-2 grid gap-2">
+            {group.items.map(skill => (
+              <article
+                key={skill.id}
+                className="rounded-md border border-slate-800 bg-slate-950/60 px-3 py-2"
+              >
+                <p className="text-sm font-medium text-slate-100">{skill.title}</p>
+                <p className="mt-0.5 text-xs text-slate-400">{skill.description}</p>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
+  )
+}
+
+function TrialsPanel() {
+  const [expandedId, setExpandedId] = useState<string | null>(trials[0]?.id ?? null)
+
+  return (
+    <div className="space-y-2">
+      {trials.map(trial => {
+        const expanded = expandedId === trial.id
+        return (
+          <article key={trial.id} className={cardClasses}>
+            <button
+              type="button"
+              onClick={() => setExpandedId(prev => (prev === trial.id ? null : trial.id))}
+              className="w-full text-left"
+            >
+              <p className="font-medium text-slate-100">{trial.title}</p>
+              <p className="mt-1 text-sm text-slate-300">{trial.problem}</p>
+            </button>
+
+            {expanded ? (
+              <div className="mt-3 space-y-2 border-t border-slate-800 pt-3">
+                <div>
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Abordagem</p>
+                  <p className="mt-1 text-sm text-slate-200">{trial.approach}</p>
+                </div>
+                <div>
+                  <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Resultado</p>
+                  <p className="mt-1 text-sm text-slate-200">{trial.result}</p>
+                </div>
+              </div>
+            ) : null}
+          </article>
+        )
+      })}
+    </div>
+  )
+}
+
+function ShrinePanel() {
+  const [copyStatus, setCopyStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const copyStatusTimeoutRef = useRef<number | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (copyStatusTimeoutRef.current) {
+        window.clearTimeout(copyStatusTimeoutRef.current)
+      }
+    }
+  }, [])
+
+  const handleCopyEmail = async () => {
+    try {
+      if (!navigator.clipboard) {
+        throw new Error('Clipboard indisponível')
+      }
+      await navigator.clipboard.writeText(contact.email)
+      setCopyStatus('success')
+    } catch {
+      setCopyStatus('error')
+    } finally {
+      if (copyStatusTimeoutRef.current) {
+        window.clearTimeout(copyStatusTimeoutRef.current)
+      }
+      copyStatusTimeoutRef.current = window.setTimeout(() => {
+        setCopyStatus('idle')
+      }, 2200)
+    }
+  }
+
+  return (
+    <div className="grid gap-3">
+      <a
+        href={`mailto:${contact.email}`}
+        className={`${cardClasses} transition hover:border-souls-ember/60`}
+      >
+        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Email</p>
+        <p className="mt-1 text-sm text-slate-200">{contact.email}</p>
+      </a>
+
+      <div className="flex gap-2">
+        <button
+          type="button"
+          onClick={handleCopyEmail}
+          className="rounded-md bg-souls-ember px-3 py-2 text-xs font-semibold text-black transition hover:brightness-110"
+        >
+          Copiar email
+        </button>
+        <a
+          href={contact.linkedin}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-md border border-slate-700 px-3 py-2 text-xs text-slate-200 transition hover:bg-slate-800"
+        >
+          Abrir LinkedIn
+        </a>
+        <a
+          href={contact.github}
+          target="_blank"
+          rel="noreferrer"
+          className="rounded-md border border-slate-700 px-3 py-2 text-xs text-slate-200 transition hover:bg-slate-800"
+        >
+          Abrir GitHub
+        </a>
+      </div>
+
+      <p aria-live="polite" className="min-h-5 text-xs text-slate-300">
+        {copyStatus === 'success' ? 'Email copiado para a área de transferência.' : null}
+        {copyStatus === 'error'
+          ? 'Não foi possível copiar automaticamente. Use o email exibido acima.'
+          : null}
+      </p>
+    </div>
+  )
+}
+
+const panelByRegion: Record<string, () => ReactNode> = {
+  hub: HubPanel,
+  battlefield: BattlefieldPanel,
+  codex: CodexPanel,
+  'skill-tree': SkillTreePanel,
+  trials: TrialsPanel,
+  shrine: ShrinePanel,
+}
+
+export function RegionDetails({ regionId }: RegionDetailsProps) {
+  const Panel = panelByRegion[regionId]
+
+  if (!Panel) {
+    return (
+      <article className={cardClasses}>
+        <p className="text-sm text-slate-300">
+          Conteúdo em preparação. Selecione outra região para continuar a exploração.
+        </p>
+      </article>
+    )
+  }
+
+  return <Panel />
+}

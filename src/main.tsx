@@ -1,16 +1,11 @@
-import React from "react";
-import ReactDOM from "react-dom/client";
-import { GlobalStyle } from "@/styles/Global";
-import { Home } from "@/pages/home";
-import { NavBar } from "@/components/Navbar";
-import { Footer } from "@/components/Footer";
+import React from 'react'
+import ReactDOM from 'react-dom/client'
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+import { App } from '@/App'
+import '@/styles/tailwind.css'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <GlobalStyle>
-      <NavBar />
-      <Home />
-      <Footer />
-    </GlobalStyle>
+    <App />
   </React.StrictMode>
-);
+)
