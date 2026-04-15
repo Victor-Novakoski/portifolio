@@ -9,12 +9,20 @@
     color-scheme: dark;
   }
 
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
   * {
     @apply border-slate-800;
   }
 
   body {
     @apply bg-souls-abyss font-body text-slate-100 antialiased;
+    margin: 0;
+    overflow: hidden;
     background-image: radial-gradient(circle at 50% -20%, rgba(199, 162, 93, 0.2), transparent 40%);
   }
 

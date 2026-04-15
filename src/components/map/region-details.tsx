@@ -12,6 +12,8 @@ type RegionDetailsProps = {
 }
 
 const cardClasses = 'rounded-lg border border-slate-800 bg-slate-900/75 p-3'
+const sectionTitleClasses =
+  'inline-flex w-fit rounded-md border border-souls-ember/45 bg-souls-ember/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-souls-ember shadow-[0_0_0_1px_rgba(202,163,89,0.14)]'
 
 type SkillDomain = 'frontend' | 'backend' | 'platform' | 'future'
 
@@ -28,22 +30,36 @@ function HubPanel() {
   return (
     <div className="space-y-4">
       <p className="text-sm leading-relaxed text-slate-200">{narrative.intro}</p>
+      <article className={cardClasses}>
+        <p className="font-medium text-slate-100">{contact.name}</p>
+        <p className="mt-1 text-sm text-slate-300">{contact.role}</p>
+        <p className="mt-2 text-xs text-slate-400">
+          {contact.location} • {contact.phone}
+        </p>
+      </article>
       <div className="grid gap-3 sm:grid-cols-3">
         <article className={cardClasses}>
-          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Foco</p>
-          <p className="mt-2 text-sm text-slate-100">Engenharia front-end com visão de produto</p>
+          <p className={sectionTitleClasses}>Foco</p>
+          <p className="mt-2 text-sm text-slate-100">
+            Back-end com Go e APIs escaláveis, com front-end em React/TypeScript e Next.js para entregas
+            completas.
+          </p>
         </article>
         <article className={cardClasses}>
-          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Stack base</p>
-          <p className="mt-2 text-sm text-slate-100">React, TypeScript, arquitetura modular</p>
+          <p className={sectionTitleClasses}>Stack base</p>
+          <p className="mt-2 text-sm text-slate-100">
+            Go, React, Next.js, TypeScript, Node.js, REST API, PostgreSQL e Docker
+          </p>
         </article>
         <article className={cardClasses}>
-          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Direção</p>
-          <p className="mt-2 text-sm text-slate-100">Qualidade, performance e escala sustentável</p>
+          <p className={sectionTitleClasses}>Ambiente de atuação</p>
+          <p className="mt-2 text-sm text-slate-100">
+            Plataforma logística enterprise com regras críticas de transporte e alto volume de dados.
+          </p>
         </article>
       </div>
       <div className="space-y-2">
-        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Princípios de engenharia</p>
+        <p className={sectionTitleClasses}>Princípios de engenharia</p>
         <div className="grid gap-2">
           {narrative.codex.principles.map(item => (
             <article key={item} className={cardClasses}>
@@ -65,7 +81,7 @@ function BattlefieldPanel() {
 
   return (
     <div className="space-y-3">
-      <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Projetos em destaque</p>
+      <p className={sectionTitleClasses}>Projetos em destaque</p>
       <div className="grid gap-2">
         {projects.map(project => (
           <button
@@ -101,7 +117,7 @@ function BattlefieldPanel() {
       <div className="grid gap-2 sm:grid-cols-2">
         {selectedProject.challenges.slice(0, 2).map(challenge => (
           <article key={challenge} className={cardClasses}>
-            <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Desafio</p>
+            <p className={sectionTitleClasses}>Desafio</p>
             <p className="mt-1 text-sm text-slate-200">{challenge}</p>
           </article>
         ))}
@@ -114,8 +130,18 @@ function BattlefieldPanel() {
           rel="noreferrer"
           className="rounded-md bg-souls-ember px-3 py-2 text-xs font-semibold text-black transition hover:brightness-110"
         >
-          Ver repositório
+          Repositório front-end
         </a>
+        {selectedProject.backendRepoUrl ? (
+          <a
+            href={selectedProject.backendRepoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-md border border-slate-700 px-3 py-2 text-xs text-slate-200 transition hover:bg-slate-800"
+          >
+            Repositório back-end
+          </a>
+        ) : null}
         {selectedProject.demoUrl ? (
           <a
             href={selectedProject.demoUrl}
@@ -132,35 +158,80 @@ function BattlefieldPanel() {
 }
 
 function CodexPanel() {
+  const [expandedExperienceId, setExpandedExperienceId] = useState<string | null>(
+    experienceMilestones[0]?.id ?? null
+  )
+  const currentRole = experienceMilestones[0]
+
   return (
-    <div className="space-y-3">
-      <article className={cardClasses}>
-        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Resumo de experiência</p>
-        <p className="mt-1 text-sm text-slate-200">{narrative.codex.origin}</p>
-      </article>
-      <article className={cardClasses}>
-        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Missão</p>
-        <p className="mt-1 text-sm text-slate-200">{narrative.codex.mission}</p>
-      </article>
-      <div className="space-y-2 rounded-lg border border-slate-800 bg-slate-900/60 p-3">
-        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Linha do tempo</p>
+    <div className="space-y-4">
+      <section className="grid gap-2 sm:grid-cols-3">
+        <article className={cardClasses}>
+          <p className={sectionTitleClasses}>Atuação atual</p>
+          <p className="mt-1 text-sm font-medium text-slate-100">{currentRole?.period ?? 'Atual'}</p>
+          <p className="mt-1 text-xs text-slate-300">{currentRole?.title ?? 'Desenvolvedor de software'}</p>
+        </article>
+        <article className={cardClasses}>
+          <p className={sectionTitleClasses}>Foco técnico</p>
+          <p className="mt-1 text-sm font-medium text-slate-100">Go + React/TypeScript</p>
+          <p className="mt-1 text-xs text-slate-300">Back-end robusto com entrega full stack orientada a produto</p>
+        </article>
+        <article className={cardClasses}>
+          <p className={sectionTitleClasses}>Contexto</p>
+          <p className="mt-1 text-sm font-medium text-slate-100">Logística enterprise</p>
+          <p className="mt-1 text-xs text-slate-300">Regras críticas de negócio e alto volume de dados</p>
+        </article>
+      </section>
+
+      <section className="space-y-2 rounded-lg border border-slate-800 bg-slate-900/60 p-3">
+        <p className={sectionTitleClasses}>Resumo estratégico</p>
+        <p className="text-sm leading-relaxed text-slate-200">{narrative.codex.origin}</p>
+        <p className="text-sm leading-relaxed text-slate-300">{narrative.codex.mission}</p>
+      </section>
+
+      <section className="space-y-2 rounded-lg border border-slate-800 bg-slate-900/60 p-3">
+        <p className={sectionTitleClasses}>Linha do tempo</p>
         <ol className="space-y-2">
-          {experienceMilestones.map(item => (
-            <li key={item.id} className="rounded-md border border-slate-800 bg-slate-950/70 px-3 py-2">
-              <p className="text-[11px] uppercase tracking-[0.14em] text-slate-400">{item.period}</p>
-              <p className="mt-1 text-sm font-medium text-slate-100">{item.title}</p>
-              <p className="mt-1 text-sm text-slate-300">{item.summary}</p>
-              <ul className="mt-2 space-y-1">
-                {item.highlights.map(highlight => (
-                  <li key={highlight} className="text-xs text-slate-400">
-                    • {highlight}
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ))}
+          {experienceMilestones.map(item => {
+            const isExpanded = expandedExperienceId === item.id
+            return (
+              <li
+                key={item.id}
+                className={`rounded-md border px-3 py-2 transition ${
+                  isExpanded
+                    ? 'border-souls-ember/60 bg-slate-950/90'
+                    : 'border-slate-800 bg-slate-950/70 hover:bg-slate-900/80'
+                }`}
+              >
+                <button
+                  type="button"
+                  onClick={() => setExpandedExperienceId(prev => (prev === item.id ? null : item.id))}
+                  className="w-full text-left"
+                >
+                  <p className={sectionTitleClasses}>
+                    {item.period}
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-slate-100">{item.title}</p>
+                  <p className="mt-1 text-xs text-slate-400">{item.highlights[0]}</p>
+                </button>
+
+                {isExpanded ? (
+                  <div className="mt-3 border-t border-slate-800 pt-3">
+                    <p className="text-sm text-slate-200">{item.summary}</p>
+                    <ul className="mt-2 space-y-1">
+                      {item.highlights.map(highlight => (
+                        <li key={highlight} className="text-xs text-slate-400">
+                          • {highlight}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </li>
+            )
+          })}
         </ol>
-      </div>
+      </section>
     </div>
   )
 }
@@ -178,7 +249,7 @@ function SkillTreePanel() {
     <div className="space-y-3">
       {grouped.map(group => (
         <section key={group.domain} className={cardClasses}>
-          <p className="text-xs uppercase tracking-[0.14em] text-slate-400">{group.label}</p>
+          <p className={sectionTitleClasses}>{group.label}</p>
           <div className="mt-2 grid gap-2">
             {group.items.map(skill => (
               <article
@@ -217,11 +288,11 @@ function TrialsPanel() {
             {expanded ? (
               <div className="mt-3 space-y-2 border-t border-slate-800 pt-3">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Abordagem</p>
+                  <p className={sectionTitleClasses}>Abordagem</p>
                   <p className="mt-1 text-sm text-slate-200">{trial.approach}</p>
                 </div>
                 <div>
-                  <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Resultado</p>
+                  <p className={sectionTitleClasses}>Resultado</p>
                   <p className="mt-1 text-sm text-slate-200">{trial.result}</p>
                 </div>
               </div>
@@ -266,11 +337,18 @@ function ShrinePanel() {
 
   return (
     <div className="grid gap-3">
+      <article className={cardClasses}>
+        <p className={sectionTitleClasses}>Localização e telefone</p>
+        <p className="mt-1 text-sm text-slate-200">
+          {contact.location} • {contact.phone}
+        </p>
+      </article>
+
       <a
         href={`mailto:${contact.email}`}
         className={`${cardClasses} transition hover:border-souls-ember/60`}
       >
-        <p className="text-xs uppercase tracking-[0.14em] text-slate-400">Email</p>
+        <p className={sectionTitleClasses}>Email</p>
         <p className="mt-1 text-sm text-slate-200">{contact.email}</p>
       </a>
 

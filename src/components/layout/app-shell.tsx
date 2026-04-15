@@ -12,7 +12,7 @@ export function AppShell({ children }: AppShellProps) {
   }, [])
 
   return (
-    <div className="min-h-screen bg-souls-abyss text-slate-100">
+    <div className="min-h-screen overflow-hidden bg-souls-abyss text-slate-100">
       <div className="pointer-events-none fixed inset-0 bg-[radial-gradient(circle_at_20%_15%,rgba(199,162,93,0.14),transparent_35%),radial-gradient(circle_at_80%_15%,rgba(96,165,250,0.12),transparent_30%)]" />
       <a
         href="#main-content"

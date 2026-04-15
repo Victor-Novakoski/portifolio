@@ -1,17 +1,17 @@
 export const narrative = {
-  title: 'The Lost Developer',
-  subtitle: 'Uma mente forjada em código atravessando um sistema corrompido.',
+  title: 'Victor Novakoski',
+  subtitle: 'Desenvolvedor Front-end | Experiência em Back-end com Go',
   intro:
-    'Este portfólio apresenta minha jornada técnica como uma travessia por reinos de engenharia. Cada área representa um desafio real de produto, arquitetura e execução.',
+    'Desenvolvedor Front-end com experiência em aplicações de grande escala utilizando Angular, integração com APIs REST e manutenção de sistemas complexos. Atuação prática em back-end com Go (Golang), incluindo desenvolvimento e manutenção de APIs e uso de Docker para execução e organização de serviços.',
   codex: {
     origin:
-      'Sou desenvolvedor focado em front-end e experiência de produto, com base sólida em TypeScript, React e integrações modernas.',
+      'Atuo em sistema logístico voltado à área de transportes, em projeto de grande porte do setor alimentício, lidando com regras de negócio complexas e alto volume de dados.',
     mission:
-      'Construir interfaces de alta qualidade, com arquitetura sustentável, acessibilidade prática e foco em performance.',
+      'Construir interfaces robustas e evolutivas, conciliando velocidade de entrega com qualidade de engenharia e integração estável com serviços de back-end.',
     principles: [
-      'Qualidade de engenharia acima de hype',
-      'Sistema de design e consistência visual',
-      'Entrega incremental com baixo risco',
+      'Arquitetura front-end sustentável para sistemas de alta complexidade',
+      'Integração previsível com APIs e dados críticos de negócio',
+      'Evolução incremental de legado com baixo risco operacional',
     ],
   },
 }

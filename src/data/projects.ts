@@ -5,47 +5,53 @@ export type ProjectBoss = {
   stack: string[]
   challenges: string[]
   repoUrl: string
+  backendRepoUrl?: string
   demoUrl?: string
 }
 
 export const projects: ProjectBoss[] = [
   {
-    id: 'obsidian-market',
-    name: 'Obsidian Market',
+    id: 'panda-cooking',
+    name: 'Panda Cooking',
     context:
-      'Projeto focado em experiência de compra, performance em listagem e fluxo de checkout previsível.',
-    stack: ['React', 'TypeScript', 'React Router', 'Zod'],
+      'Aplicação full stack para compartilhamento de receitas, com foco em experiência de uso, componentização e organização de fluxo no front-end.',
+    stack: ['React', 'TypeScript', 'Axios', 'Styled Components', 'Framer Motion'],
     challenges: [
-      'Sincronizar filtros na URL sem quebrar navegação',
-      'Evitar re-render excessivo em listagens grandes',
-      'Padronizar estados de loading e erro',
+      'Estruturar componentes reutilizáveis sem perder consistência visual',
+      'Integrar chamadas HTTP com feedback claro de estado',
+      'Manter fluidez de interface com animações sem comprometer performance',
     ],
-    repoUrl: 'https://github.com/Victor-Novakoski',
+    repoUrl: 'https://github.com/Victor-Novakoski/panda-cooking',
+    backendRepoUrl: 'https://github.com/Victor-Novakoski/panda-cooking-api',
+    demoUrl: 'https://panda-cooking.vercel.app',
   },
   {
-    id: 'ashen-dashboard',
-    name: 'Ashen Dashboard',
+    id: 'contacts',
+    name: 'Contacts',
     context:
-      'Interface para leitura operacional com prioridade em clareza visual e tomada de decisão rápida.',
-    stack: ['React', 'TypeScript', 'Recharts', 'React Query'],
+      'Aplicação para gestão de contatos, priorizando simplicidade de uso, estrutura organizada e manutenção rápida.',
+    stack: ['React', 'TypeScript', 'Axios', 'Styled Components'],
     challenges: [
-      'Normalizar dados heterogêneos de APIs',
-      'Criar componentes reutilizáveis de visualização',
-      'Garantir responsividade sem perda de informação',
+      'Padronizar estados de formulário e validação de dados',
+      'Garantir comunicação estável entre front-end e API',
+      'Construir fluxo CRUD com baixo acoplamento',
     ],
-    repoUrl: 'https://github.com/Victor-Novakoski',
+    repoUrl: 'https://github.com/Victor-Novakoski/contacts-front',
+    backendRepoUrl: 'https://github.com/Victor-Novakoski/contacts-back',
   },
   {
-    id: 'cathedral-ui',
-    name: 'Cathedral UI',
+    id: 'motors-shop',
+    name: 'Motors Shop',
     context:
-      'Estrutura de UI para reduzir inconsistência visual e acelerar desenvolvimento em squads diferentes.',
-    stack: ['React', 'TypeScript', 'Storybook', 'Tailwind CSS'],
+      'Plataforma de compra e venda de veículos com autenticação e fluxo de anúncios, construída com integração entre front-end e serviços back-end.',
+    stack: ['React', 'TypeScript', 'Node.js', 'Express', 'REST API'],
     challenges: [
-      'Definir contratos de componente estáveis',
-      'Evoluir tokens sem quebrar telas existentes',
-      'Documentar padrões de composição',
+      'Modelar fluxo de autenticação e permissões de usuário',
+      'Integrar dados de anúncios e detalhes de veículos com API',
+      'Manter usabilidade da interface em jornadas longas de navegação',
     ],
-    repoUrl: 'https://github.com/Victor-Novakoski',
+    repoUrl: 'https://github.com/Victor-Novakoski/Motors-Shop-Front',
+    backendRepoUrl: 'https://github.com/Victor-Novakoski/Motors-Shop-Back',
+    demoUrl: 'https://motors-shop-front-chi.vercel.app',
   },
 ]

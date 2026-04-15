@@ -8,33 +8,47 @@ export type ExperienceMilestone = {
 
 export const experienceMilestones: ExperienceMilestone[] = [
   {
-    id: 'exp-foundation',
-    period: 'Base',
-    title: 'Fundamentos de Front-end',
-    summary: 'Consolidação de HTML, CSS, JavaScript e construção de interfaces responsivas.',
+    id: 'exp-galileu-frontend',
+    period: 'Jun/2023 - Atual',
+    title: 'Galileu Sistemas e Soluções — Desenvolvedor Front-end',
+    summary:
+      'Desenvolvimento de interfaces em Angular para sistema logístico de alcance nacional, com foco em estabilidade, legibilidade e manutenção contínua.',
     highlights: [
-      'Padronização de componentes reutilizáveis',
-      'Consistência visual em múltiplas telas',
+      'Integração com APIs REST e manipulação de regras de negócio complexas',
+      'Atuação em projeto de transportes para cliente de grande porte do setor alimentício',
     ],
   },
   {
-    id: 'exp-react',
-    period: 'Evolução',
-    title: 'Arquitetura com React e TypeScript',
-    summary: 'Migração de projetos legados para base tipada e modular com foco em manutenção.',
+    id: 'exp-lowcode-yaml',
+    period: 'Contexto técnico atual',
+    title: 'Customização em framework interno low-code',
+    summary:
+      'Experiência com framework interno baseado em YAML para geração de interfaces, realizando adaptações para atender limitações da ferramenta e requisitos específicos.',
     highlights: [
-      'Refatoração incremental com baixo risco',
-      'Contratos de dados mais previsíveis',
+      'Customizações de UI orientadas por regras de negócio',
+      'Evolução de sistema legado sem interromper operação',
     ],
   },
   {
-    id: 'exp-product',
-    period: 'Atual',
-    title: 'Engenharia orientada a produto',
-    summary: 'Decisões técnicas alinhadas a impacto real de negócio, UX e performance percebida.',
+    id: 'exp-go-backend',
+    period: 'Back-end aplicado',
+    title: 'APIs em Go (Golang) + Docker',
+    summary:
+      'Participação no desenvolvimento e manutenção de APIs com Go, utilizando Docker para organização de serviços e execução de ambientes.',
     highlights: [
-      'Priorização orientada por contexto',
-      'Entrega rápida sem perder qualidade de engenharia',
+      'Integração front-end/back-end com contratos de API consistentes',
+      'Apoio técnico em fluxos críticos do domínio logístico',
+    ],
+  },
+  {
+    id: 'exp-education',
+    period: 'Formação',
+    title: 'Base acadêmica e especialização',
+    summary:
+      'Formação em Desenvolvimento Web Full Stack (Kenzie Academy) e início de Engenharia de Software em março de 2026.',
+    highlights: [
+      'Kenzie Academy Brasil — mai/2022 a mai/2023',
+      'Engenharia de Software — início em mar/2026',
     ],
   },
 ]
