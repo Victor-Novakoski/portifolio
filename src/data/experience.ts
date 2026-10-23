@@ -8,47 +8,45 @@ export type ExperienceMilestone = {
 
 export const experienceMilestones: ExperienceMilestone[] = [
   {
-    id: 'exp-galileu-frontend',
+    id: 'exp-galileu',
     period: 'Jun/2023 - Atual',
-    title: 'Galileu Sistemas e Soluções — Desenvolvedor Front-end',
+    title: 'Galileu Sistemas e Soluções — Desenvolvedor Full Stack',
     summary:
-      'Desenvolvimento de interfaces em Angular para sistema logístico de alcance nacional, com foco em estabilidade, legibilidade e manutenção contínua.',
+      'Desenvolvimento de APIs REST em Go e de front-ends para um sistema de logística e transporte usado em escala nacional, do banco de dados à interface.',
     highlights: [
-      'Integração com APIs REST e manipulação de regras de negócio complexas',
-      'Atuação em projeto de transportes para cliente de grande porte do setor alimentício',
+      'APIs REST em Go com go-swagger, Viper e PostgreSQL',
+      'Regras de negócio configuráveis com scripts Starlark em fluxos de processamento assíncrono',
+      'Biblioteca Go compartilhada entre as APIs e ambientes de desenvolvimento com Docker Compose',
     ],
   },
   {
-    id: 'exp-lowcode-yaml',
-    period: 'Contexto técnico atual',
-    title: 'Customização em framework interno low-code',
+    id: 'exp-galileu-frontend',
+    period: 'Front-end na Galileu',
+    title: 'Angular e framework interno low-code',
     summary:
-      'Experiência com framework interno baseado em YAML para geração de interfaces, realizando adaptações para atender limitações da ferramenta e requisitos específicos.',
+      'Front-ends dedicados para clientes de grande porte da indústria, em Angular e numa plataforma interna low-code baseada em YAML, além da migração de sistemas legados.',
     highlights: [
       'Customizações de UI orientadas por regras de negócio',
-      'Evolução de sistema legado sem interromper operação',
+      'Evolução de sistema legado sem interromper a operação',
     ],
   },
   {
-    id: 'exp-go-backend',
-    period: 'Back-end aplicado',
-    title: 'APIs em Go (Golang) + Docker',
-    summary:
-      'Participação no desenvolvimento e manutenção de APIs com Go, utilizando Docker para organização de serviços e execução de ambientes.',
-    highlights: [
-      'Integração front-end/back-end com contratos de API consistentes',
-      'Apoio técnico em fluxos críticos do domínio logístico',
-    ],
+    id: 'exp-army',
+    period: 'Mar/2020 - Fev/2021',
+    title: 'Exército Brasileiro — Soldado',
+    summary: 'Treinamento militar de 11 meses, concluído com certificado de excelência militar.',
+    highlights: ['Disciplina, trabalho em equipe e responsabilidade sob pressão'],
   },
   {
     id: 'exp-education',
     period: 'Formação',
     title: 'Base acadêmica e especialização',
     summary:
-      'Formação em Desenvolvimento Web Full Stack (Kenzie Academy) e início de Engenharia de Software em março de 2026.',
+      'Bacharelado em Engenharia de Software em andamento, depois de formações em desenvolvimento web full stack e no ecossistema JavaScript.',
     highlights: [
-      'Kenzie Academy Brasil — mai/2022 a mai/2023',
-      'Engenharia de Software — início em mar/2026',
+      'Uninter — Engenharia de Software, desde mar/2026',
+      'Kenzie Academy Brasil — Desenvolvimento Web Full Stack, mai/2022 a mai/2023',
+      'JStack — JavaScript, React e Node.js, dez/2022 a jan/2023',
     ],
   },
 ]

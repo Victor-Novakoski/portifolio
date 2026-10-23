@@ -4,26 +4,37 @@ export type ProjectBoss = {
   context: string
   stack: string[]
   challenges: string[]
-  repoUrl: string
+  repoUrl?: string
   backendRepoUrl?: string
   demoUrl?: string
 }
 
 export const projects: ProjectBoss[] = [
   {
+    id: 'rastreia',
+    name: 'Rastreia',
+    context:
+      'Plataforma de rastreio de entregas em tempo real: a transportadora cadastra as entregas, o motorista atualiza o status pelo celular (PWA com Web Push) e o cliente acompanha por um link público.',
+    stack: ['Go', 'React', 'TypeScript', 'PostgreSQL', 'Redis', 'RabbitMQ', 'WebSocket', 'Docker'],
+    challenges: [
+      'Status ao vivo com WebSocket e Redis pub/sub funcionando com várias instâncias da API',
+      'Notificações que não se perdem, com Transactional Outbox e worker de e-mail no RabbitMQ',
+      'Sessão com JWT curto e refresh token rotativo com detecção de reuso',
+    ],
+  },
+  {
     id: 'panda-cooking',
     name: 'Panda Cooking',
     context:
-      'Aplicação full stack para compartilhamento de receitas, com foco em experiência de uso, componentização e organização de fluxo no front-end.',
-    stack: ['React', 'TypeScript', 'Axios', 'Styled Components', 'Framer Motion'],
+      'Rede de receitas: qualquer pessoa busca e lê receitas; com conta, publica as suas com fotos, ingredientes e modo de preparo, comenta e guarda as favoritas.',
+    stack: ['Go', 'Gin', 'PostgreSQL', 'Next.js', 'React', 'TypeScript', 'Docker'],
     challenges: [
-      'Estruturar componentes reutilizáveis sem perder consistência visual',
-      'Integrar chamadas HTTP com feedback claro de estado',
-      'Manter fluidez de interface com animações sem comprometer performance',
+      'Sessão segura com refresh token em cookie HttpOnly e o navegador falando só com o front (BFF)',
+      'Proteção contra abuso com limite por IP, bloqueio de login e checagem de origem',
+      'Busca que ignora acento com unaccent e índice de trigramas no PostgreSQL',
     ],
-    repoUrl: 'https://github.com/Victor-Novakoski/panda-cooking',
-    backendRepoUrl: 'https://github.com/Victor-Novakoski/panda-cooking-api',
-    demoUrl: 'https://panda-cooking.vercel.app',
+    repoUrl: 'https://github.com/Victor-Novakoski/panda-cooking-front',
+    backendRepoUrl: 'https://github.com/Victor-Novakoski/panda-cooking-go-api',
   },
   {
     id: 'contacts',

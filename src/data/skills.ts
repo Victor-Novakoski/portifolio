@@ -19,6 +19,12 @@ export const skills: Skill[] = [
     description: 'Projetos web com componentização e integração com APIs REST.',
   },
   {
+    id: 'nextjs',
+    title: 'Next.js',
+    domain: 'frontend',
+    description: 'Renderização no servidor e rotas de API como camada entre o navegador e o back-end.',
+  },
+  {
     id: 'typescript',
     title: 'TypeScript',
     domain: 'frontend',
@@ -40,7 +46,13 @@ export const skills: Skill[] = [
     id: 'go',
     title: 'Go (Golang)',
     domain: 'backend',
-    description: 'Desenvolvimento e manutenção de APIs para suporte aos fluxos da aplicação.',
+    description: 'APIs REST no trabalho e em projetos próprios, com chi, Gin, pgx/sqlc, GORM, OpenAPI e testes.',
+  },
+  {
+    id: 'redis-rabbitmq',
+    title: 'Redis e RabbitMQ',
+    domain: 'backend',
+    description: 'Tempo real com Redis pub/sub e filas com RabbitMQ para processamento assíncrono.',
   },
   {
     id: 'node-express',
@@ -52,13 +64,13 @@ export const skills: Skill[] = [
     id: 'postgres',
     title: 'PostgreSQL',
     domain: 'backend',
-    description: 'Noções de modelagem e uso de banco relacional em aplicações web.',
+    description: 'Modelagem, consultas SQL, migrations versionadas, transações e índices.',
   },
   {
     id: 'docker',
-    title: 'Docker (nível inicial)',
+    title: 'Docker e CI',
     domain: 'platform',
-    description: 'Execução e organização de serviços para ambientes de desenvolvimento.',
+    description: 'Docker Compose para ambientes completos e GitHub Actions com lint, testes e varredura de segurança.',
   },
   {
     id: 'rest',

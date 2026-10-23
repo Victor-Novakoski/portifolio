@@ -124,14 +124,20 @@ function BattlefieldPanel() {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <a
-          href={selectedProject.repoUrl}
-          target="_blank"
-          rel="noreferrer"
-          className="rounded-md bg-souls-ember px-3 py-2 text-xs font-semibold text-black transition hover:brightness-110"
-        >
-          Repositório front-end
-        </a>
+        {selectedProject.repoUrl ? (
+          <a
+            href={selectedProject.repoUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-md bg-souls-ember px-3 py-2 text-xs font-semibold text-black transition hover:brightness-110"
+          >
+            Repositório front-end
+          </a>
+        ) : (
+          <span className="rounded-md border border-slate-700 px-3 py-2 text-xs text-slate-400">
+            Repositório em breve
+          </span>
+        )}
         {selectedProject.backendRepoUrl ? (
           <a
             href={selectedProject.backendRepoUrl}

@@ -37,7 +37,7 @@ export const worldRegions: WorldRegion[] = [
     title: 'Habilidades',
     x: 505,
     y: 60,
-    lore: 'Stack técnica principal: Angular, React, TypeScript, Go, Docker e APIs REST.',
+    lore: 'Stack técnica principal: Go, React, Next.js, TypeScript, PostgreSQL, Docker e Angular.',
     accent: '#5EC9A3',
   },
   {
@@ -45,7 +45,7 @@ export const worldRegions: WorldRegion[] = [
     title: 'Desafios Técnicos',
     x: 760,
     y: 280,
-    lore: 'Casos reais de integração, legado e regras de negócio complexas.',
+    lore: 'Problemas reais dos meus projetos: tempo real, mensageria e segurança de sessão.',
     accent: '#C58DFF',
   },
   {
@@ -53,7 +53,7 @@ export const worldRegions: WorldRegion[] = [
     title: 'Contato',
     x: 870,
     y: 450,
-    lore: 'Canal direto para entrevistas e oportunidades em front-end e engenharia web.',
+    lore: 'Canal direto para entrevistas e oportunidades em desenvolvimento full stack.',
     accent: '#F08B7A',
   },
 ]
