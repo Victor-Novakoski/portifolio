@@ -1,6 +1,6 @@
 export const contact = {
   name: 'Victor Novakoski',
-  role: 'Desenvolvedor Front-end | Experiência em Back-end com Go',
+  role: 'Desenvolvedor Full Stack | Go · React · TypeScript',
   location: 'Colombo - PR',
   phone: '(41) 99599-6176',
   email: 'novakoski2021@gmail.com',

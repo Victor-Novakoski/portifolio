@@ -1,15 +1,15 @@
 export const narrative = {
   title: 'Victor Novakoski',
-  subtitle: 'Desenvolvedor Front-end | Experiência em Back-end com Go',
+  subtitle: 'Desenvolvedor Full Stack | Go · React · TypeScript',
   intro:
-    'Desenvolvedor Front-end com experiência em aplicações de grande escala utilizando Angular, integração com APIs REST e manutenção de sistemas complexos. Atuação prática em back-end com Go (Golang), incluindo desenvolvimento e manutenção de APIs e uso de Docker para execução e organização de serviços.',
+    'Desenvolvedor Full Stack com mais de 3 anos de experiência profissional, especializado em APIs REST em Go e interfaces em React com TypeScript. Atuo em um sistema de logística e transporte usado em escala nacional, do banco de dados (PostgreSQL) à interface. Cursando Engenharia de Software.',
   codex: {
     origin:
-      'Atuo em sistema logístico voltado à área de transportes, em projeto de grande porte do setor alimentício, lidando com regras de negócio complexas e alto volume de dados.',
+      'Atuo em um sistema logístico voltado à área de transportes, atendendo clientes de grande porte da indústria, lidando com regras de negócio complexas e alto volume de dados.',
     mission:
-      'Construir interfaces robustas e evolutivas, conciliando velocidade de entrega com qualidade de engenharia e integração estável com serviços de back-end.',
+      'Entregar de ponta a ponta, da API à interface, conciliando velocidade de entrega com qualidade de engenharia, segurança e testes.',
     principles: [
-      'Arquitetura front-end sustentável para sistemas de alta complexidade',
+      'Arquitetura sustentável, do back-end ao front-end, para sistemas de alta complexidade',
       'Integração previsível com APIs e dados críticos de negócio',
       'Evolução incremental de legado com baixo risco operacional',
     ],
