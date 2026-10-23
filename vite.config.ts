@@ -1,20 +1,29 @@
-import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
+import { defineConfig, type Plugin } from 'vite'
 
-// https://vitejs.dev/config/
+// Endereço público usado no canonical e nas tags de compartilhamento.
+// Na Vercel vem de VERCEL_PROJECT_PRODUCTION_URL; dá para fixar com SITE_URL.
+const productionHost = process.env.VERCEL_PROJECT_PRODUCTION_URL
+const siteUrl = (process.env.SITE_URL ?? (productionHost ? `https://${productionHost}` : '')).replace(/\/+$/, '')
+
+function absoluteMeta(): Plugin {
+  return {
+    name: 'absolute-meta',
+    transformIndexHtml() {
+      if (!siteUrl) return []
+      return [
+        { tag: 'link', attrs: { rel: 'canonical', href: `${siteUrl}/` }, injectTo: 'head' },
+        { tag: 'meta', attrs: { property: 'og:url', content: `${siteUrl}/` }, injectTo: 'head' },
+        { tag: 'meta', attrs: { property: 'og:image', content: `${siteUrl}/og.png` }, injectTo: 'head' },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: `${siteUrl}/og.png` }, injectTo: 'head' },
+      ]
+    },
+  }
+}
+
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), absoluteMeta()],
   resolve: {
     alias: [{ find: '@', replacement: '/src' }],
-  },
-  build: {
-    rollupOptions: {
-      output: {
-        manualChunks: {
-          react: ['react', 'react-dom'],
-          animation: ['framer-motion', 'gsap'],
-        },
-      },
-    },
   },
 })

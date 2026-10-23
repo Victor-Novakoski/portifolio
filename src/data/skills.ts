@@ -1,51 +1,74 @@
+export type SkillPlace = 'work' | 'rastreia' | 'panda'
+
 export type Skill = {
   id: string
-  title: string
-  domain: 'frontend' | 'backend' | 'platform' | 'future'
-  description: string
+  tool: string
+  area: 'back-end' | 'front-end' | 'plataforma'
+  use: string
+  where: SkillPlace[]
+}
+
+export const skillPlaces: Record<SkillPlace, { short: string; long: string }> = {
+  work: { short: 'trabalho', long: 'trabalho (Galileu)' },
+  rastreia: { short: 'rastreia', long: 'Rastreia' },
+  panda: { short: 'panda', long: 'Panda Cooking' },
 }
 
 export const skills: Skill[] = [
   {
-    id: 'frontend',
-    title: 'Engenharia Front-end',
-    domain: 'frontend',
-    description: 'Interfaces escaláveis com React, TypeScript e componentização consistente.',
+    id: 'go',
+    tool: 'Go',
+    area: 'back-end',
+    use: 'APIs REST com chi, Gin, pgx/sqlc, GORM e OpenAPI',
+    where: ['work', 'rastreia', 'panda'],
   },
   {
-    id: 'architecture',
-    title: 'Arquitetura de UI',
-    domain: 'platform',
-    description: 'Separação de responsabilidades, design de módulos e evolução incremental.',
+    id: 'postgres',
+    tool: 'PostgreSQL',
+    area: 'back-end',
+    use: 'Modelagem, migrations, transações, locks e índices',
+    where: ['work', 'rastreia', 'panda'],
   },
   {
-    id: 'performance',
-    title: 'Performance na Web',
-    domain: 'platform',
-    description: 'Otimização de renderização, bundle e experiência percebida.',
+    id: 'redis-rabbitmq',
+    tool: 'Redis · RabbitMQ',
+    area: 'back-end',
+    use: 'Tempo real entre instâncias e filas com outbox',
+    where: ['rastreia'],
   },
   {
-    id: 'responsiveness',
-    title: 'Responsividade',
-    domain: 'frontend',
-    description: 'Layouts fluidos e consistentes em mobile, tablet e desktop.',
+    id: 'react',
+    tool: 'React · TypeScript',
+    area: 'front-end',
+    use: 'Componentes, formulários e estado de servidor',
+    where: ['rastreia', 'panda'],
   },
   {
-    id: 'design-system',
-    title: 'Sistema de Design',
-    domain: 'platform',
-    description: 'Bibliotecas de componentes, tokens e governança visual.',
+    id: 'nextjs',
+    tool: 'Next.js',
+    area: 'front-end',
+    use: 'Renderização no servidor e camada BFF',
+    where: ['panda'],
   },
   {
-    id: 'dataviz',
-    title: 'Visualização de Dados',
-    domain: 'backend',
-    description: 'Modelagem de dados para leitura visual clara e confiável.',
+    id: 'angular',
+    tool: 'Angular',
+    area: 'front-end',
+    use: 'Interfaces de sistema logístico em produção',
+    where: ['work'],
   },
   {
-    id: 'ai',
-    title: 'Engenharia de IA',
-    domain: 'future',
-    description: 'Integração de fluxos com IA para assistência e automação contextual.',
+    id: 'docker',
+    tool: 'Docker · Compose',
+    area: 'plataforma',
+    use: 'Ambiente completo com um comando',
+    where: ['work', 'rastreia', 'panda'],
+  },
+  {
+    id: 'actions',
+    tool: 'GitHub Actions',
+    area: 'plataforma',
+    use: 'Lint, testes, govulncheck, gitleaks e Trivy',
+    where: ['rastreia', 'panda'],
   },
 ]

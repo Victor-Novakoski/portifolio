@@ -1,34 +1,49 @@
 export type Trial = {
   id: string
+  numeral: string
   title: string
   problem: string
   approach: string
   result: string
+  where: string
+  diagram?: boolean
 }
 
 export const trials: Trial[] = [
   {
-    id: 'trial-api-load',
-    title: 'Provação I — Escalar API sob alta carga',
-    problem: 'Picos de latência em horários de alto tráfego degradavam a experiência do usuário.',
+    id: 'trial-realtime',
+    numeral: 'I',
+    title: 'Tempo real com várias instâncias da API',
+    problem:
+      'O cliente está conectado numa instância e o motorista muda o status por outra. Sem nada no meio, a tela do cliente nunca fica sabendo.',
     approach:
-      'Mapeamento de gargalos, cache seletivo e desacoplamento de chamadas críticas no front-end.',
-    result: 'Tempo médio de resposta mais previsível e menor taxa de abandono em fluxos sensíveis.',
+      'WebSocket só do servidor para o cliente, com o token na primeira mensagem para não cair em log, e Redis pub/sub repassando cada mudança para todas as instâncias.',
+    result:
+      'Painel e página pública atualizam sozinhos, e a API escala na horizontal. O mesmo Redis guarda o rate limit compartilhado.',
+    where: 'rastreia',
+    diagram: true,
   },
   {
-    id: 'trial-metadata-validation',
-    title: 'Provação II — Validação dinâmica de metadados',
-    problem: 'Metadados inconsistentes entre fontes diferentes quebravam regras de exibição.',
+    id: 'trial-outbox',
+    numeral: 'II',
+    title: 'Notificações que não se perdem',
+    problem:
+      'A API grava o status e depois publica na fila. Se cair entre as duas coisas, o cliente nunca é avisado.',
     approach:
-      'Padronização de contratos com validação de schema e fallback para estados seguros.',
-    result: 'Menos erros em produção e maior confiança na camada de apresentação.',
+      'Transactional Outbox: o evento é gravado na mesma transação do status, e um relay publica com confirmação do RabbitMQ, usando FOR UPDATE SKIP LOCKED.',
+    result:
+      'E-mails e Web Push entregues pelo menos uma vez, mesmo com o RabbitMQ fora do ar por alguns minutos.',
+    where: 'rastreia',
   },
   {
-    id: 'trial-ui-refactor',
-    title: 'Provação III — Refatoração de UI legada',
-    problem: 'Código legado acoplado dificultava manutenção e evolução de novas features.',
+    id: 'trial-session',
+    numeral: 'III',
+    title: 'Sessão segura sem token exposto',
+    problem:
+      'Token no localStorage fica vulnerável a XSS, e um refresh token roubado daria acesso por muito tempo.',
     approach:
-      'Migração incremental de stack, organização por domínio e componentes desacoplados.',
-    result: 'Base sustentável para novas entregas com menor risco de regressão.',
+      'Access token curto só em memória e refresh token rotativo em cookie HttpOnly, guardado como hash. Token reusado derruba a sessão inteira.',
+    result: 'Nenhum token legível pelo JavaScript, e roubo de sessão detectado na próxima renovação.',
+    where: 'rastreia · panda',
   },
 ]
