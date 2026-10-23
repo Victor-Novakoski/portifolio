@@ -6,3 +6,6 @@ export const introIsRunning = () => document.documentElement.classList.contains(
 export function endIntro() {
   document.documentElement.classList.remove('intro')
 }
+
+// A brasa da abertura pousou na primeira parada do trilho.
+export const LAND_EVENT = 'brasa:land'
