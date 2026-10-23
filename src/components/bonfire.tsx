@@ -12,11 +12,7 @@ const W = 200
 const H = 220
 const routePoints = stops.filter(stop => stop.id !== 'inicio').map(stop => stop.id)
 
-const formatDuration = (ms: number) => {
-  const seconds = Math.round(ms / 1000)
-  const minutes = Math.floor(seconds / 60)
-  return `${minutes ? `${minutes}min ` : ''}${seconds % 60}s`
-}
+const COPIED_MS = 3000
 
 function drawLogs(ctx: CanvasRenderingContext2D) {
   ctx.strokeStyle = '#5b4b31'
@@ -52,12 +48,11 @@ function drawStillFire(ctx: CanvasRenderingContext2D) {
 
 // Fim da rota: a fogueira acende quando metade da seção aparece, e a visita é dada como entregue.
 export function Bonfire() {
-  const { visited, startedAt, arrive } = useJourney()
+  const { visited, arrive } = useJourney()
   const sectionRef = useRef<HTMLElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const [litAt, setLitAt] = useState<number | null>(null)
+  const [lit, setLit] = useState(false)
   const [copied, setCopied] = useState('')
-  const lit = litAt !== null
 
   useEffect(() => {
     const section = sectionRef.current
@@ -65,7 +60,7 @@ export function Bonfire() {
     const observer = new IntersectionObserver(
       entries => {
         if (!entries.some(entry => entry.intersectionRatio >= 0.5)) return
-        setLitAt(Date.now())
+        setLit(true)
         arrive('contato')
       },
       { threshold: 0.5 }
@@ -159,6 +154,13 @@ export function Bonfire() {
     }
   }, [lit])
 
+  // O aviso de cópia some sozinho depois de alguns segundos.
+  useEffect(() => {
+    if (!copied) return
+    const timer = window.setTimeout(() => setCopied(''), COPIED_MS)
+    return () => window.clearTimeout(timer)
+  }, [copied])
+
   const copyEmail = async () => {
     try {
       await navigator.clipboard.writeText(profile.email)
@@ -172,7 +174,7 @@ export function Bonfire() {
         selection.removeAllRanges()
         selection.addRange(range)
       }
-      setCopied('selecionado: use Ctrl+C')
+      setCopied('selecionado, copie manualmente')
     }
   }
 
@@ -188,10 +190,10 @@ export function Bonfire() {
         <span className="arrival" role="status">
           {lit ? (
             <>
-              <b>Entregue</b> · percurso de {formatDuration(litAt - startedAt)} · {points}/{routePoints.length} pontos
+              <b>Entregue</b> · você passou por {points} de {routePoints.length} seções
             </>
           ) : (
-            `Ponto ${routePoints.length}/${routePoints.length} · Fogueira`
+            `Parada ${routePoints.length} de ${routePoints.length}`
           )}
         </span>
         <h2>Contato</h2>
