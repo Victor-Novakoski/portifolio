@@ -1,99 +1,74 @@
+export type SkillPlace = 'work' | 'rastreia' | 'panda'
+
 export type Skill = {
   id: string
-  title: string
-  domain: 'frontend' | 'backend' | 'platform' | 'future'
-  description: string
+  tool: string
+  area: 'back-end' | 'front-end' | 'plataforma'
+  use: string
+  where: SkillPlace[]
+}
+
+export const skillPlaces: Record<SkillPlace, { short: string; long: string }> = {
+  work: { short: 'trabalho', long: 'trabalho (Galileu)' },
+  rastreia: { short: 'rastreia', long: 'Rastreia' },
+  panda: { short: 'panda', long: 'Panda Cooking' },
 }
 
 export const skills: Skill[] = [
   {
-    id: 'angular',
-    title: 'Angular',
-    domain: 'frontend',
-    description: 'Construção e manutenção de interfaces para sistema logístico em escala nacional.',
-  },
-  {
-    id: 'react',
-    title: 'React',
-    domain: 'frontend',
-    description: 'Projetos web com componentização e integração com APIs REST.',
-  },
-  {
-    id: 'nextjs',
-    title: 'Next.js',
-    domain: 'frontend',
-    description: 'Renderização no servidor e rotas de API como camada entre o navegador e o back-end.',
-  },
-  {
-    id: 'typescript',
-    title: 'TypeScript',
-    domain: 'frontend',
-    description: 'Tipagem para previsibilidade, manutenção e redução de erros em front-end.',
-  },
-  {
-    id: 'javascript',
-    title: 'JavaScript',
-    domain: 'frontend',
-    description: 'Base sólida para lógica de interface e integração de serviços.',
-  },
-  {
-    id: 'html-css',
-    title: 'HTML e CSS',
-    domain: 'frontend',
-    description: 'Estrutura e estilização de interfaces responsivas e usáveis.',
-  },
-  {
     id: 'go',
-    title: 'Go (Golang)',
-    domain: 'backend',
-    description: 'APIs REST no trabalho e em projetos próprios, com chi, Gin, pgx/sqlc, GORM, OpenAPI e testes.',
-  },
-  {
-    id: 'redis-rabbitmq',
-    title: 'Redis e RabbitMQ',
-    domain: 'backend',
-    description: 'Tempo real com Redis pub/sub e filas com RabbitMQ para processamento assíncrono.',
-  },
-  {
-    id: 'node-express',
-    title: 'Node.js e Express',
-    domain: 'backend',
-    description: 'Construção de serviços HTTP e integração com front-end.',
+    tool: 'Go',
+    area: 'back-end',
+    use: 'APIs REST com chi, Gin, pgx/sqlc, GORM e OpenAPI',
+    where: ['work', 'rastreia', 'panda'],
   },
   {
     id: 'postgres',
-    title: 'PostgreSQL',
-    domain: 'backend',
-    description: 'Modelagem, consultas SQL, migrations versionadas, transações e índices.',
+    tool: 'PostgreSQL',
+    area: 'back-end',
+    use: 'Modelagem, migrations, transações, locks e índices',
+    where: ['work', 'rastreia', 'panda'],
+  },
+  {
+    id: 'redis-rabbitmq',
+    tool: 'Redis · RabbitMQ',
+    area: 'back-end',
+    use: 'Tempo real entre instâncias e filas com outbox',
+    where: ['rastreia'],
+  },
+  {
+    id: 'react',
+    tool: 'React · TypeScript',
+    area: 'front-end',
+    use: 'Componentes, formulários e estado de servidor',
+    where: ['rastreia', 'panda'],
+  },
+  {
+    id: 'nextjs',
+    tool: 'Next.js',
+    area: 'front-end',
+    use: 'Renderização no servidor e camada BFF',
+    where: ['panda'],
+  },
+  {
+    id: 'angular',
+    tool: 'Angular',
+    area: 'front-end',
+    use: 'Interfaces de sistema logístico em produção',
+    where: ['work'],
   },
   {
     id: 'docker',
-    title: 'Docker e CI',
-    domain: 'platform',
-    description: 'Docker Compose para ambientes completos e GitHub Actions com lint, testes e varredura de segurança.',
+    tool: 'Docker · Compose',
+    area: 'plataforma',
+    use: 'Ambiente completo com um comando',
+    where: ['work', 'rastreia', 'panda'],
   },
   {
-    id: 'rest',
-    title: 'REST API',
-    domain: 'platform',
-    description: 'Integração de front-end com serviços back-end e contratos HTTP.',
-  },
-  {
-    id: 'yaml-lowcode',
-    title: 'Low-code YAML',
-    domain: 'platform',
-    description: 'Customizações em framework interno de geração de interfaces.',
-  },
-  {
-    id: 'git',
-    title: 'Git e colaboração',
-    domain: 'platform',
-    description: 'Versionamento e fluxo colaborativo para evolução contínua de produto.',
-  },
-  {
-    id: 'software-engineering',
-    title: 'Engenharia de Software',
-    domain: 'future',
-    description: 'Formação acadêmica iniciada em março de 2026 para aprofundamento técnico.',
+    id: 'actions',
+    tool: 'GitHub Actions',
+    area: 'plataforma',
+    use: 'Lint, testes, govulncheck, gitleaks e Trivy',
+    where: ['rastreia', 'panda'],
   },
 ]

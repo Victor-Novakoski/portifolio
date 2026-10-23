@@ -1,9 +1,11 @@
-<svg width="44" height="44" viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-<circle cx="22" cy="22" r="22" fill="url(#paint0_linear_147_168)"/>
-<defs>
-<linearGradient id="paint0_linear_147_168" x1="22" y1="0" x2="22" y2="44" gradientUnits="userSpaceOnUse">
-<stop stop-color="#5C63ED"/>
-<stop offset="1" stop-color="#BEC1F8"/>
-</linearGradient>
-</defs>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <radialGradient id="g" cx="50%" cy="58%" r="55%">
+      <stop offset="0" stop-color="#FFF3C9"/>
+      <stop offset=".45" stop-color="#E0BC74"/>
+      <stop offset="1" stop-color="#8C2F2A"/>
+    </radialGradient>
+  </defs>
+  <rect width="32" height="32" rx="6" fill="#0E0D0B"/>
+  <path d="M16 4c1.6 4.4 7 7.4 7 13.6A7 7 0 0 1 9 17.6c0-3.2 1.8-5 3.2-6.4.2 2 1.2 3.2 2.4 3.6C14.4 10.6 15 7 16 4z" fill="url(#g)"/>
 </svg>

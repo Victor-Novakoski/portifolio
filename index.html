@@ -1,31 +1,58 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>The Lost Developer | Portfólio Soulslike</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <title>Victor Novakoski | Desenvolvedor Full Stack</title>
     <meta
       name="description"
-      content="Portfólio de Victor Novakoski, desenvolvedor full stack (Go, React e TypeScript): projetos, desafios técnicos, habilidades e contato."
+      content="Victor Novakoski, desenvolvedor full stack em Go, React e TypeScript. Projetos, desafios técnicos, experiência e contato."
     />
-    <meta
-      name="keywords"
-      content="portfolio, go, golang, react, typescript, full stack, soulslike, software engineer"
-    />
-    <meta property="og:title" content="The Lost Developer | Portfólio Soulslike" />
-    <meta
-      property="og:description"
-      content="Uma jornada interativa por projetos, desafios e evolução técnica."
-    />
+    <meta name="author" content="Victor Novakoski" />
+    <meta name="theme-color" content="#0E0D0B" />
+    <meta name="color-scheme" content="dark" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
     <meta property="og:type" content="website" />
     <meta property="og:locale" content="pt_BR" />
-    <meta name="theme-color" content="#0A0A0B" />
+    <meta property="og:site_name" content="Victor Novakoski" />
+    <meta property="og:title" content="Victor Novakoski | Desenvolvedor Full Stack" />
+    <meta
+      property="og:description"
+      content="APIs em Go e interfaces em React para logística em escala nacional. Veja os projetos, os desafios e o caminho até aqui."
+    />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Victor Novakoski, desenvolvedor full stack" />
+    <meta name="twitter:card" content="summary_large_image" />
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;600;700;800&family=Source+Sans+3:ital,wght@0,400;0,600;0,700;1,400&family=JetBrains+Mono:wght@400&display=swap"
+    />
+
+    <!-- Marca a abertura antes do primeiro paint para o nome não piscar. Roda uma vez por sessão. -->
+    <script>
+      ;(function () {
+        try {
+          var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+          var path = window.location.pathname.replace(/\/+$/, '')
+          if (reduce || path !== '' || sessionStorage.getItem('brasa-intro') === '1') return
+          sessionStorage.setItem('brasa-intro', '1')
+          document.documentElement.classList.add('intro')
+        } catch (e) {}
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
+    <noscript>
+      <p style="padding: 24px; font-family: sans-serif; color: #e8e2d4">
+        Victor Novakoski, desenvolvedor full stack. Contato: novakoski2021@gmail.com
+      </p>
+    </noscript>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>
