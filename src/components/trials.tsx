@@ -9,7 +9,6 @@ function TrialCard({ trial, open }: { trial: Trial; open: boolean }) {
   return (
     <details className="trial" open={open} ref={ref}>
       <summary>
-        <span className="rn">{trial.numeral}</span>
         <span>
           <h3>{trial.title}</h3>
           <p className="prob">{trial.problem}</p>
@@ -39,7 +38,7 @@ export function Trials() {
   return (
     <section className="stop-sec" id="desafios">
       <div className="wrap">
-        <SectionHead numeral="II" point="Ponto 2/6 · Provações" title="Desafios técnicos">
+        <SectionHead stopId="desafios" title="Desafios técnicos">
           Problemas que apareceram de verdade, como foram resolvidos e o que mudou depois.
         </SectionHead>
         <div className="trials">

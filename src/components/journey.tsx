@@ -5,7 +5,7 @@ export function Journey() {
   return (
     <section className="stop-sec" id="experiencia">
       <div className="wrap journey">
-        <SectionHead numeral="III" point="Ponto 3/6 · Jornada" title="Experiência" align="left">
+        <SectionHead stopId="experiencia" title="Experiência">
           Do quartel ao Go, passando pela Kenzie.
         </SectionHead>
         <ol className="timeline">

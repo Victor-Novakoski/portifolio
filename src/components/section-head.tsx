@@ -1,32 +1,26 @@
 import type { ReactNode } from 'react'
 
+import { stops } from '@/data/stops'
+
 type SectionHeadProps = {
-  numeral: string
-  point: string
+  stopId: string
   title: string
-  align?: 'left' | 'right'
   children?: ReactNode
 }
 
-// "Ponto x/6": cada seção é uma parada da rota, com o numeral romano vazado ao fundo.
-export function SectionHead({ numeral, point, title, align = 'right', children }: SectionHeadProps) {
+// O início não conta como parada: o sobrescrito vai de "Parada 1 de 6" a "Parada 6 de 6".
+const sectionStops = stops.filter(stop => stop.id !== 'inicio')
+
+export function SectionHead({ stopId, title, children }: SectionHeadProps) {
+  const position = sectionStops.findIndex(stop => stop.id === stopId) + 1
+
   return (
-    <div className={align === 'left' ? 'head left' : 'head'}>
-      <span className="numeral" aria-hidden="true">
-        {numeral}
+    <div className="head">
+      <span className="point">
+        Parada {position} de {sectionStops.length}
       </span>
-      <span className="point">{point}</span>
       <h2>{title}</h2>
       {children && <p>{children}</p>}
-    </div>
-  )
-}
-
-export function Leg({ km }: { km: number }) {
-  return (
-    <div className="leg" aria-hidden="true">
-      <i />
-      km {km}
     </div>
   )
 }

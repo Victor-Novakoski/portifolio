@@ -53,7 +53,7 @@ function ProjectCard({ project }: { project: Project }) {
           ))}
         </ul>
         <div className="item-links">
-          {project.links.length === 0 && <span className="off">repositório em breve</span>}
+          {project.links.length === 0 && <span className="off">código sob pedido</span>}
           {project.links.map(link => (
             <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
               {link.label} ↗
@@ -69,7 +69,7 @@ export function Projects() {
   return (
     <section className="stop-sec" id="projetos">
       <div className="wrap">
-        <SectionHead numeral="I" point="Ponto 1/6 · Inventário" title="Projetos" align="left">
+        <SectionHead stopId="projetos" title="Projetos">
           Feitos de ponta a ponta: API, banco, interface, testes e CI.
         </SectionHead>
         <div className="projects">

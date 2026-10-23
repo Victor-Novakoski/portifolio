@@ -7,7 +7,7 @@ export function Skills() {
   return (
     <section className="stop-sec" id="habilidades">
       <div className="wrap">
-        <SectionHead numeral="IV" point="Ponto 4/6 · Atributos" title="Habilidades">
+        <SectionHead stopId="habilidades" title="Habilidades">
           O que uso, para quê e onde dá para ver.
         </SectionHead>
         <div className="inv-wrap">
@@ -26,8 +26,8 @@ export function Skills() {
                     {skill.tool}
                     <small>{skill.area}</small>
                   </th>
-                  <td className="use">{skill.use}</td>
-                  <td className="where">
+                  <td className="use" data-label="Uso">{skill.use}</td>
+                  <td className="where" data-label="Onde">
                     {skill.where.map(place => (
                       <span key={place} className="place">
                         <span className={`dotw ${place}`} aria-hidden="true" />
