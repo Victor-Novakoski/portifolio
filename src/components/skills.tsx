@@ -26,8 +26,8 @@ export function Skills() {
                     {skill.tool}
                     <small>{skill.area}</small>
                   </th>
-                  <td className="use">{skill.use}</td>
-                  <td className="where">
+                  <td className="use" data-label="Uso">{skill.use}</td>
+                  <td className="where" data-label="Onde">
                     {skill.where.map(place => (
                       <span key={place} className="place">
                         <span className={`dotw ${place}`} aria-hidden="true" />

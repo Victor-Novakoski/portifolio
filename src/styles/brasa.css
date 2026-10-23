@@ -54,6 +54,7 @@ nav.main a:hover, nav.main a[aria-current="true"] { color: var(--ember-hot); }
 .cv { display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 14px; border-radius: 4px; background: var(--ember); color: #14110a; font: 700 14px/1 var(--font-body); text-decoration: none; }
 .cv:hover { background: var(--ember-hot); }
 .cv svg { width: 16px; height: 16px; }
+.cv .label-short { display: none; }
 .menu-btn { display: none; height: 40px; padding: 0 12px; border: 1px solid var(--line); background: transparent; color: var(--fg); border-radius: 4px; font: 600 14px/1 var(--font-body); cursor: pointer; }
 .tracklog { position: absolute; top: calc(var(--header-h) - 6px); right: max(16px, env(safe-area-inset-right, 0px)); width: min(380px, calc(100vw - 32px)); background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 18px 18px 14px; box-shadow: 0 24px 60px rgba(0,0,0,.55); }
 .tracklog header { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
@@ -73,10 +74,12 @@ nav.main a:hover, nav.main a[aria-current="true"] { color: var(--ember-hot); }
   .track-btn { margin-left: auto; }
   .track-btn .where { display: none; }
   .cv .label { display: none; }
+  .cv .label-short { display: inline; }
   nav.main.open { display: flex; position: absolute; top: var(--header-h); left: 0; right: 0; flex-direction: column; background: var(--surface); border-bottom: 1px solid var(--line); padding: 8px max(16px, env(safe-area-inset-right, 0px)) 12px max(16px, env(safe-area-inset-left, 0px)); }
   nav.main.open a { padding: 12px 6px; font-size: 17px; }
 }
-@media (max-width: 560px) { .brand { font-size: 13px; letter-spacing: .08em; } header.top .wrap { gap: 10px; } .track-btn { padding: 0 11px; } .track-btn .state { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; } .menu-btn { padding: 0 10px; } .cv { padding: 0 11px; } }
+@media (max-width: 560px) { .brand { font-size: 13px; letter-spacing: .08em; } header.top .wrap { gap: 10px; } .track-btn { padding: 0 11px; } .menu-btn { padding: 0 10px; } .cv { padding: 0 11px; } }
+@media (max-width: 420px) { .brand .fore { display: none; } header.top .wrap { gap: 8px; } .track-btn { padding: 0 10px; } }
 
 /* Barra de rota (celular e tablet): marcas nas paradas, cabeça que brilha a cada chegada */
 .routebar { position: sticky; top: calc(env(safe-area-inset-top, 0px) + var(--header-h)); z-index: 35; height: 3px; background: var(--line); overflow-x: clip; }
@@ -311,8 +314,8 @@ details.trial[open] .toggle::after { content: " − fechar"; }
 @media (max-width: 860px) { .journey { grid-template-columns: minmax(0, 1fr); gap: 28px; } .journey .head { position: static; } }
 
 /* Atributos: tabela inventário */
-.inv-wrap { overflow-x: auto; border: 1px solid var(--line); }
-table.inv { width: 100%; border-collapse: collapse; min-width: 640px; font-size: 15.5px; }
+.inv-wrap { border: 1px solid var(--line); }
+table.inv { width: 100%; border-collapse: collapse; font-size: 15.5px; }
 table.inv th, table.inv td { padding: 12px 14px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
 table.inv thead th { font: 400 11px/1 var(--font-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); background: var(--surface); }
 table.inv tbody th { font-weight: 700; white-space: nowrap; }
@@ -325,6 +328,19 @@ table.inv td.where { font: 400 12px/1.6 var(--font-mono); white-space: nowrap; }
 .dotw.panda { background: #8fae86; }
 table.inv td.where .place + .place { margin-left: 8px; }
 table.inv tbody tr:hover { background: rgba(199,162,93,.05); }
+@media (max-width: 640px) {
+  table.inv, table.inv tbody, table.inv tr, table.inv th, table.inv td { display: block; }
+  table.inv thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  table.inv tbody tr { padding: 14px 16px; border-bottom: 1px solid var(--line); }
+  table.inv tbody tr:last-child { border-bottom: 0; }
+  table.inv th, table.inv td { padding: 0; border-bottom: 0; }
+  table.inv tbody th, table.inv td.where { white-space: normal; }
+  table.inv td { margin-top: 10px; }
+  table.inv td::before { content: attr(data-label); display: block; margin-bottom: 4px; font: 400 11px/1 var(--font-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); opacity: .8; }
+  table.inv td.where { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+  table.inv td.where::before { flex-basis: 100%; }
+  table.inv td.where .place + .place { margin-left: 0; }
+}
 .legend { margin-top: 12px; font: 400 12px/1.6 var(--font-mono); color: var(--muted); display: flex; flex-wrap: wrap; gap: 16px; }
 
 /* Sobre */
@@ -349,10 +365,14 @@ table.inv tbody tr:hover { background: rgba(199,162,93,.05); }
 .bonfire h2 { font: 600 clamp(32px, 4.6vw, 52px)/1.05 var(--font-display); letter-spacing: .03em; margin: 6px 0 0; }
 .bonfire .sub { color: var(--muted); margin: 0; max-width: 52ch; }
 .mail { display: flex; flex-wrap: wrap; justify-content: center; align-items: stretch; gap: 10px; margin-top: 10px; }
-.mail code { font: 400 clamp(16px, 2.8vw, 26px)/1 var(--font-mono); color: var(--fg); padding: 16px 18px; border: 1px solid var(--line); background: var(--surface); user-select: all; overflow-wrap: anywhere; border-radius: 2px; }
-.mail .mail-link { display: inline-flex; align-items: center; text-decoration: none; }
+.mail code { display: flex; align-items: center; min-height: 48px; font: 400 clamp(16px, 2.8vw, 26px)/1 var(--font-mono); color: var(--fg); padding: 12px 18px; border: 1px solid var(--line); background: var(--surface); user-select: all; overflow-wrap: anywhere; border-radius: 2px; }
+.mail button, .mail .mail-link { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
 .mail button, .mail .mail-link { font: 400 13px/1 var(--font-mono); background: transparent; color: var(--ember-hot); border: 1px solid rgba(199,162,93,.5); border-radius: 2px; padding: 0 16px; min-height: 48px; cursor: pointer; }
 .mail button:hover, .mail .mail-link:hover { background: rgba(199,162,93,.1); }
+@media (max-width: 560px) {
+  .mail { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); width: 100%; }
+  .mail code { grid-column: 1 / -1; justify-content: center; }
+}
 .copied { font: 400 12px/1 var(--font-mono); color: var(--ember-hot); min-height: 14px; }
 .bonfire .actions { justify-content: center; margin-top: 6px; }
 footer.end { border-top: 1px solid var(--line); padding-block: 22px; font: 400 12px/1.6 var(--font-mono); color: var(--muted); }

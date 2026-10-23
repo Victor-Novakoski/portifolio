@@ -199,10 +199,10 @@ export function Bonfire() {
         <div className="mail">
           <code id="email">{profile.email}</code>
           <button type="button" onClick={copyEmail}>
-            copiar
+            Copiar e-mail
           </button>
           <a className="mail-link" href={`mailto:${profile.email}`}>
-            escrever
+            Abrir e-mail
           </a>
         </div>
         <span className="copied" role="status" aria-live="polite">

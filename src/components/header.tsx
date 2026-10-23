@@ -56,7 +56,8 @@ export function Header() {
     <header className="top">
       <div className="wrap">
         <a className="brand" href="#inicio">
-          {profile.forename.toUpperCase()} <b>{profile.surname.toUpperCase()}</b>
+          <span className="fore">{profile.forename.toUpperCase()} </span>
+          <b>{profile.surname.toUpperCase()}</b>
         </a>
         <nav className={menuOpen ? 'main open' : 'main'} id="menu" aria-label="Seções">
           {navStops.map(stop => (
@@ -76,7 +77,7 @@ export function Header() {
           type="button"
           aria-expanded={logOpen}
           aria-controls="tracklog"
-          aria-label={`Rastreie esta visita: ${state.toLowerCase()}, ${where}`}
+          aria-label={`${state} · ${where}: abrir o rastreio desta visita`}
           onClick={() => setLogOpen(open => !open)}
         >
           <span className="pulse" aria-hidden="true" />
@@ -96,9 +97,10 @@ export function Header() {
         >
           Menu
         </button>
-        <a className="cv" href={profile.cvUrl} download aria-label="Baixar currículo (PDF)">
+        <a className="cv" href={profile.cvUrl} download aria-label="CV: baixar currículo em PDF">
           <DownloadIcon />
           <span className="label">Currículo</span>
+          <span className="label-short">CV</span>
         </a>
         <div className="tracklog" id="tracklog" ref={logRef} hidden={!logOpen}>
           <header>
