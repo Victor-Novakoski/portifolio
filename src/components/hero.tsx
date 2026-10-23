@@ -1,9 +1,14 @@
 import { DownloadIcon, GitHubIcon, LinkedInIcon, MailIcon } from '@/components/icons'
 import { profile } from '@/data/profile'
+import { useHeroHeat } from '@/hooks/use-hero-heat'
 
 export function Hero() {
+  const { heroRef, heatRef, canvasRef } = useHeroHeat()
+
   return (
-    <section className="hero" id="inicio">
+    <section className="hero" id="inicio" ref={heroRef}>
+      <span className="heat" ref={heatRef} aria-hidden="true" />
+      <canvas className="hero-sparks" ref={canvasRef} aria-hidden="true" />
       <div className="wrap">
         <div className="namebox">
           <span className="seed" aria-hidden="true" />

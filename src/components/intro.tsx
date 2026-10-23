@@ -1,17 +1,16 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { endIntro, introIsRunning, LAND_EVENT } from '@/lib/motion'
+import { endIntro, introIsRunning, introIsShort, LAND_EVENT } from '@/lib/motion'
 import { makeSpark, stepSparks, type Spark } from '@/lib/sparks'
 
 const SKIP_EVENTS = ['keydown', 'pointerdown', 'wheel', 'touchstart'] as const
 const TRAIL = 8
 
-// Linha do tempo da abertura, em ms (acompanha os atrasos do brasa.css).
-const KINDLE = { start: 650, duration: 1000 }
-const FLARE_AT = 1650
-const FLIGHT = { start: 1750, duration: 600 }
-const END_AT = 3000
-const HARD_STOP = 3600
+// Linhas do tempo da abertura, em ms (acompanham os atrasos do brasa.css). Quem volta ganha a curta.
+const TIMELINES = {
+  full: { kindle: { start: 650, duration: 1000 }, flareAt: 1650, flareSparks: 24, flight: { start: 1750, duration: 600 }, endAt: 3000, hardStop: 3600 },
+  short: { kindle: null, flareAt: 120, flareSparks: 16, flight: { start: 300, duration: 500 }, endAt: 1200, hardStop: 1800 },
+}
 
 const easeOutCubic = (k: number) => 1 - Math.pow(1 - k, 3)
 const easeInOutCubic = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2)
@@ -38,6 +37,7 @@ export function Intro() {
     const ctx = canvas?.getContext('2d')
     if (!running || !canvas || !ctx) return
 
+    const { kindle, flareAt, flareSparks, flight, endAt, hardStop } = TIMELINES[introIsShort() ? 'short' : 'full']
     const sparks: Spark[] = []
     const trail: Point[] = []
     let flared = false
@@ -72,8 +72,8 @@ export function Intro() {
       const box = surname?.getBoundingClientRect()
 
       // A frente da faixa quente solta duas faíscas por quadro.
-      if (box && t > KINDLE.start && t < KINDLE.start + KINDLE.duration) {
-        const front = box.left + easeOutCubic((t - KINDLE.start) / KINDLE.duration) * box.width
+      if (box && kindle && t > kindle.start && t < kindle.start + kindle.duration) {
+        const front = box.left + easeOutCubic((t - kindle.start) / kindle.duration) * box.width
         for (let k = 0; k < 2; k++) {
           sparks.push(
             makeSpark(front + (Math.random() - 0.5) * 12, box.top + box.height * (0.25 + Math.random() * 0.65), (Math.random() - 0.5) * 0.8, -(0.8 + Math.random() * 1.6), 50 + Math.random() * 40)
@@ -82,9 +82,9 @@ export function Intro() {
       }
 
       // Ignição: o nome todo explode em luz.
-      if (box && !flared && t >= FLARE_AT) {
+      if (box && !flared && t >= flareAt) {
         flared = true
-        for (let k = 0; k < 24; k++) {
+        for (let k = 0; k < flareSparks; k++) {
           const angle = Math.random() * Math.PI * 2
           const speed = 1 + Math.random() * 2.4
           const heavy = Math.random() < 0.2
@@ -97,13 +97,13 @@ export function Intro() {
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
 
       // O pacote: a brasa voa numa curva até a primeira parada, deixando rastro.
-      if (box && t >= FLIGHT.start && !landed) {
+      if (box && t >= flight.start && !landed) {
         from ??= { x: box.right - box.height * 0.1, y: box.top + box.height * 0.45 }
         to ??= landingPoint()
         if (!to) {
           landed = true
         } else {
-          const k = Math.min(1, (t - FLIGHT.start) / FLIGHT.duration)
+          const k = Math.min(1, (t - flight.start) / flight.duration)
           const e = easeInOutCubic(k)
           const control = { x: (from.x + to.x) / 2, y: Math.min(from.y, to.y) - 140 }
           const x = (1 - e) * (1 - e) * from.x + 2 * (1 - e) * e * control.x + e * e * to.x
@@ -136,7 +136,7 @@ export function Intro() {
 
       stepSparks(ctx, sparks)
 
-      if (t < HARD_STOP && (t < END_AT || sparks.length)) frame = requestAnimationFrame(draw)
+      if (t < hardStop && (t < endAt || sparks.length)) frame = requestAnimationFrame(draw)
       else finish()
     }
     frame = requestAnimationFrame(draw)
