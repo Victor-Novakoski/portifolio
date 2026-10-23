@@ -46,7 +46,7 @@ nav.main a { text-decoration: none; color: var(--muted); padding: 8px 10px; font
 nav.main a:hover, nav.main a[aria-current="true"] { color: var(--ember-hot); }
 .track-btn { display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 12px; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--fg); font: 400 12px/1 var(--font-mono); letter-spacing: .04em; cursor: pointer; white-space: nowrap; }
 .track-btn .pulse { width: 8px; height: 8px; border-radius: 50%; background: var(--ember); box-shadow: 0 0 0 0 var(--ember-glow); }
-@media (prefers-reduced-motion: no-preference) { .track-btn .pulse { animation: ping 1.8s ease-out infinite; } }
+@media (prefers-reduced-motion: no-preference) { .track-btn .pulse { animation: ping 1.8s ease-out 3; } }
 @keyframes ping { 0% { box-shadow: 0 0 0 0 rgba(199,162,93,.55); } 100% { box-shadow: 0 0 0 9px rgba(199,162,93,0); } }
 .track-btn.done .pulse { background: var(--ok); animation: none; }
 .track-btn .where { color: var(--muted); animation: fadein 200ms both; }
@@ -125,7 +125,6 @@ nav.main a:hover, nav.main a[aria-current="true"] { color: var(--ember-hot); }
   .rail a.ignite .stop::after { animation: burst 520ms ease-out; }
   .rail a.bump .stop { animation: bump 200ms ease-out; }
   .rail.wave a { animation: wave 300ms calc(520ms + (6 - var(--i, 0)) * 50ms) ease-out both; }
-  .rail .traveler { animation: breathe 2400ms ease-in-out infinite; }
   .scrolling .rail .line { animation: march 600ms linear infinite; }
 }
 @keyframes ring { from { transform: scale(1); opacity: .5; } to { transform: scale(2.2); opacity: 0; } }
@@ -139,7 +138,6 @@ nav.main a:hover, nav.main a[aria-current="true"] { color: var(--ember-hot); }
 @keyframes burst { from { transform: scale(1); opacity: .9; } to { transform: scale(3.4); opacity: 0; } }
 @keyframes bump { 50% { transform: rotate(45deg) scale(1.1); } }
 @keyframes wave { 50% { transform: scale(1.15); } }
-@keyframes breathe { 50% { opacity: .75; } }
 @keyframes march { to { background-position: 0 9px; } }
 @media (min-width: 1280px) { .rail { display: block; } }
 
@@ -150,7 +148,7 @@ nav.main a:hover, nav.main a[aria-current="true"] { color: var(--ember-hot); }
 .intro .rail .traveler { animation: fadein 400ms 2350ms both; }
 .intro .routebar { animation: fadein 400ms 2150ms both; }
 @keyframes fadein { from { opacity: 0; } to { opacity: 1; } }
-.intro .surname, .intro .forename { background: linear-gradient(90deg, var(--fg) 0 40%, var(--ember-hot) 44%, #fff3c9 46%, var(--line) 52% 100%); background-size: 260% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent; animation: kindle 700ms 300ms cubic-bezier(.3,.6,.2,1) forwards; }
+.intro .surname, .intro .forename { background: linear-gradient(90deg, var(--fg) 0 40%, var(--ember-hot) 44%, #fff3c9 46%, var(--muted) 52% 100%); background-size: 260% 100%; background-position: 100% 0; -webkit-background-clip: text; background-clip: text; color: transparent; animation: kindle 700ms 300ms cubic-bezier(.3,.6,.2,1) forwards; }
 .intro .surname { animation-duration: 1000ms; animation-delay: 650ms; }
 @keyframes kindle { to { background-position: 0 0; } }
 .intro .seed { animation: seed 1100ms ease-out both; }
@@ -158,17 +156,14 @@ nav.main a:hover, nav.main a[aria-current="true"] { color: var(--ember-hot); }
 .namebox::after { content: ""; position: absolute; inset: -20% -6%; background: radial-gradient(closest-side, rgba(255,236,190,.4), rgba(224,188,116,.12) 55%, transparent); opacity: 0; mix-blend-mode: screen; pointer-events: none; }
 .intro .namebox::after { animation: flare 280ms 1650ms ease-out both; }
 @keyframes flare { 40% { opacity: .55; } 100% { opacity: 0; } }
-.intro .after-name { animation: fadeup 600ms 1100ms both; }
 /* Abertura curta (visitante que volta): o nome já vem aceso, a semente pisca e a brasa vai direto ao trilho */
 .intro-short .surname, .intro-short .forename { animation: none; background: none; color: var(--fg); }
-.intro-short .after-name { animation: none; }
 .intro-short .seed { animation-duration: 700ms; }
 .intro-short .namebox::after { animation-delay: 120ms; }
 .intro-short .rail .line { animation-duration: 400ms; animation-delay: 450ms; }
 .intro-short .rail li { animation-delay: calc(450ms + var(--i, 0) * 50ms); }
 .intro-short .rail .traveler { animation-delay: 800ms; }
 .intro-short .routebar { animation-delay: 450ms; }
-@keyframes fadeup { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
 .skip-intro { position: fixed; right: max(16px, env(safe-area-inset-right, 0px)); bottom: calc(16px + env(safe-area-inset-bottom, 0px)); z-index: 56; font: 400 11px/1 var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--muted); background: transparent; border: 1px solid var(--line); border-radius: 3px; padding: 8px 10px; cursor: pointer; }
 
 /* Hero */

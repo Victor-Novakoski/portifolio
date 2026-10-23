@@ -17,7 +17,7 @@ export function Hero() {
             <span className="surname">{profile.surname.toUpperCase()}</span>
           </h1>
         </div>
-        <div className="after-name">
+        <div>
           <p className="logline">
             {profile.stack.join(' · ')} <span className="cmt">// full stack</span>
           </p>
@@ -41,7 +41,7 @@ export function Hero() {
             </a>
           </div>
         </div>
-        <div className="statusbox after-name" aria-label="Status">
+        <div className="statusbox" aria-label="Status">
           {profile.status.map(item => (
             <div key={item.key}>
               <span className="k">{item.key}</span>
@@ -49,7 +49,7 @@ export function Hero() {
             </div>
           ))}
         </div>
-        <div className="current-proj after-name">
+        <div className="current-proj">
           <span className="tag">projeto atual</span>
           <a href={profile.currentProject.href}>{profile.currentProject.label} →</a>
         </div>
