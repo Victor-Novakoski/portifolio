@@ -41,14 +41,14 @@ export function Hero() {
             </a>
           </div>
         </div>
-        <div className="statusbox" aria-label="Status">
+        <dl className="statusbox">
           {profile.status.map(item => (
             <div key={item.key}>
-              <span className="k">{item.key}</span>
-              <b>{item.value}</b>
+              <dt>{item.key}</dt>
+              <dd>{item.value}</dd>
             </div>
           ))}
-        </div>
+        </dl>
         <div className="current-proj">
           <span className="tag">projeto atual</span>
           <a href={profile.currentProject.href}>{profile.currentProject.label} →</a>

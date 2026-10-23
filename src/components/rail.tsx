@@ -119,7 +119,7 @@ export function Rail() {
           />
         ))}
       </div>
-      <nav className={['rail', delivered && 'delivered', wave && 'wave'].filter(Boolean).join(' ')} aria-label="Trilho de brasas">
+      <nav className={['rail', delivered && 'delivered', wave && 'wave'].filter(Boolean).join(' ')} aria-label="Progresso da página">
         <span className="line" />
         <span className="line-lit" />
         <canvas className="sparks" ref={canvasRef} aria-hidden="true" />
