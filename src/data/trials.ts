@@ -1,6 +1,5 @@
 export type Trial = {
   id: string
-  numeral: string
   title: string
   problem: string
   approach: string
@@ -12,7 +11,6 @@ export type Trial = {
 export const trials: Trial[] = [
   {
     id: 'trial-realtime',
-    numeral: 'I',
     title: 'Tempo real com várias instâncias da API',
     problem:
       'O cliente está conectado numa instância e o motorista muda o status por outra. Sem nada no meio, a tela do cliente nunca fica sabendo.',
@@ -25,7 +23,6 @@ export const trials: Trial[] = [
   },
   {
     id: 'trial-outbox',
-    numeral: 'II',
     title: 'Notificações que não se perdem',
     problem:
       'A API grava o status e depois publica na fila. Se cair entre as duas coisas, o cliente nunca é avisado.',
@@ -37,7 +34,6 @@ export const trials: Trial[] = [
   },
   {
     id: 'trial-session',
-    numeral: 'III',
     title: 'Sessão segura sem token exposto',
     problem:
       'Token no localStorage fica vulnerável a XSS, e um refresh token roubado daria acesso por muito tempo.',

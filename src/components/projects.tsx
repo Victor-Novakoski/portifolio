@@ -69,7 +69,7 @@ export function Projects() {
   return (
     <section className="stop-sec" id="projetos">
       <div className="wrap">
-        <SectionHead numeral="I" point="Ponto 1/6 · Inventário" title="Projetos" align="left">
+        <SectionHead stopId="projetos" title="Projetos">
           Feitos de ponta a ponta: API, banco, interface, testes e CI.
         </SectionHead>
         <div className="projects">

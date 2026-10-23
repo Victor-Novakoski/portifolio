@@ -7,7 +7,7 @@ export function Skills() {
   return (
     <section className="stop-sec" id="habilidades">
       <div className="wrap">
-        <SectionHead numeral="IV" point="Ponto 4/6 · Atributos" title="Habilidades">
+        <SectionHead stopId="habilidades" title="Habilidades">
           O que uso, para quê e onde dá para ver.
         </SectionHead>
         <div className="inv-wrap">
