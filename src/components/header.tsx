@@ -69,7 +69,9 @@ export function Header() {
         >
           <span className="pulse" aria-hidden="true" />
           <span className="state">{delivered ? 'Entregue' : 'Em rota'}</span>
-          <span className="where">· {where}</span>
+          <span className="where" key={where}>
+            · {where}
+          </span>
         </button>
         <button
           className="menu-btn"

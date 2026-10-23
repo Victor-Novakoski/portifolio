@@ -4,6 +4,7 @@ import { stops } from '@/data/stops'
 
 export type JourneyEvent = {
   id: number
+  stopId: string
   time: string
   text: string
   delivered?: boolean
@@ -26,7 +27,7 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
   const [startedAt] = useState(() => Date.now())
   const [current, setCurrent] = useState('inicio')
   const [visited, setVisited] = useState<ReadonlySet<string>>(() => new Set(['inicio']))
-  const [events, setEvents] = useState<JourneyEvent[]>(() => [{ id: 0, time: clock(), text: 'Saiu da origem' }])
+  const [events, setEvents] = useState<JourneyEvent[]>(() => [{ id: 0, stopId: 'inicio', time: clock(), text: 'Saiu da origem' }])
   const visitedRef = useRef(new Set(['inicio']))
 
   const arrive = useCallback((stopId: string) => {
@@ -39,7 +40,7 @@ export function JourneyProvider({ children }: { children: ReactNode }) {
     const delivered = stopId === 'contato'
     setEvents(list => [
       ...list,
-      { id: list.length, time: clock(), text: delivered ? 'Entregue no contato' : `Chegou em ${label}`, delivered },
+      { id: list.length, stopId, time: clock(), text: delivered ? 'Entregue no contato' : `Chegou em ${label}`, delivered },
     ])
   }, [])
 
