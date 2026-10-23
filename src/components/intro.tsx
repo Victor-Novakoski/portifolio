@@ -1,13 +1,34 @@
 import { useEffect, useRef, useState } from 'react'
 
-import { endIntro, introIsRunning } from '@/lib/motion'
+import { endIntro, introIsRunning, LAND_EVENT } from '@/lib/motion'
+import { makeSpark, stepSparks, type Spark } from '@/lib/sparks'
 
-type Spark = { x: number; y: number; vx: number; vy: number; life: number; max: number; size: number }
-
-const SPARK_COUNT = 46
 const SKIP_EVENTS = ['keydown', 'pointerdown', 'wheel', 'touchstart'] as const
+const TRAIL = 8
 
-// Abertura: o nome acende e solta faíscas. Qualquer tecla, toque ou rolagem encerra.
+// Linha do tempo da abertura, em ms (acompanha os atrasos do brasa.css).
+const KINDLE = { start: 650, duration: 1000 }
+const FLARE_AT = 1650
+const FLIGHT = { start: 1750, duration: 600 }
+const END_AT = 3000
+const HARD_STOP = 3600
+
+const easeOutCubic = (k: number) => 1 - Math.pow(1 - k, 3)
+const easeInOutCubic = (k: number) => (k < 0.5 ? 4 * k * k * k : 1 - Math.pow(-2 * k + 2, 3) / 2)
+
+type Point = { x: number; y: number }
+
+// Onde a brasa pousa: a primeira parada do trilho no desktop, ou o começo da barra de rota no celular.
+function landingPoint(): Point | null {
+  const stop = document.querySelector('.rail li:first-child .stop')?.getBoundingClientRect()
+  if (stop && stop.width > 0) return { x: stop.left + stop.width / 2, y: stop.top + stop.height / 2 }
+  const bar = document.querySelector('.routebar')?.getBoundingClientRect()
+  if (bar && bar.width > 0) return { x: bar.left + 4, y: bar.top + bar.height / 2 }
+  return null
+}
+
+// Abertura: uma faixa quente percorre o nome soltando faíscas, o nome explode em luz,
+// e a brasa sai do "I" de NOVAKOSKI e voa até a primeira parada da rota.
 export function Intro() {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [running, setRunning] = useState(introIsRunning)
@@ -18,9 +39,13 @@ export function Intro() {
     if (!running || !canvas || !ctx) return
 
     const sparks: Spark[] = []
-    let emitted = 0
+    const trail: Point[] = []
+    let flared = false
+    let landed = false
     let frame = 0
     let done = false
+    let from: Point | null = null
+    let to: Point | null = null
 
     const size = () => {
       const ratio = window.devicePixelRatio || 1
@@ -35,48 +60,83 @@ export function Intro() {
       ctx.clearRect(0, 0, canvas.width, canvas.height)
       endIntro()
       setRunning(false)
+      if (!landed) window.dispatchEvent(new Event(LAND_EVENT))
     }
 
     size()
     const surname = document.querySelector('.surname')
     const start = performance.now()
+
     const draw = (now: number) => {
       const t = now - start
-      if (surname && t > 1100 && t < 1800 && emitted < SPARK_COUNT) {
-        const box = surname.getBoundingClientRect()
-        for (let k = 0; k < 2 && emitted < SPARK_COUNT; k++, emitted++) {
-          sparks.push({
-            x: box.left + Math.random() * box.width,
-            y: box.top + box.height * (0.3 + Math.random() * 0.6),
-            vx: (Math.random() - 0.5) * 0.6,
-            vy: -(0.8 + Math.random() * 1.6),
-            life: 0,
-            max: 50 + Math.random() * 50,
-            size: 1 + Math.random() * 1.8,
-          })
+      const box = surname?.getBoundingClientRect()
+
+      // A frente da faixa quente solta duas faíscas por quadro.
+      if (box && t > KINDLE.start && t < KINDLE.start + KINDLE.duration) {
+        const front = box.left + easeOutCubic((t - KINDLE.start) / KINDLE.duration) * box.width
+        for (let k = 0; k < 2; k++) {
+          sparks.push(
+            makeSpark(front + (Math.random() - 0.5) * 12, box.top + box.height * (0.25 + Math.random() * 0.65), (Math.random() - 0.5) * 0.8, -(0.8 + Math.random() * 1.6), 50 + Math.random() * 40)
+          )
+        }
+      }
+
+      // Ignição: o nome todo explode em luz.
+      if (box && !flared && t >= FLARE_AT) {
+        flared = true
+        for (let k = 0; k < 24; k++) {
+          const angle = Math.random() * Math.PI * 2
+          const speed = 1 + Math.random() * 2.4
+          const heavy = Math.random() < 0.2
+          sparks.push(
+            makeSpark(box.left + Math.random() * box.width, box.top + box.height * (0.3 + Math.random() * 0.5), Math.cos(angle) * speed, Math.sin(angle) * speed - 0.8, 40 + Math.random() * 40, heavy ? 0.04 : 0)
+          )
         }
       }
 
       ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
-      ctx.globalCompositeOperation = 'lighter'
-      for (let i = sparks.length - 1; i >= 0; i--) {
-        const spark = sparks[i]
-        spark.life++
-        spark.x += spark.vx + Math.sin((spark.life + i) / 6) * 0.25
-        spark.y += spark.vy
-        spark.vy *= 0.992
-        const alpha = 1 - spark.life / spark.max
-        if (alpha <= 0) {
-          sparks.splice(i, 1)
-          continue
+
+      // O pacote: a brasa voa numa curva até a primeira parada, deixando rastro.
+      if (box && t >= FLIGHT.start && !landed) {
+        from ??= { x: box.right - box.height * 0.1, y: box.top + box.height * 0.45 }
+        to ??= landingPoint()
+        if (!to) {
+          landed = true
+        } else {
+          const k = Math.min(1, (t - FLIGHT.start) / FLIGHT.duration)
+          const e = easeInOutCubic(k)
+          const control = { x: (from.x + to.x) / 2, y: Math.min(from.y, to.y) - 140 }
+          const x = (1 - e) * (1 - e) * from.x + 2 * (1 - e) * e * control.x + e * e * to.x
+          const y = (1 - e) * (1 - e) * from.y + 2 * (1 - e) * e * control.y + e * e * to.y
+          trail.unshift({ x, y })
+          trail.length = Math.min(trail.length, TRAIL)
+          ctx.globalCompositeOperation = 'lighter'
+          trail.forEach((point, i) => {
+            const alpha = 1 - i / TRAIL
+            const radius = 7 * alpha + 1
+            const glow = ctx.createRadialGradient(point.x, point.y, 0, point.x, point.y, radius)
+            glow.addColorStop(0, `rgba(255,243,201,${(alpha * 0.9).toFixed(3)})`)
+            glow.addColorStop(0.5, `rgba(224,188,116,${(alpha * 0.5).toFixed(3)})`)
+            glow.addColorStop(1, 'rgba(199,162,93,0)')
+            ctx.fillStyle = glow
+            ctx.beginPath()
+            ctx.arc(point.x, point.y, radius, 0, Math.PI * 2)
+            ctx.fill()
+          })
+          ctx.globalCompositeOperation = 'source-over'
+          if (k >= 1) {
+            landed = true
+            window.dispatchEvent(new Event(LAND_EVENT))
+            for (let n = 0; n < 10; n++) {
+              sparks.push(makeSpark(to.x, to.y, 0.2 + Math.random() * 1.4, -(0.6 + Math.random() * 1.6), 30 + Math.random() * 10, 0.03))
+            }
+          }
         }
-        ctx.fillStyle = `rgba(240,196,120,${alpha.toFixed(3)})`
-        ctx.beginPath()
-        ctx.arc(spark.x, spark.y, spark.size, 0, Math.PI * 2)
-        ctx.fill()
       }
 
-      if (t < 2900 || sparks.length) frame = requestAnimationFrame(draw)
+      stepSparks(ctx, sparks)
+
+      if (t < HARD_STOP && (t < END_AT || sparks.length)) frame = requestAnimationFrame(draw)
       else finish()
     }
     frame = requestAnimationFrame(draw)
