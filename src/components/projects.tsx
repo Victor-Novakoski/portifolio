@@ -53,7 +53,7 @@ function ProjectCard({ project }: { project: Project }) {
           ))}
         </ul>
         <div className="item-links">
-          {project.links.length === 0 && <span className="off">repositório em breve</span>}
+          {project.links.length === 0 && <span className="off">código sob pedido</span>}
           {project.links.map(link => (
             <a key={link.href} href={link.href} target="_blank" rel="noreferrer">
               {link.label} ↗
