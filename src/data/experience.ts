@@ -1,49 +1,45 @@
-export type ExperienceMilestone = {
+// Galileu: só cargo, período e stack.
+export type Region = {
   id: string
-  when: string
+  region: string
   title: string
   org: string
-  summary: string
-  highlights?: string[]
-  kind?: 'now' | 'army'
+  when: string
+  summary?: string
+  now?: boolean
 }
 
-export const experienceMilestones: ExperienceMilestone[] = [
+export const regions: Region[] = [
   {
-    id: 'exp-galileu',
-    when: 'jun 2023 → hoje',
-    title: 'Desenvolvedor Full Stack',
-    org: 'Galileu Sistemas e Soluções',
-    summary:
-      'APIs REST em Go e front-ends para um sistema de logística e transporte usado em escala nacional.',
-    highlights: [
-      'APIs em Go com go-swagger, Viper e PostgreSQL',
-      'Regras de negócio configuráveis com scripts Starlark',
-      'Front-ends em Angular e numa plataforma interna low-code',
-    ],
-    kind: 'now',
-  },
-  {
-    id: 'exp-uninter',
-    when: 'mar 2026 → hoje',
-    title: 'Engenharia de Software',
-    org: 'Uninter',
-    summary: 'Bacharelado em andamento.',
-  },
-  {
-    id: 'exp-kenzie',
-    when: 'mai 2022 → mai 2023',
-    title: 'Desenvolvimento Web Full Stack',
-    org: 'Kenzie Academy Brasil',
-    summary: 'Um ano de front-end e back-end, mais a JStack (JavaScript, React e Node.js).',
-  },
-  {
-    id: 'exp-army',
-    when: 'mar 2020 → fev 2021',
+    id: 'exercito',
+    region: 'ponto de partida',
     title: 'Soldado',
     org: 'Exército Brasileiro',
-    summary:
-      '11 meses de treinamento militar, concluídos com certificado de excelência. A disciplina veio de lá.',
-    kind: 'army',
+    when: 'mar 2020 → fev 2021',
+    summary: '11 meses de serviço, com certificado de excelência.',
+  },
+  {
+    id: 'kenzie',
+    region: 'treinamento',
+    title: 'Desenvolvimento Web Full Stack',
+    org: 'Kenzie Academy Brasil',
+    when: 'mai 2022 → mai 2023',
+    summary: 'Um ano de front-end e back-end com JavaScript, React e Node.js.',
+  },
+  {
+    id: 'galileu',
+    region: 'região atual',
+    title: 'Desenvolvedor Full Stack',
+    org: 'Galileu Sistemas e Soluções',
+    when: 'jun 2023 → hoje',
+    summary: 'Go, PostgreSQL, Angular e go-swagger.',
+    now: true,
+  },
+  {
+    id: 'uninter',
+    region: 'em andamento',
+    title: 'Engenharia de Software',
+    org: 'Uninter',
+    when: 'mar 2026 → hoje',
   },
 ]
