@@ -1,4 +1,5 @@
 import { About } from '@/components/about'
+import { Bosses } from '@/components/bosses'
 import { CacaBugsCall } from '@/components/caca-bugs-call'
 import { Contact } from '@/components/contact'
 import { Experience } from '@/components/experience'
@@ -23,6 +24,7 @@ function Site() {
         <TitleScreen />
         <GameMenu resumeAt={null} />
         <Projects />
+        <Bosses />
         <Experience />
         <Skills />
         <About />
