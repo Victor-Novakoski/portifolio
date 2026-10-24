@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react'
 import { sections } from '@/data/sections'
 import { prefersReducedMotion } from '@/lib/motion'
 import { safeSet } from '@/lib/storage'
-
-export const LAST_SECTION_KEY = 'forja.secao'
+import { LAST_SECTION_KEY } from '@/lib/visit'
 
 // Seção no meio da tela: acende o título dela (com um tranco de câmera) e marca o link do cabeçalho.
 // Só a seção fica guardada, para o "Continuar em" de quem volta.

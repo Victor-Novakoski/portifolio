@@ -16,7 +16,7 @@ export function Bosses() {
   const onWin = useCallback((id: Boss['id']) => {
     setDefeated(prev => new Set(prev).add(id))
     // Um bug escapa da luta pouco depois da vitória.
-    window.setTimeout(() => window.dispatchEvent(new Event(STRAY_BUG_EVENT)), 3600)
+    window.setTimeout(() => window.dispatchEvent(new CustomEvent(STRAY_BUG_EVENT, { detail: 'luta' })), 3600)
   }, [])
 
   // Teclado da luta ativa: Espaço esquiva, segurar Enter carrega o golpe, Esc pausa.
