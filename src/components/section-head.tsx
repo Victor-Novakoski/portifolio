@@ -1,26 +1,14 @@
-import type { ReactNode } from 'react'
+import { sectionById } from '@/data/sections'
 
-import { stops } from '@/data/stops'
-
-type SectionHeadProps = {
-  stopId: string
-  title: string
-  children?: ReactNode
-}
-
-// O início não conta como parada: o sobrescrito vai de "Parada 1 de 6" a "Parada 6 de 6".
-const sectionStops = stops.filter(stop => stop.id !== 'inicio')
-
-export function SectionHead({ stopId, title, children }: SectionHeadProps) {
-  const position = sectionStops.findIndex(stop => stop.id === stopId) + 1
-
+export function SectionHead({ id, sub }: { id: string; sub?: string }) {
+  const section = sectionById(id)!
   return (
-    <div className="head">
-      <span className="point">
-        Parada {position} de {sectionStops.length}
-      </span>
-      <h2>{title}</h2>
-      {children && <p>{children}</p>}
-    </div>
+    <>
+      <h2 className="sec-h" id={`h-${id}`}>
+        {section.label}
+        <sup>{section.tag}</sup>
+      </h2>
+      {sub && <p className="sec-sub">{sub}</p>}
+    </>
   )
 }

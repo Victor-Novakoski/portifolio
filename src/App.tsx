@@ -1,37 +1,33 @@
 import { About } from '@/components/about'
-import { Bonfire } from '@/components/bonfire'
+import { CacaBugsCall } from '@/components/caca-bugs-call'
+import { Contact } from '@/components/contact'
+import { Experience } from '@/components/experience'
 import { Footer } from '@/components/footer'
+import { GameMenu } from '@/components/game-menu'
 import { Header } from '@/components/header'
-import { Hero } from '@/components/hero'
-import { Intro } from '@/components/intro'
-import { Journey } from '@/components/journey'
+import { HunterSymbol } from '@/components/icons'
 import { NotFound } from '@/components/not-found'
 import { Projects } from '@/components/projects'
-import { Rail } from '@/components/rail'
 import { Skills } from '@/components/skills'
-import { Trials } from '@/components/trials'
-import { JourneyProvider } from '@/hooks/use-journey'
-import { useRouteProgress } from '@/hooks/use-route-progress'
+import { TitleScreen } from '@/components/title-screen'
 
-function Route() {
-  useRouteProgress()
-
+function Site() {
   return (
     <>
+      <HunterSymbol />
       <a className="skip" href="#conteudo">
         Pular para o conteúdo
       </a>
-      <Intro />
       <Header />
-      <Rail />
       <main id="conteudo">
-        <Hero />
+        <TitleScreen />
+        <GameMenu resumeAt={null} />
         <Projects />
-        <Trials />
-        <Journey />
+        <Experience />
         <Skills />
         <About />
-        <Bonfire />
+        <CacaBugsCall best={0} />
+        <Contact />
       </main>
       <Footer />
     </>
@@ -40,10 +36,5 @@ function Route() {
 
 export function App() {
   if (window.location.pathname.replace(/\/+$/, '') !== '') return <NotFound />
-
-  return (
-    <JourneyProvider>
-      <Route />
-    </JourneyProvider>
-  )
+  return <Site />
 }
