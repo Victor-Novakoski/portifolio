@@ -8,7 +8,6 @@ import { Journey } from '@/components/journey'
 import { NotFound } from '@/components/not-found'
 import { Projects } from '@/components/projects'
 import { Rail } from '@/components/rail'
-import { Leg } from '@/components/section-head'
 import { Skills } from '@/components/skills'
 import { Trials } from '@/components/trials'
 import { JourneyProvider } from '@/hooks/use-journey'
@@ -27,15 +26,10 @@ function Route() {
       <Rail />
       <main id="conteudo">
         <Hero />
-        <Leg km={1} />
         <Projects />
-        <Leg km={2} />
         <Trials />
-        <Leg km={3} />
         <Journey />
-        <Leg km={4} />
         <Skills />
-        <Leg km={5} />
         <About />
         <Bonfire />
       </main>

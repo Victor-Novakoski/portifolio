@@ -4,6 +4,7 @@ import { stops } from '@/data/stops'
 import { useJourney } from '@/hooks/use-journey'
 import { LAND_EVENT, prefersReducedMotion } from '@/lib/motion'
 import { makeSpark, stepSparks, type Spark } from '@/lib/sparks'
+import { formatElapsed } from '@/lib/visits'
 
 const IGNITE_MS = 520
 const FRESH_MS = 1600
@@ -14,9 +15,9 @@ const STOP_X = 27.5
 type Pulse = { id: string; kind: 'ignite' | 'bump' } | null
 
 // Trilho de brasas (desktop) e barra de rota (celular). As duas leem a posição de --route/--p;
-// cada primeira chegada acende a parada com faíscas e mostra a hora do evento, como no Rastreia.
+// cada primeira chegada acende a parada com faíscas e mostra o tempo desde o início da visita, como no Rastreia.
 export function Rail() {
-  const { current, visited, events } = useJourney()
+  const { current, visited, events, startedAt } = useJourney()
   const [pulse, setPulse] = useState<Pulse>(null)
   const [fresh, setFresh] = useState<string | null>(null)
   const [wave, setWave] = useState(false)
@@ -118,7 +119,7 @@ export function Rail() {
           />
         ))}
       </div>
-      <nav className={['rail', delivered && 'delivered', wave && 'wave'].filter(Boolean).join(' ')} aria-label="Trilho de brasas">
+      <nav className={['rail', delivered && 'delivered', wave && 'wave'].filter(Boolean).join(' ')} aria-label="Progresso da página">
         <span className="line" />
         <span className="line-lit" />
         <canvas className="sparks" ref={canvasRef} aria-hidden="true" />
@@ -132,7 +133,8 @@ export function Rail() {
             ]
               .filter(Boolean)
               .join(' ')
-            const time = events.find(event => event.stopId === stop.id)?.time
+            const event = events.find(item => item.stopId === stop.id)
+            const time = event && formatElapsed(event.at - startedAt)
             return (
               <li key={stop.id} style={{ top: `${(i / (stops.length - 1)) * 100}%`, '--i': i } as CSSProperties}>
                 <a href={`#${stop.id}`} className={classes || undefined} aria-current={current === stop.id ? 'true' : undefined}>

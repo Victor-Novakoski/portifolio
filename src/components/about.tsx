@@ -5,7 +5,7 @@ export function About() {
   return (
     <section className="stop-sec" id="sobre">
       <div className="wrap">
-        <SectionHead numeral="V" point="Ponto 5/6 · Origem" title="Sobre" align="left" />
+        <SectionHead stopId="sobre" title="Sobre" />
         <div className="about">
           <div>
             <p className="big">

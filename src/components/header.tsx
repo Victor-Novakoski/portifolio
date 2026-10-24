@@ -4,17 +4,29 @@ import { DownloadIcon } from '@/components/icons'
 import { profile } from '@/data/profile'
 import { navStops, stops } from '@/data/stops'
 import { useJourney } from '@/hooks/use-journey'
+import { formatElapsed } from '@/lib/visits'
+
+const WELCOME_MS = 4000
 
 export function Header() {
-  const { current, events, startedAt } = useJourney()
+  const { current, events, startedAt, previous } = useJourney()
   const [menuOpen, setMenuOpen] = useState(false)
   const [logOpen, setLogOpen] = useState(false)
+  const [welcome, setWelcome] = useState(previous !== null)
   const trackBtnRef = useRef<HTMLButtonElement>(null)
   const logRef = useRef<HTMLDivElement>(null)
   const listRef = useRef<HTMLOListElement>(null)
 
   const delivered = current === 'contato'
   const where = stops.find(stop => stop.id === current)?.label ?? ''
+  const state = delivered ? 'Entregue' : welcome ? 'De volta' : 'Em rota'
+
+  // Quem volta vê "De volta" no selo por alguns segundos.
+  useEffect(() => {
+    if (!welcome) return
+    const timer = window.setTimeout(() => setWelcome(false), WELCOME_MS)
+    return () => window.clearTimeout(timer)
+  }, [welcome])
 
   useEffect(() => {
     if (!logOpen) return
@@ -44,7 +56,8 @@ export function Header() {
     <header className="top">
       <div className="wrap">
         <a className="brand" href="#inicio">
-          {profile.forename.toUpperCase()} <b>{profile.surname.toUpperCase()}</b>
+          <span className="fore">{profile.forename.toUpperCase()} </span>
+          <b>{profile.surname.toUpperCase()}</b>
         </a>
         <nav className={menuOpen ? 'main open' : 'main'} id="menu" aria-label="Seções">
           {navStops.map(stop => (
@@ -64,11 +77,13 @@ export function Header() {
           type="button"
           aria-expanded={logOpen}
           aria-controls="tracklog"
-          aria-label={`Rastreie esta visita: ${delivered ? 'entregue' : `em rota, ${where}`}`}
+          aria-label={`${state} · ${where}: abrir o rastreio desta visita`}
           onClick={() => setLogOpen(open => !open)}
         >
           <span className="pulse" aria-hidden="true" />
-          <span className="state">{delivered ? 'Entregue' : 'Em rota'}</span>
+          <span className="state" key={state}>
+            {state}
+          </span>
           <span className="where" key={where}>
             · {where}
           </span>
@@ -82,9 +97,10 @@ export function Header() {
         >
           Menu
         </button>
-        <a className="cv" href={profile.cvUrl} download aria-label="Baixar currículo (PDF)">
+        <a className="cv" href={profile.cvUrl} download aria-label="CV: baixar currículo em PDF">
           <DownloadIcon />
           <span className="label">Currículo</span>
+          <span className="label-short">CV</span>
         </a>
         <div className="tracklog" id="tracklog" ref={logRef} hidden={!logOpen}>
           <header>
@@ -94,7 +110,9 @@ export function Header() {
           <ol ref={listRef} aria-live="polite">
             {events.map(event => (
               <li key={event.id} className={event.delivered ? 'delivered' : undefined}>
-                <time>{event.time}</time>
+                <time dateTime={new Date(event.at).toISOString()} title={new Date(event.at).toLocaleTimeString('pt-BR')}>
+                  {formatElapsed(event.at - startedAt)}
+                </time>
                 <i aria-hidden="true" />
                 <span>{event.text}</span>
               </li>

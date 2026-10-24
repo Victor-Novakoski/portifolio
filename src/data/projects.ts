@@ -32,7 +32,7 @@ export const projects: Project[] = [
     status: 'soon',
     glyph: 'pin',
     image: rastreiaShot,
-    imageAlt: 'Painel da transportadora no Rastreia',
+    imageAlt: 'Página inicial do Rastreia, com uma entrega de exemplo em rota',
     sheet: [
       { label: 'api', value: 'Go · chi · pgx/sqlc · JWT' },
       { label: 'tempo real', value: 'WebSocket · Redis pub/sub' },
