@@ -26,7 +26,8 @@ export function CacaBugsHost({ onBest }: { onBest(score: number): void }) {
         onBest={onBest}
         onClose={() => {
           setOpen(false)
-          opener?.focus()
+          // Depois que o <dialog> fecha, o foco volta para quem abriu o jogo.
+          window.setTimeout(() => opener?.focus({ preventScroll: true }), 0)
         }}
       />
     </Suspense>
