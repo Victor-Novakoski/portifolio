@@ -1,32 +1,14 @@
-import type { ReactNode } from 'react'
+import { sectionById } from '@/data/sections'
 
-type SectionHeadProps = {
-  numeral: string
-  point: string
-  title: string
-  align?: 'left' | 'right'
-  children?: ReactNode
-}
-
-// "Ponto x/6": cada seção é uma parada da rota, com o numeral romano vazado ao fundo.
-export function SectionHead({ numeral, point, title, align = 'right', children }: SectionHeadProps) {
+export function SectionHead({ id, sub }: { id: string; sub?: string }) {
+  const section = sectionById(id)!
   return (
-    <div className={align === 'left' ? 'head left' : 'head'}>
-      <span className="numeral" aria-hidden="true">
-        {numeral}
-      </span>
-      <span className="point">{point}</span>
-      <h2>{title}</h2>
-      {children && <p>{children}</p>}
-    </div>
-  )
-}
-
-export function Leg({ km }: { km: number }) {
-  return (
-    <div className="leg" aria-hidden="true">
-      <i />
-      km {km}
-    </div>
+    <>
+      <h2 className="sec-h" id={`h-${id}`}>
+        {section.label}
+        <sup>{section.tag}</sup>
+      </h2>
+      {sub && <p className="sec-sub">{sub}</p>}
+    </>
   )
 }

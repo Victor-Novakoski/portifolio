@@ -1,37 +1,39 @@
 export const profile = {
-  forename: 'Victor',
-  surname: 'Novakoski',
+  name: 'Victor Novakoski',
   role: 'Desenvolvedor Full Stack',
-  stack: ['go', 'react', 'typescript', 'postgresql'],
-  lede: 'Desenvolvedor Full Stack. Há mais de 3 anos construo APIs em Go e interfaces em React para um sistema de logística usado em escala nacional, do banco de dados à tela.',
-  status: [
-    { key: 'status', value: 'disponível para vagas' },
-    { key: 'base', value: 'Colombo, PR · remoto' },
-    { key: 'xp', value: '3+ anos · logística' },
-    { key: 'estuda', value: 'Eng. de Software' },
-  ],
-  currentProject: {
-    label: 'Rastreia: rastreio de entregas em tempo real, em Go e React',
-    href: '#projetos',
+  stack: ['Go', 'React', 'TypeScript', 'PostgreSQL'],
+  status: {
+    base: 'Colombo, PR · remoto',
+    availability: 'disponível para vagas',
+    summary: 'Há mais de 3 anos construo APIs em Go e interfaces em React, do banco à tela.',
   },
   email: 'novakoski2021@gmail.com',
   linkedin: 'https://www.linkedin.com/in/victor-novakoski-6b0163240/',
   github: 'https://github.com/Victor-Novakoski',
   cvUrl: '/curriculo-victor-novakoski.pdf',
-  about: {
-    headline: [
-      { text: 'Gosto de entender o ' },
-      { text: 'negócio', highlight: true },
-      { text: ' por trás do código e de resolver o problema ' },
-      { text: 'de ponta a ponta', highlight: true },
-      { text: ', do banco à tela.' },
-    ],
-    body: 'Moro em Colombo, no Paraná, e trabalho remoto. No dia a dia, construo APIs em Go e interfaces para um sistema logístico com regras complexas e muito dado. Fora dele, mantenho projetos próprios para testar o que não cabe no trabalho.',
-    principles: [
-      'Arquitetura sustentável, do back-end ao front-end',
-      'Integração previsível com APIs e dados críticos',
-      'Evolução incremental, com baixo risco',
+  hatNote:
+    'Esse chapéu existe de verdade: é a primeira peça do cosplay de caçador que o Victor está montando, junto com as armas impressas em 3D.',
+}
+
+export const about = {
+  paragraphs: [
+    'Persistente, nerd e artesão. Jogo soulslike pelo mesmo motivo que gosto de bug difícil: a vitória vale porque custou. Errar, entender e tentar de novo é o meu método, no código e fora dele.',
+    'Fora do editor, construo coisas com as mãos, quase sempre para dar de presente. A última prop que fiz foi a bazuca da Mina Ashiro, de Kaiju No. 8.',
+    'No guarda-roupa tenho os cosplays do Chuuya (Bungo Stray Dogs) e do Sabito (Demon Slayer), e quero mais. O próximo passo é uma máquina de costura, para aprender a costurar os meus. Gosto de eventos geek; se você também vai, me conta qual.',
+  ],
+  crafts: [
+    'Bazuca da Mina Ashiro, de presente',
+    'Rosa de ferro, de presente',
+    'Origami',
+    'Arte com limpador de cachimbo',
+    'Amigurumi de crochê',
+  ],
+  cosplay: {
+    title: 'Em construção · cosplay de caçador de Bloodborne',
+    parts: [
+      { done: true, text: 'Armas impressas em 3D, por um amigo' },
+      { done: true, text: 'Chapéu do caçador, o mesmo da tela de título' },
+      { done: false, text: 'Casaco e o resto do traje, que depende de aprender a costurar' },
     ],
   },
-  contactNote: 'Aberto a vagas full stack ou back-end, inclusive remotas. Respondo por e-mail ou LinkedIn.',
 }

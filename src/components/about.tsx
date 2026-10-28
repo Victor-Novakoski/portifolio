@@ -1,24 +1,34 @@
 import { SectionHead } from '@/components/section-head'
-import { profile } from '@/data/profile'
+import { about } from '@/data/profile'
 
 export function About() {
   return (
-    <section className="stop-sec" id="sobre">
-      <div className="wrap">
-        <SectionHead numeral="V" point="Ponto 5/6 · Origem" title="Sobre" align="left" />
+    <section className="block wrap" id="sobre" aria-labelledby="h-sobre">
+      <div className="inner">
+        <SectionHead id="sobre" />
         <div className="about">
-          <div>
-            <p className="big">
-              {profile.about.headline.map(part => (part.highlight ? <em key={part.text}>{part.text}</em> : part.text))}
-            </p>
+          <div className="txt">
+            {about.paragraphs.map(p => (
+              <p key={p}>{p}</p>
+            ))}
           </div>
-          <div>
-            <p>{profile.about.body}</p>
-            <ul className="principles">
-              {profile.about.principles.map((principle, i) => (
-                <li key={principle}>
-                  <b>{String(i + 1).padStart(2, '0')}</b>
-                  <span>{principle}</span>
+          <div className="card offc">
+            <h3>Fora do código</h3>
+            <span className="tag">Feito à mão</span>
+            <ul className="crafts">
+              {about.crafts.map(c => (
+                <li key={c}>{c}</li>
+              ))}
+            </ul>
+            <span className="tag">{about.cosplay.title}</span>
+            <ul className="real">
+              {about.cosplay.parts.map(part => (
+                <li key={part.text} className={part.done ? undefined : 'todo'}>
+                  <b aria-hidden="true">{part.done ? '✓' : '○'}</b>
+                  <span>
+                    <span className="sr">{part.done ? 'Pronto: ' : 'Falta: '}</span>
+                    {part.text}
+                  </span>
                 </li>
               ))}
             </ul>

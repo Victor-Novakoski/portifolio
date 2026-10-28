@@ -4,18 +4,19 @@
 
 Portfólio de Victor Novakoski, desenvolvedor full stack (Go, React, TypeScript e PostgreSQL).
 
-A visita funciona como uma entrega em rota: cada seção é um ponto de parada, o selo "Rastreie esta visita" mostra o histórico com horário, e a rota termina na fogueira do contato. É a mesma ideia do Rastreia, o projeto de rastreio de entregas em tempo real que aparece no site.
+O tema é a "Forja do Caçador": a tela de título tem um caçador com chapéu e lanterna (o chapéu é a primeira peça de um cosplay real e dá para arremessar), cada desafio técnico é uma luta curta contra um chefe e o mini game Caça-bugs fecha a visita antes do contato. Quem só quer ler tem "Ler sem lutar", e tudo funciona com teclado e com movimento reduzido.
 
 ## O que tem no site
 
-- Projetos: Rastreia e Panda Cooking, com ficha técnica e links
-- Desafios técnicos resolvidos, com um diagrama de evento entre instâncias da API
-- Experiência, habilidades e onde cada uma foi usada
+- Projetos: Rastreia e Panda Cooking (com uma demo da busca por trigramas), mais dois estudos
+- Desafios técnicos como lutas contra chefes: cada acerto revela o risco, a solução e o resultado
+- Experiência, habilidades e um Sobre com o que faço fora do código
+- Mini game Caça-bugs, carregado só quando alguém clica em jogar
 - Contato e currículo em PDF
 
 ## Stack
 
-React 19, TypeScript e Vite, com CSS puro (sem framework de UI nem biblioteca de animação). As animações respeitam `prefers-reduced-motion`.
+React 19, TypeScript e Vite, com CSS puro e canvas 2D (sem framework de UI, motor de jogo nem biblioteca de animação). As animações respeitam `prefers-reduced-motion`, e o botão Pausar do cabeçalho para todas.
 
 ## Rodando localmente
 
@@ -34,8 +35,10 @@ Pensado para a Vercel. O `vercel.json` manda qualquer rota para o `index.html` (
 
 ```
 src/
-  data/        conteúdo do site (perfil, projetos, desafios, experiência, habilidades)
+  data/        conteúdo do site (perfil, projetos, chefes, experiência, habilidades, seções)
   components/  uma seção por arquivo
-  hooks/       jornada da visita, progresso da rota e revelações
-  styles/      brasa.css, o tema
+  scene/       canvas da tela de título (céu, chapéu e lanterna)
+  game/        lógica das lutas e o mini game (caca-bugs/, num chunk separado)
+  lib/         pausa global, armazenamento seguro, trigramas e utilitários
+  styles/      forja.css, o tema
 ```
