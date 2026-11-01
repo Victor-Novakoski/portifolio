@@ -68,6 +68,13 @@ const itemPaths: Record<ProjectIcon, ReactNode> = {
       <path d="M27 16v12M21 22h12" stroke="#A9D6E5" />
     </>
   ),
+  camera: (
+    <>
+      <path d="M8 16h8l3-5h10l3 5h8v22H8z" />
+      <circle cx="24" cy="26" r="7" />
+      <circle cx="24" cy="26" r="3" fill="#D2384F" stroke="none" />
+    </>
+  ),
   gear: (
     <>
       <circle cx="24" cy="24" r="7" />
