@@ -1,6 +1,7 @@
 import rastreiaShot from '@/assets/projects/rastreia.webp'
+import revelacaoShot from '@/assets/projects/revelacao.webp'
 
-export type ProjectIcon = 'lantern' | 'grimoire' | 'gear' | 'scroll'
+export type ProjectIcon = 'lantern' | 'grimoire' | 'camera' | 'gear' | 'scroll'
 
 export type Project = {
   id: string
@@ -8,6 +9,8 @@ export type Project = {
   kind: string
   icon: ProjectIcon
   main?: boolean
+  // Ocupa a linha inteira no desktop, com o print ao lado do texto.
+  wide?: boolean
   summary: string
   flavor: string
   sheet: Array<{ label: string; value: string }>
@@ -59,6 +62,28 @@ export const projects: Project[] = [
       { label: 'Front-end no GitHub', href: 'https://github.com/Victor-Novakoski/panda-cooking-front' },
       { label: 'API em Go no GitHub', href: 'https://github.com/Victor-Novakoski/panda-cooking-go-api' },
     ],
+  },
+  {
+    id: 'revelacao',
+    name: 'Revelação',
+    kind: 'Item raro · jogo para navegador',
+    icon: 'camera',
+    main: true,
+    wide: true,
+    summary: 'Jogo de terror de tensão: você revela fotos em São Paulo, 1957, e uma figura aparece nelas, cada vez mais perto.',
+    flavor: 'Câmera amaldiçoada achada no fundo de uma loja. Toda foto que sai dela mostra alguém que não estava lá.',
+    shot: {
+      src: revelacaoShot,
+      alt: 'A bandeja de revelação sob a luz vermelha, com a foto ainda surgindo no papel',
+      caption: 'a foto surgindo na bandeja',
+    },
+    sheet: [
+      { label: 'Jogo', value: 'React + TypeScript, Three.js (R3F)' },
+      { label: 'Revelação', value: 'Shader GLSL que reage ao balanço da bandeja' },
+      { label: 'Som', value: 'Tone.js, tudo sintetizado no navegador' },
+      { label: 'Fotos', value: 'CLI em Go, acervo em domínio público' },
+    ],
+    links: [{ label: 'Código no GitHub', href: 'https://github.com/Victor-Novakoski/revelacao' }],
   },
   {
     id: 'motors-shop',

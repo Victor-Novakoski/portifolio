@@ -95,7 +95,7 @@ section.block{padding-block:56px;border-top:1px solid var(--line);scroll-margin-
 
 /* Projetos: cards de item */
 .inv{display:grid;gap:14px}
-@media (min-width:860px){.inv{grid-template-columns:1fr 1fr}}
+@media (min-width:860px){.inv{grid-template-columns:1fr 1fr}.item.wide{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;column-gap:28px;align-content:start}.item.wide>*{grid-column:1}.item.wide>.shot{grid-column:2;grid-row:1/span 6;align-self:start;margin:0}}
 .ih{display:flex;gap:14px;align-items:center;margin-bottom:6px}
 .ico{flex:none;width:56px;height:56px;display:grid;place-items:center;background:radial-gradient(circle at 50% 40%,#221F2B,#121017);border:1px solid var(--line-2);border-radius:3px}
 .main .ico{border-color:var(--gold);box-shadow:0 0 14px rgba(227,193,122,.15)}
