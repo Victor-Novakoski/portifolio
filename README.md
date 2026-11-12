@@ -4,11 +4,13 @@
 
 Portfólio de Victor Novakoski, desenvolvedor full stack (Go, React, TypeScript e PostgreSQL).
 
+**No ar:** https://portifolio-victor-novakoski.vercel.app
+
 O tema é a "Forja do Caçador": a tela de título tem um caçador com chapéu e lanterna (o chapéu é a primeira peça de um cosplay real e dá para arremessar), cada desafio técnico é uma luta curta contra um chefe e o mini game Caça-bugs fecha a visita antes do contato. Quem só quer ler tem "Ler sem lutar", e tudo funciona com teclado e com movimento reduzido.
 
 ## O que tem no site
 
-- Projetos: Rastreia e Panda Cooking (com uma demo da busca por trigramas), mais dois estudos
+- Projetos: Rastreia, Panda Cooking (com uma demo da busca por trigramas) e o jogo Revelação, mais dois estudos
 - Desafios técnicos como lutas contra chefes: cada acerto revela o risco, a solução e o resultado
 - Experiência, habilidades e um Sobre com o que faço fora do código
 - Mini game Caça-bugs, carregado só quando alguém clica em jogar
@@ -31,14 +33,15 @@ yarn build      # checa os tipos e gera dist/
 
 Pensado para a Vercel. O `vercel.json` manda qualquer rota para o `index.html` (rotas desconhecidas mostram a página 404 do app). O endereço usado no canonical e nas tags de compartilhamento vem de `VERCEL_PROJECT_PRODUCTION_URL`, ou de `SITE_URL` se for definido.
 
+## Decisões principais
+
+- Conteúdo primeiro: nome, cargo, stack e currículo aparecem na primeira tela do celular, e todo jogo tem um atalho para quem só quer ler.
+- A lógica do canvas, das lutas e do mini game fica em módulos TypeScript imperativos; o React cuida da estrutura e do texto.
+- O mini game só baixa quando alguém pede para jogar.
+- Quem volta vê só "Continuar em <seção>", sem horário nem tempo da visita anterior.
+
+O porquê de cada uma está em [docs/decisoes/](docs/decisoes/), e o mapa dos docs em [docs/INDEX.md](docs/INDEX.md).
+
 ## Estrutura
 
-```
-src/
-  data/        conteúdo do site (perfil, projetos, chefes, experiência, habilidades, seções)
-  components/  uma seção por arquivo
-  scene/       canvas da tela de título (céu, chapéu e lanterna)
-  game/        lógica das lutas e o mini game (caca-bugs/, num chunk separado)
-  lib/         pausa global, armazenamento seguro, trigramas e utilitários
-  styles/      forja.css, o tema
-```
+Visão geral das pastas e dos fluxos em [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md). Produto e design em [docs/PRD.md](docs/PRD.md) e [docs/DESIGN.md](docs/DESIGN.md).
