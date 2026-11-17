@@ -8,7 +8,7 @@ export const profile = {
     summary: 'Há mais de 3 anos construo APIs em Go e interfaces em React, do banco à tela.',
   },
   email: 'novakoski2021@gmail.com',
-  linkedin: 'https://www.linkedin.com/in/victor-novakoski-6b0163240/',
+  linkedin: 'https://www.linkedin.com/in/victor-novakoski/',
   github: 'https://github.com/Victor-Novakoski',
   cvUrl: '/curriculo-victor-novakoski.pdf',
   hatNote:
