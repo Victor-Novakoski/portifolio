@@ -58,6 +58,7 @@ export const projects: Project[] = [
       { label: 'Segurança', value: 'Trivy e gitleaks no pipeline' },
     ],
     links: [
+      { label: 'Site no ar', href: 'https://pandacooking.vercel.app' },
       { label: 'Front-end no GitHub', href: 'https://github.com/Victor-Novakoski/panda-cooking-front' },
       { label: 'API em Go no GitHub', href: 'https://github.com/Victor-Novakoski/panda-cooking-go-api' },
     ],
