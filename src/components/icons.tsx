@@ -81,18 +81,6 @@ const itemPaths: Record<ProjectIcon, ReactNode> = {
       <circle cx="24" cy="26" r="3" fill="#E0505C" stroke="none" />
     </>
   ),
-  gear: (
-    <>
-      <circle cx="24" cy="24" r="7" />
-      <circle cx="24" cy="24" r="14" strokeWidth="5" strokeDasharray="5 4" />
-    </>
-  ),
-  scroll: (
-    <>
-      <path d="M12 10h24v28H12z" />
-      <path d="M9 10a3 3 0 0 1 6 0M33 38a3 3 0 0 0 6 0M17 18h14M17 24h14M17 30h9" />
-    </>
-  ),
 }
 
 export function ItemIcon({ icon }: { icon: ProjectIcon }) {

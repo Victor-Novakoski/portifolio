@@ -5,7 +5,7 @@ export const profile = {
   status: {
     base: 'Colombo, PR · remoto',
     availability: 'disponível para vagas',
-    summary: 'Há mais de 3 anos construo APIs em Go e interfaces em React, do banco à tela.',
+    summary: 'Há mais de 3 anos no full stack: APIs em Go e front-end com um framework interno no trabalho, React nos meus projetos.',
   },
   email: 'novakoski2021@gmail.com',
   linkedin: 'https://www.linkedin.com/in/victor-novakoski/',

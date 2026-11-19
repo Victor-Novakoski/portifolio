@@ -114,9 +114,6 @@ section.block{padding-block:72px;border-top:1px solid var(--line);scroll-margin-
 .main .ico{border-color:var(--gold);box-shadow:0 0 16px rgba(240,180,76,.14)}
 .ico svg{width:32px;height:32px}
 .item h3{font-size:2.3rem;line-height:.9;margin:6px 0 0}
-.item.study{padding:16px 18px}
-.item.study h3{font-size:1.6rem}
-.item.study .ico{width:44px;height:44px}
 .item .flavor{font-style:italic;color:var(--muted);border-left:2px solid var(--line-2);padding-left:12px;margin:12px 0 16px}
 .item dl{display:grid;grid-template-columns:auto 1fr;margin:0 0 16px;font-size:.95rem;border-top:1px solid var(--line)}
 .item dt{font:500 .7rem/1.4 var(--f-mono);color:var(--muted);letter-spacing:.08em;text-transform:uppercase;padding:9px 14px 9px 0;border-bottom:1px solid var(--line)}
