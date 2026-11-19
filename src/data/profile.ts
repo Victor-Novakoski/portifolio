@@ -8,11 +8,9 @@ export const profile = {
     summary: 'Há mais de 3 anos construo APIs em Go e interfaces em React, do banco à tela.',
   },
   email: 'novakoski2021@gmail.com',
-  linkedin: 'https://www.linkedin.com/in/victor-novakoski-6b0163240/',
+  linkedin: 'https://www.linkedin.com/in/victor-novakoski/',
   github: 'https://github.com/Victor-Novakoski',
   cvUrl: '/curriculo-victor-novakoski.pdf',
-  hatNote:
-    'Esse chapéu existe de verdade: é a primeira peça do cosplay de caçador que o Victor está montando, junto com as armas impressas em 3D.',
 }
 
 export const about = {
@@ -32,7 +30,7 @@ export const about = {
     title: 'Em construção · cosplay de caçador de Bloodborne',
     parts: [
       { done: true, text: 'Armas impressas em 3D, por um amigo' },
-      { done: true, text: 'Chapéu do caçador, o mesmo da tela de título' },
+      { done: true, text: 'Chapéu do caçador' },
       { done: false, text: 'Casaco e o resto do traje, que depende de aprender a costurar' },
     ],
   },

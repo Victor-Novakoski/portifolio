@@ -115,7 +115,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     g.bugs.push({ x, y, vx: 0, vy: 0, r: type === 's' ? 22 : 15, type, ack: 0, thrown: 0, w: rnd(0, 6) })
   }
 
-  const text = (g: Game, x: number, y: number, s: string, c = '#E3C17A') => g.fx.push({ k: 't', x, y, s, c, l: 50 })
+  const text = (g: Game, x: number, y: number, s: string, c = '#F0B44C') => g.fx.push({ k: 't', x, y, s, c, l: 50 })
   function burst(g: Game, x: number, y: number, c: string, n: number) {
     for (let i = 0; i < n; i++) g.parts.push({ x, y, vx: rnd(-5, 5), vy: rnd(-8, -2), c, l: rnd(40, 70), s: rnd(2, 5) })
   }
@@ -134,7 +134,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     g.score += pts
     g.kills++
     text(g, b.x, b.y - 10, `${how ? `${how} ` : ''}+${pts}${g.combo > 1 ? ` x${Math.min(g.combo, 5)}` : ''}`)
-    burst(g, b.x, b.y, b.type === 'a' ? '#A9D6E5' : b.type === 's' ? '#A8A1B3' : '#D2384F', 8)
+    burst(g, b.x, b.y, b.type === 'a' ? '#A9D6E5' : b.type === 's' ? '#9C978E' : '#E0505C', 8)
   }
 
   function hit(g: Game, b: Bug) {
@@ -143,7 +143,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       remove(g.bugs, b)
       if (g.held === b) g.held = null
       g.score += 5
-      text(g, b.x, b.y - 12, 'DIVIDIU', '#A8A1B3')
+      text(g, b.x, b.y - 12, 'DIVIDIU', '#9C978E')
       for (let k = -1; k <= 1; k += 2) g.bugs.push({ x: b.x + k * 8, y: b.y, vx: k * 7, vy: rnd(-3, 3), r: 13, type: 'n', ack: 0, thrown: 0, w: 0 })
       return
     }
@@ -260,7 +260,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       b.w += 0.2 * f
       if (b.ack > 0) {
         b.ack -= dt
-        if (b.ack <= 0) text(g, b.x, b.y - 12, 'SEM ACK', '#A8A1B3')
+        if (b.ack <= 0) text(g, b.x, b.y - 12, 'SEM ACK', '#9C978E')
       }
       if (g.held === b) {
         b.vx = (a.x - b.x) * 0.4
@@ -283,9 +283,9 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
           } else {
             remove(g.bugs, b)
             c.hp--
-            burst(g, c.x, c.y, '#D2384F', 10)
+            burst(g, c.x, c.y, '#E0505C', 10)
             if (!reduce) g.shake = 8
-            text(g, c.x, c.y - 44, 'PRODUÇÃO -1', '#E8566B')
+            text(g, c.x, c.y - 44, 'PRODUÇÃO -1', '#E0505C')
             on.say(`A Produção foi atingida. Restam ${c.hp}.`)
             if (c.hp <= 0) return end(g)
             return
@@ -363,11 +363,11 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     c.translate(b.x, b.y)
     c.rotate(Math.atan2(b.vy, b.vx) + Math.PI / 2)
     if (b.type === 's') {
-      c.globalAlpha = 0.3; c.fillStyle = '#A8A1B3'
+      c.globalAlpha = 0.3; c.fillStyle = '#9C978E'
       c.beginPath(); c.ellipse(-7, 3, b.r * 0.7, b.r, 0, 0, TAU); c.ellipse(7, -3, b.r * 0.7, b.r, 0, 0, TAU); c.fill()
       c.globalAlpha = 1
     }
-    c.strokeStyle = '#EDE7DC'; c.lineWidth = 1.5
+    c.strokeStyle = '#E4E0D8'; c.lineWidth = 1.5
     for (let k = -1; k <= 1; k++) {
       c.beginPath()
       c.moveTo(-b.r * 0.6, k * b.r * 0.45); c.lineTo(-b.r * 1.15, k * b.r * 0.55 + legs * k)
@@ -375,9 +375,9 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       c.stroke()
     }
     c.globalAlpha = b.type === 'a' ? (b.ack > 0 ? 1 : 0.6) : 1
-    c.fillStyle = b.type === 'a' ? '#A9D6E5' : b.type === 's' ? '#6E6680' : '#D2384F'
+    c.fillStyle = b.type === 'a' ? '#A9D6E5' : b.type === 's' ? '#6B6760' : '#E0505C'
     c.beginPath(); c.ellipse(0, 2, b.r * 0.65, b.r * 0.9, 0, 0, TAU); c.fill()
-    c.fillStyle = '#EDE7DC'; c.beginPath(); c.arc(0, -b.r * 0.8, b.r * 0.35, 0, TAU); c.fill()
+    c.fillStyle = '#E4E0D8'; c.beginPath(); c.arc(0, -b.r * 0.8, b.r * 0.35, 0, TAU); c.fill()
     c.globalAlpha = 1
     if (b.ack > 0) { c.strokeStyle = '#A9D6E5'; c.beginPath(); c.arc(0, 0, b.r + 6, 0, TAU * (b.ack / 800)); c.stroke() }
     c.restore()
@@ -392,15 +392,15 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     if (r.k === 'rosa') {
       c.fillStyle = '#8E8A96'
       for (let i = 0; i < 5; i++) { c.beginPath(); c.ellipse(Math.cos(i * 1.256) * 6, Math.sin(i * 1.256) * 6, 7, 5, i * 1.256, 0, TAU); c.fill() }
-      c.fillStyle = '#D2384F'; c.beginPath(); c.arc(0, 0, 4, 0, TAU); c.fill()
+      c.fillStyle = '#E0505C'; c.beginPath(); c.arc(0, 0, 4, 0, TAU); c.fill()
     } else if (r.k === 'ami') {
-      c.fillStyle = '#E3C17A'; c.beginPath(); c.arc(0, 0, 12, 0, TAU); c.fill()
+      c.fillStyle = '#F0B44C'; c.beginPath(); c.arc(0, 0, 12, 0, TAU); c.fill()
       c.strokeStyle = '#8A6E36'; c.beginPath(); c.arc(0, 0, 8, 0.3, 2.6); c.moveTo(-10, -4); c.quadraticCurveTo(0, 4, 10, -4); c.stroke()
     } else {
       c.rotate(-0.5)
-      c.fillStyle = '#A8A1B3'; c.fillRect(-15, -5, 30, 10)
-      c.fillStyle = '#4A4458'; c.fillRect(-4, 5, 6, 8)
-      c.fillStyle = '#E3C17A'; c.fillRect(13, -6, 4, 12)
+      c.fillStyle = '#9C978E'; c.fillRect(-15, -5, 30, 10)
+      c.fillStyle = '#3D3A36'; c.fillRect(-4, 5, 6, 8)
+      c.fillStyle = '#F0B44C'; c.fillRect(13, -6, 4, 12)
     }
     c.restore()
     c.fillStyle = 'rgba(237,231,220,.85)'; c.font = '500 11px "IBM Plex Mono", monospace'; c.textAlign = 'center'
@@ -418,19 +418,19 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     for (let y = 0; y < MH; y += 48) { c.beginPath(); c.moveTo(0, y); c.lineTo(MW, y); c.stroke() }
     if (!G) return
     const C = G.core
-    c.fillStyle = '#1E1A26'; c.strokeStyle = C.hp > 2 ? '#E3C17A' : '#D2384F'; c.lineWidth = 2
+    c.fillStyle = '#1A1918'; c.strokeStyle = C.hp > 2 ? '#F0B44C' : '#E0505C'; c.lineWidth = 2
     c.beginPath(); c.arc(C.x, C.y, C.r, 0, TAU); c.fill(); c.stroke()
-    c.fillStyle = '#A8A1B3'
+    c.fillStyle = '#9C978E'
     for (let k = -1; k <= 1; k++) c.fillRect(C.x - 13, C.y + k * 8 - 3, 26, 5)
-    c.fillStyle = '#E3C17A'
+    c.fillStyle = '#F0B44C'
     for (let h = 0; h < CORE_HP; h++) { c.globalAlpha = h < C.hp ? 1 : 0.2; c.fillRect(C.x - CORE_HP * 5 + 1 + h * 10, C.y + C.r + 8, 8, 4) }
     c.globalAlpha = 1
     c.fillStyle = 'rgba(237,231,220,.8)'; c.font = '500 11px "IBM Plex Mono", monospace'; c.textAlign = 'center'
     c.fillText('PRODUÇÃO', C.x, C.y - C.r - 22)
     // A Produção usa o chapéu do caçador.
-    c.fillStyle = '#2A2530'; c.strokeStyle = '#EDE7DC'; c.lineWidth = 1
+    c.fillStyle = '#24221F'; c.strokeStyle = '#E4E0D8'; c.lineWidth = 1
     c.beginPath(); c.ellipse(C.x, C.y - C.r + 2, 30, 5, 0, 0, TAU); c.fill(); c.stroke()
-    c.fillStyle = '#3A3242'
+    c.fillStyle = '#2E2C29'
     c.beginPath(); c.moveTo(C.x - 14, C.y - C.r + 1); c.quadraticCurveTo(C.x - 14, C.y - C.r - 18, C.x, C.y - C.r - 19)
     c.quadraticCurveTo(C.x + 14, C.y - C.r - 18, C.x + 14, C.y - C.r + 1); c.closePath(); c.fill(); c.stroke()
     if (C.shield > 0) {
@@ -445,18 +445,18 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     if (g.shake > 0) c.translate(rnd(-1, 1) * g.shake * 0.5, rnd(-1, 1) * g.shake * 0.5)
     const A = g.aim
     const lg = c.createRadialGradient(A.x, A.y, 4, A.x, A.y, 95)
-    lg.addColorStop(0, 'rgba(227,193,122,.22)'); lg.addColorStop(1, 'rgba(227,193,122,0)')
+    lg.addColorStop(0, 'rgba(240,180,76,.22)'); lg.addColorStop(1, 'rgba(240,180,76,0)')
     c.fillStyle = lg; c.beginPath(); c.arc(A.x, A.y, 95, 0, TAU); c.fill()
     g.relics.forEach(drawRelic)
     g.balls.forEach(o => {
       c.save(); c.translate(o.x, o.y); c.rotate(o.a); c.globalAlpha = o.l < 2000 ? 0.5 : 1
-      c.fillStyle = '#E3C17A'; c.beginPath(); c.arc(0, 0, o.r, 0, TAU); c.fill()
+      c.fillStyle = '#F0B44C'; c.beginPath(); c.arc(0, 0, o.r, 0, TAU); c.fill()
       c.strokeStyle = '#8A6E36'; c.lineWidth = 2; c.beginPath(); c.arc(0, 0, o.r * 0.6, 0.2, 2.8); c.moveTo(-o.r, -3); c.quadraticCurveTo(0, 6, o.r, -3); c.stroke()
       c.restore()
     })
     g.bugs.forEach(drawBug)
     if (g.held) {
-      c.strokeStyle = 'rgba(227,193,122,.6)'; c.setLineDash([4, 4])
+      c.strokeStyle = 'rgba(240,180,76,.6)'; c.setLineDash([4, 4])
       c.beginPath(); c.moveTo(A.x, A.y); c.lineTo(g.held.x, g.held.y); c.stroke(); c.setLineDash([])
     }
     g.parts.forEach(p => { c.globalAlpha = Math.min(1, p.l / 20); c.fillStyle = p.c; c.fillRect(p.x, p.y, p.s, p.s) })
@@ -469,12 +469,12 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
         c.globalAlpha = e.l / 14; c.strokeStyle = '#A9C3CC'; c.lineWidth = 3
         c.beginPath(); c.arc(e.x, e.y, SLASH_R + 4 - e.l, -2.4, -0.4); c.stroke()
       } else {
-        c.globalAlpha = e.l / 30; c.strokeStyle = '#E3C17A'; c.lineWidth = 4
+        c.globalAlpha = e.l / 30; c.strokeStyle = '#F0B44C'; c.lineWidth = 4
         c.beginPath(); c.arc(e.x, e.y, 130 - e.l * 3, 0, TAU); c.stroke()
       }
     })
     c.globalAlpha = 1
-    c.strokeStyle = g.baz ? '#E3C17A' : '#EDE7DC'; c.lineWidth = 1.5
+    c.strokeStyle = g.baz ? '#F0B44C' : '#E4E0D8'; c.lineWidth = 1.5
     c.beginPath(); c.arc(A.x, A.y, 12, 0, TAU)
     c.moveTo(A.x - 18, A.y); c.lineTo(A.x - 8, A.y); c.moveTo(A.x + 8, A.y); c.lineTo(A.x + 18, A.y)
     c.moveTo(A.x, A.y - 18); c.lineTo(A.x, A.y - 8); c.moveTo(A.x, A.y + 8); c.lineTo(A.x, A.y + 18)

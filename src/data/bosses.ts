@@ -9,7 +9,8 @@ export type Boss = {
   fragments: [string, string, string]
 }
 
-export const fragmentLabels = ['O risco', 'A solução', 'O resultado'] as const
+// A ficha do chefe: o golpe é o risco, a fraqueza é a solução e a recompensa é o resultado.
+export const fragmentLabels = ['Golpe', 'Fraqueza', 'Recompensa'] as const
 
 export const bosses: Boss[] = [
   {

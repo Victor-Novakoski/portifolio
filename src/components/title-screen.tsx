@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { profile } from '@/data/profile'
 import { prefersReducedMotion } from '@/lib/motion'
@@ -15,27 +15,13 @@ function goToMenu() {
 export function TitleScreen() {
   const titleRef = useRef<HTMLElement>(null)
   const skyRef = useRef<HTMLCanvasElement>(null)
-  const propsRef = useRef<HTMLCanvasElement>(null)
-  const hudRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<TitleScene | null>(null)
-  const [hatNote, setHatNote] = useState('')
 
-  // Canvas do céu, chapéu e lanterna.
+  // Canvas do céu e do caçador com a lanterna.
   useEffect(() => {
-    let noteT = 0
-    const scene = mountTitleScene(titleRef.current!, {
-      sky: skyRef.current!,
-      props: propsRef.current!,
-      hud: hudRef.current!,
-      onHatNote() {
-        setHatNote(profile.hatNote)
-        window.clearTimeout(noteT)
-        noteT = window.setTimeout(() => setHatNote(''), 8000)
-      },
-    })
+    const scene = mountTitleScene(titleRef.current!, { sky: skyRef.current! })
     sceneRef.current = scene
     return () => {
-      window.clearTimeout(noteT)
       scene.destroy()
       sceneRef.current = null
     }
@@ -70,7 +56,7 @@ export function TitleScreen() {
     return () => document.removeEventListener('keydown', onKey)
   }, [])
 
-  // Segredos: digitar "chapéu" ergue o chapéu; "bug" solta um bug pela tela.
+  // Segredos: digitar "bug" solta um bug pela tela; "luz" balança a lanterna do caçador.
   useEffect(() => {
     let typed = ''
     function onKey(e: KeyboardEvent) {
@@ -81,9 +67,9 @@ export function TitleScreen() {
       if (/bug$/.test(typed)) {
         typed = ''
         window.dispatchEvent(new Event(STRAY_BUG_EVENT))
-      } else if (/chap[eé]u$/.test(typed)) {
+      } else if (/luz$/.test(typed)) {
         typed = ''
-        sceneRef.current?.tipHat()
+        sceneRef.current?.swingLamp()
       }
     }
     document.addEventListener('keydown', onKey)
@@ -93,9 +79,12 @@ export function TitleScreen() {
   return (
     <section className="title" id="topo" ref={titleRef} aria-label="Apresentação">
       <canvas ref={skyRef} aria-hidden="true" />
-      <canvas className="props" ref={propsRef} aria-hidden="true" />
       <div className="hud wrap">
-        <div className="inner hud-l" ref={hudRef}>
+        <div className="inner hud-l">
+          <ul className="cells" aria-label="Status">
+            <li>{profile.status.base}</li>
+            <li className="on">{profile.status.availability}</li>
+          </ul>
           <span className="tag">Personagem · nível full stack</span>
           <h1>{profile.name}</h1>
           <p className="role">{profile.role}</p>
@@ -104,19 +93,7 @@ export function TitleScreen() {
               <li key={item}>{item}</li>
             ))}
           </ul>
-          <div className="bars" aria-hidden="true">
-            <div className="bar">
-              <span>Vida</span>
-              <i style={{ '--c': 'var(--blood)' } as CSSProperties} />
-            </div>
-            <div className="bar">
-              <span>Vigor</span>
-              <i style={{ '--c': 'var(--gold)', '--r': '18%' } as CSSProperties} />
-            </div>
-          </div>
-          <p className="status">
-            {profile.status.base} · <b>{profile.status.availability}</b>. {profile.status.summary}
-          </p>
+          <p className="status">{profile.status.summary}</p>
           <div className="ctas">
             <a className="btn gold" href={profile.cvUrl} download>
               Baixar currículo (PDF)
@@ -125,13 +102,7 @@ export function TitleScreen() {
               Enfrentar os desafios
             </a>
           </div>
-          <p className="hatnote" role="status">
-            {hatNote}
-          </p>
           <div>
-            <button className="btn sr-f" type="button" onClick={() => sceneRef.current?.throwHat()}>
-              Arremessar o chapéu do caçador
-            </button>
             <button className="btn sr-f" type="button" onClick={() => sceneRef.current?.swingLamp()}>
               Balançar a lanterna
             </button>

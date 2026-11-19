@@ -7,10 +7,10 @@ export function Projects() {
   return (
     <section className="block wrap" id="projetos" aria-labelledby="h-projetos">
       <div className="inner">
-        <SectionHead id="projetos" sub="Dois projetos completos e dois estudos, cada um com a descrição do item e a ficha técnica." />
+        <SectionHead id="projetos" sub="Dois projetos completos, um jogo e dois estudos, cada um com a descrição do item e a ficha técnica." />
         <div className="inv">
           {projects.map(p => (
-            <article key={p.id} className={`item card ${p.main ? 'main' : 'study'}`}>
+            <article key={p.id} className={`item card ${p.main ? 'main' : 'study'}${p.wide ? ' wide' : ''}`}>
               <div className="ih">
                 <span className="ico" aria-hidden="true">
                   <ItemIcon icon={p.icon} />

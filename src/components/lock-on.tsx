@@ -101,9 +101,9 @@ export function LockOn() {
   return (
     <div className="lock" ref={ref} aria-hidden="true">
       <svg viewBox="0 0 18 18">
-        <circle cx="9" cy="9" r="6" fill="none" stroke="#E3C17A" strokeWidth="1.5" />
-        <path d="M9 0v4M9 14v4M0 9h4M14 9h4" stroke="#E3C17A" strokeWidth="1.5" />
-        <circle cx="9" cy="9" r="1.5" fill="#E3C17A" />
+        <circle cx="9" cy="9" r="6" fill="none" stroke="#F0B44C" strokeWidth="1.5" />
+        <path d="M9 0v4M9 14v4M0 9h4M14 9h4" stroke="#F0B44C" strokeWidth="1.5" />
+        <circle cx="9" cy="9" r="1.5" fill="#F0B44C" />
       </svg>
     </div>
   )
