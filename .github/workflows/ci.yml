@@ -10,7 +10,7 @@ permissions:
 
 jobs:
   verificar:
-    name: Lint e build
+    name: Formatação, lint e build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -20,6 +20,8 @@ jobs:
           cache: yarn
       - name: Instalar dependências
         run: yarn install --frozen-lockfile
+      - name: Formatação
+        run: yarn format:check
       - name: Lint
         run: yarn lint
       - name: Build
