@@ -54,7 +54,16 @@ type Game = {
 type Spawn = { x: number; y: number; type: BugType }
 
 // `endless`: segundos sobrevividos na onda 3, que não tem fim.
-export type Result = { score: number; kills: number; record: boolean; best: number; wave: number; perks: PerkId[]; seconds: number; endless: number }
+export type Result = {
+  score: number
+  kills: number
+  record: boolean
+  best: number
+  wave: number
+  perks: PerkId[]
+  seconds: number
+  endless: number
+}
 export type Shop = { wave: number; frag: number; perks: PerkId[] }
 
 export type EngineEvents = {
@@ -123,15 +132,35 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
 
   function newGame(): Game {
     return {
-      t: 0, score: 0,
+      t: 0,
+      score: 0,
       core: { x: MW / 2, y: MH / 2, r: 30, hp: CORE_HP, shield: 0 },
-      bugs: [], relics: [], balls: [], fx: [], parts: [],
-      combo: 0, comboT: 0, spawnT: 600, relicT: 8000, relicI: 0, baz: 0,
-      over: false, paused: true, shake: 0,
+      bugs: [],
+      relics: [],
+      balls: [],
+      fx: [],
+      parts: [],
+      combo: 0,
+      comboT: 0,
+      spawnT: 600,
+      relicT: 8000,
+      relicI: 0,
+      baz: 0,
+      over: false,
+      paused: true,
+      shake: 0,
       aim: { x: MW / 2, y: MH * 0.25, vx: 0, vy: 0, px: MW / 2, py: MH * 0.25 },
-      held: null, kills: 0,
-      wave: 1, frag: 0, perks: new Set(), rollback: false, hunters: [], shop: false,
-      next: null, vacT: VACUUM_MS, mqT: 0,
+      held: null,
+      kills: 0,
+      wave: 1,
+      frag: 0,
+      perks: new Set(),
+      rollback: false,
+      hunters: [],
+      shop: false,
+      next: null,
+      vacT: VACUUM_MS,
+      mqT: 0,
     }
   }
 
@@ -152,12 +181,22 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     const roll = Math.random()
     let x: number
     let y: number
-    if (edge === 0) { x = rnd(0, MW); y = -20 }
-    else if (edge === 1) { x = MW + 20; y = rnd(0, MH) }
-    else if (edge === 2) { x = rnd(0, MW); y = MH + 20 }
-    else { x = -20; y = rnd(0, MH) }
+    if (edge === 0) {
+      x = rnd(0, MW)
+      y = -20
+    } else if (edge === 1) {
+      x = MW + 20
+      y = rnd(0, MH)
+    } else if (edge === 2) {
+      x = rnd(0, MW)
+      y = MH + 20
+    } else {
+      x = -20
+      y = rnd(0, MH)
+    }
     const e = endlessS(g)
-    const sCap = Math.min(0.35, 0.3 + e / 600), aCap = Math.min(0.75, 0.5 + e / 240)
+    const sCap = Math.min(0.35, 0.3 + e / 600),
+      aCap = Math.min(0.75, 0.5 + e / 240)
     const type: BugType = roll < Math.min(sCap, 0.1 + t / 250) ? 's' : roll < Math.min(aCap, 0.2 + t / 200) ? 'a' : 'n'
     return { x, y, type }
   }
@@ -172,7 +211,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
   function burst(g: Game, x: number, y: number, c: string, n: number) {
     for (let i = 0; i < n; i++) g.parts.push({ x, y, vx: rnd(-5, 5), vy: rnd(-8, -2), c, l: rnd(40, 70), s: rnd(2, 5) })
   }
-  const remove = <T,>(list: T[], item: T) => {
+  const remove = <T>(list: T[], item: T) => {
     const i = list.indexOf(item)
     if (i > -1) list.splice(i, 1)
     return i > -1
@@ -198,7 +237,8 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       if (g.held === b) g.held = null
       g.score += 5
       text(g, b.x, b.y - 12, 'DIVIDIU', '#9C978E')
-      for (let k = -1; k <= 1; k += 2) g.bugs.push({ x: b.x + k * 8, y: b.y, vx: k * 7, vy: rnd(-3, 3), r: 13, type: 'n', ack: 0, thrown: 0, w: 0 })
+      for (let k = -1; k <= 1; k += 2)
+        g.bugs.push({ x: b.x + k * 8, y: b.y, vx: k * 7, vy: rnd(-3, 3), r: 13, type: 'n', ack: 0, thrown: 0, w: 0 })
       return
     }
     if (b.type === 'a') {
@@ -220,29 +260,47 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       if (!reduce) g.shake = 10
       on.say('Bazuca!')
       g.bugs.slice().forEach(b => {
-        const dx = b.x - x, dy = b.y - y, d = Math.sqrt(dx * dx + dy * dy) || 1
+        const dx = b.x - x,
+          dy = b.y - y,
+          d = Math.sqrt(dx * dx + dy * dy) || 1
         if (d < 130) kill(g, b, 15, 'BUM')
-        else if (d < 260) { b.vx += (dx / d) * 14; b.vy += (dy / d) * 14 }
+        else if (d < 260) {
+          b.vx += (dx / d) * 14
+          b.vy += (dy / d) * 14
+        }
       })
       return
     }
     let any = false
     g.bugs.slice().forEach(b => {
-      const dx = b.x - x, dy = b.y - y
+      const dx = b.x - x,
+        dy = b.y - y
       const R = b.r + slashR(g)
-      if (dx * dx + dy * dy < R * R) { hit(g, b); any = true }
+      if (dx * dx + dy * dy < R * R) {
+        hit(g, b)
+        any = true
+      }
     })
-    if (!any) g.relics.slice().forEach(r => {
-      const dx = r.x - x, dy = r.y - y
-      if (dx * dx + dy * dy < 40 * 40) take(g, r)
-    })
+    if (!any)
+      g.relics.slice().forEach(r => {
+        const dx = r.x - x,
+          dy = r.y - y
+        if (dx * dx + dy * dy < 40 * 40) take(g, r)
+      })
   }
 
   function take(g: Game, r: Relic) {
     remove(g.relics, r)
-    if (r.k === 'rosa') { g.core.shield = 8000; on.say('Rosa de ferro: a Produção está protegida.') }
-    else if (r.k === 'ami') { g.balls.push({ x: r.x, y: r.y, vx: rnd(-9, 9), vy: -10, r: 16, l: 11000, a: 0 }); on.say('Amigurumi: arremesse a bola contra os bugs.') }
-    else { g.baz = 1; on.say('Bazuca carregada: o próximo golpe explode.') }
+    if (r.k === 'rosa') {
+      g.core.shield = 8000
+      on.say('Rosa de ferro: a Produção está protegida.')
+    } else if (r.k === 'ami') {
+      g.balls.push({ x: r.x, y: r.y, vx: rnd(-9, 9), vy: -10, r: 16, l: 11000, a: 0 })
+      on.say('Amigurumi: arremesse a bola contra os bugs.')
+    } else {
+      g.baz = 1
+      on.say('Bazuca carregada: o próximo golpe explode.')
+    }
     text(g, r.x, r.y - 20, RELIC[r.k].toUpperCase(), '#A9D6E5')
   }
 
@@ -250,8 +308,13 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     let best: Held | null = null
     let bd = 1e9
     ;[...g.bugs, ...g.balls].forEach(b => {
-      const dx = b.x - x, dy = b.y - y, d = dx * dx + dy * dy
-      if (d < (b.r + 18) * (b.r + 18) && d < bd) { bd = d; best = b }
+      const dx = b.x - x,
+        dy = b.y - y,
+        d = dx * dx + dy * dy
+      if (d < (b.r + 18) * (b.r + 18) && d < bd) {
+        bd = d
+        best = b
+      }
     })
     return best as Held | null
   }
@@ -273,8 +336,14 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     on.say(`Fim da caçada. ${g.score} pontos.`)
     pushHud(g)
     on.over({
-      score: g.score, kills: g.kills, record: isRecord, best: record,
-      wave: g.wave, perks: [...g.perks], seconds: Math.round(g.t / 1000), endless: Math.floor(endlessS(g)),
+      score: g.score,
+      kills: g.kills,
+      record: isRecord,
+      best: record,
+      wave: g.wave,
+      perks: [...g.perks],
+      seconds: Math.round(g.t / 1000),
+      endless: Math.floor(endlessS(g)),
     })
   }
 
@@ -315,7 +384,8 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     if (g.comboT > 0) g.comboT -= dt
     if (c.shield > 0) c.shield -= dt
     const spd = 1.6 + (g.t / DUR) * 2.2 + endlessS(g) * 0.008
-    const LR = lightR(g), slow = g.perks.has('indice') ? 0.3 : 0.45
+    const LR = lightR(g),
+      slow = g.perks.has('indice') ? 0.3 : 0.45
     if (g.mqT > 0) g.mqT -= dt
     if (g.perks.has('vacuum')) {
       g.vacT -= dt
@@ -331,10 +401,14 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       h.cd -= dt
       if (h.cd > 0 || !g.bugs.length) continue
       // Golpeia o bug mais perto da Produção.
-      let target = g.bugs[0], bd = 1e9
+      let target = g.bugs[0],
+        bd = 1e9
       for (const b of g.bugs) {
         const d = (b.x - c.x) ** 2 + (b.y - c.y) ** 2
-        if (d < bd && g.held !== b) { bd = d; target = b }
+        if (d < bd && g.held !== b) {
+          bd = d
+          target = b
+        }
       }
       if (g.held === target) continue
       h.cd = HUNTER_MS
@@ -343,10 +417,14 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       hit(g, target)
       if (g.perks.has('channels')) {
         // Channels: o golpe passa adiante para o bug mais perto do primeiro.
-        let near: Bug | null = null, nd = 160 * 160
+        let near: Bug | null = null,
+          nd = 160 * 160
         for (const b of g.bugs) {
           const d = (b.x - target.x) ** 2 + (b.y - target.y) ** 2
-          if (b !== target && g.held !== b && d < nd) { nd = d; near = b }
+          if (b !== target && g.held !== b && d < nd) {
+            nd = d
+            near = b
+          }
         }
         if (near) {
           g.fx.push({ k: 'z', x: target.x, y: target.y, tx: near.x, ty: near.y, l: 12 })
@@ -364,25 +442,38 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
         b.vx = (a.x - b.x) * 0.4
         b.vy = (a.y - b.y) * 0.4
       } else {
-        const dx = c.x - b.x, dy = c.y - b.y, d = Math.sqrt(dx * dx + dy * dy) || 1
+        const dx = c.x - b.x,
+          dy = c.y - b.y,
+          d = Math.sqrt(dx * dx + dy * dy) || 1
         if (b.thrown <= 0) {
           b.vx += ((dx / d) * 0.09 + Math.cos(b.w) * 0.05) * f
           b.vy += ((dy / d) * 0.09 + Math.sin(b.w) * 0.05) * f
         }
         // A luz da lanterna (a mira) deixa os bugs lentos.
-        const lx = a.x - b.x, ly = a.y - b.y, lit = lx * lx + ly * ly < LR * LR
-        const cap = lit ? spd * slow : spd, sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy)
+        const lx = a.x - b.x,
+          ly = a.y - b.y,
+          lit = lx * lx + ly * ly < LR * LR
+        const cap = lit ? spd * slow : spd,
+          sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy)
         if (b.thrown > 0) b.thrown -= f
-        else if (sp > cap) { b.vx *= cap / sp; b.vy *= cap / sp }
+        else if (sp > cap) {
+          b.vx *= cap / sp
+          b.vy *= cap / sp
+        }
         if (d < c.r + b.r) {
           if (c.shield > 0) {
-            b.vx = (-dx / d) * 9; b.vy = (-dy / d) * 9
-            b.x = c.x - (dx / d) * (c.r + b.r + 1); b.y = c.y - (dy / d) * (c.r + b.r + 1)
+            b.vx = (-dx / d) * 9
+            b.vy = (-dy / d) * 9
+            b.x = c.x - (dx / d) * (c.r + b.r + 1)
+            b.y = c.y - (dy / d) * (c.r + b.r + 1)
           } else if (g.perks.has('rabbitmq') && g.mqT <= 0) {
             // RabbitMQ: o bug volta para a borda em vez de acertar a Produção.
             g.mqT = MQ_MS
             const back = rollSpawn(g)
-            b.x = back.x; b.y = back.y; b.vx = 0; b.vy = 0
+            b.x = back.x
+            b.y = back.y
+            b.vx = 0
+            b.vy = 0
             text(g, c.x, c.y - 44, 'DE VOLTA À FILA', '#A9D6E5')
           } else {
             remove(g.bugs, b)
@@ -407,17 +498,33 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       b.x += b.vx * f
       b.y += b.vy * f
       if (b.thrown > 0 || g.held === b) {
-        if (b.x < b.r) { b.x = b.r; b.vx = Math.abs(b.vx) * 0.8 }
-        if (b.x > MW - b.r) { b.x = MW - b.r; b.vx = -Math.abs(b.vx) * 0.8 }
-        if (b.y < b.r) { b.y = b.r; b.vy = Math.abs(b.vy) * 0.8 }
-        if (b.y > MH - b.r) { b.y = MH - b.r; b.vy = -Math.abs(b.vy) * 0.8 }
+        if (b.x < b.r) {
+          b.x = b.r
+          b.vx = Math.abs(b.vx) * 0.8
+        }
+        if (b.x > MW - b.r) {
+          b.x = MW - b.r
+          b.vx = -Math.abs(b.vx) * 0.8
+        }
+        if (b.y < b.r) {
+          b.y = b.r
+          b.vy = Math.abs(b.vy) * 0.8
+        }
+        if (b.y > MH - b.r) {
+          b.y = MH - b.r
+          b.vy = -Math.abs(b.vy) * 0.8
+        }
       }
     }
     // Bug arremessado com força derruba o que atingir.
     for (let i = 0; i < g.bugs.length; i++) {
       for (let j = i + 1; j < g.bugs.length; j++) {
-        const A = g.bugs[i], B = g.bugs[j]
-        const dx = B.x - A.x, dy = B.y - A.y, d = Math.sqrt(dx * dx + dy * dy) || 1, m = A.r + B.r
+        const A = g.bugs[i],
+          B = g.bugs[j]
+        const dx = B.x - A.x,
+          dy = B.y - A.y,
+          d = Math.sqrt(dx * dx + dy * dy) || 1,
+          m = A.r + B.r
         if (d >= m) continue
         const fast = (A.thrown > 0 && Math.abs(A.vx) + Math.abs(A.vy) > 6) || (B.thrown > 0 && Math.abs(B.vx) + Math.abs(B.vy) > 6)
         if (fast) {
@@ -426,37 +533,80 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
           i = -1
           break
         }
-        const nx = dx / d, ny = dy / d, o = (m - d) / 2
-        A.x -= nx * o; A.y -= ny * o; B.x += nx * o; B.y += ny * o
+        const nx = dx / d,
+          ny = dy / d,
+          o = (m - d) / 2
+        A.x -= nx * o
+        A.y -= ny * o
+        B.x += nx * o
+        B.y += ny * o
         const rv = (B.vx - A.vx) * nx + (B.vy - A.vy) * ny
-        if (rv < 0) { A.vx += rv * nx * 0.9; A.vy += rv * ny * 0.9; B.vx -= rv * nx * 0.9; B.vy -= rv * ny * 0.9 }
+        if (rv < 0) {
+          A.vx += rv * nx * 0.9
+          A.vy += rv * ny * 0.9
+          B.vx -= rv * nx * 0.9
+          B.vy -= rv * ny * 0.9
+        }
       }
     }
     for (const o of g.balls.slice()) {
       o.l -= dt
-      if (o.l <= 0 && g.held !== o) { remove(g.balls, o); continue }
-      if (g.held === o) { o.vx = (a.x - o.x) * 0.4; o.vy = (a.y - o.y) * 0.4 }
-      else { o.vx *= 0.997; o.vy *= 0.997 }
-      o.x += o.vx * f; o.y += o.vy * f; o.a += o.vx * 0.03
-      if (o.x < o.r) { o.x = o.r; o.vx = Math.abs(o.vx) * 0.95 }
-      if (o.x > MW - o.r) { o.x = MW - o.r; o.vx = -Math.abs(o.vx) * 0.95 }
-      if (o.y < o.r) { o.y = o.r; o.vy = Math.abs(o.vy) * 0.95 }
-      if (o.y > MH - o.r) { o.y = MH - o.r; o.vy = -Math.abs(o.vy) * 0.95 }
+      if (o.l <= 0 && g.held !== o) {
+        remove(g.balls, o)
+        continue
+      }
+      if (g.held === o) {
+        o.vx = (a.x - o.x) * 0.4
+        o.vy = (a.y - o.y) * 0.4
+      } else {
+        o.vx *= 0.997
+        o.vy *= 0.997
+      }
+      o.x += o.vx * f
+      o.y += o.vy * f
+      o.a += o.vx * 0.03
+      if (o.x < o.r) {
+        o.x = o.r
+        o.vx = Math.abs(o.vx) * 0.95
+      }
+      if (o.x > MW - o.r) {
+        o.x = MW - o.r
+        o.vx = -Math.abs(o.vx) * 0.95
+      }
+      if (o.y < o.r) {
+        o.y = o.r
+        o.vy = Math.abs(o.vy) * 0.95
+      }
+      if (o.y > MH - o.r) {
+        o.y = MH - o.r
+        o.vy = -Math.abs(o.vy) * 0.95
+      }
       g.bugs.slice().forEach(b => {
-        const dx = b.x - o.x, dy = b.y - o.y
+        const dx = b.x - o.x,
+          dy = b.y - o.y
         if (dx * dx + dy * dy < (b.r + o.r) * (b.r + o.r) && Math.abs(o.vx) + Math.abs(o.vy) > 2) kill(g, b, 15, 'NOVELO')
       })
     }
     for (const r of g.relics.slice()) {
       r.l -= dt
       r.p += 0.05 * f
-      if (r.l <= 0) { remove(g.relics, r); continue }
-      const dx = r.x - a.x, dy = r.y - a.y
+      if (r.l <= 0) {
+        remove(g.relics, r)
+        continue
+      }
+      const dx = r.x - a.x,
+        dy = r.y - a.y
       if (dx * dx + dy * dy < 30 * 30) take(g, r)
     }
     g.parts.forEach(p => {
-      p.vy += 0.4 * f; p.x += p.vx * f; p.y += p.vy * f
-      if (p.y > MH - 4) { p.y = MH - 4; p.vy *= -0.45; p.vx *= 0.7 }
+      p.vy += 0.4 * f
+      p.x += p.vx * f
+      p.y += p.vy * f
+      if (p.y > MH - 4) {
+        p.y = MH - 4
+        p.vy *= -0.45
+        p.vx *= 0.7
+      }
       p.l -= f
     })
     g.parts = g.parts.filter(p => p.l > 0)
@@ -490,23 +640,40 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     c.translate(b.x, b.y)
     c.rotate(Math.atan2(b.vy, b.vx) + Math.PI / 2)
     if (b.type === 's') {
-      c.globalAlpha = 0.3; c.fillStyle = '#9C978E'
-      c.beginPath(); c.ellipse(-7, 3, b.r * 0.7, b.r, 0, 0, TAU); c.ellipse(7, -3, b.r * 0.7, b.r, 0, 0, TAU); c.fill()
+      c.globalAlpha = 0.3
+      c.fillStyle = '#9C978E'
+      c.beginPath()
+      c.ellipse(-7, 3, b.r * 0.7, b.r, 0, 0, TAU)
+      c.ellipse(7, -3, b.r * 0.7, b.r, 0, 0, TAU)
+      c.fill()
       c.globalAlpha = 1
     }
-    c.strokeStyle = '#E4E0D8'; c.lineWidth = 1.5
+    c.strokeStyle = '#E4E0D8'
+    c.lineWidth = 1.5
     for (let k = -1; k <= 1; k++) {
       c.beginPath()
-      c.moveTo(-b.r * 0.6, k * b.r * 0.45); c.lineTo(-b.r * 1.15, k * b.r * 0.55 + legs * k)
-      c.moveTo(b.r * 0.6, k * b.r * 0.45); c.lineTo(b.r * 1.15, k * b.r * 0.55 - legs * k)
+      c.moveTo(-b.r * 0.6, k * b.r * 0.45)
+      c.lineTo(-b.r * 1.15, k * b.r * 0.55 + legs * k)
+      c.moveTo(b.r * 0.6, k * b.r * 0.45)
+      c.lineTo(b.r * 1.15, k * b.r * 0.55 - legs * k)
       c.stroke()
     }
     c.globalAlpha = b.type === 'a' ? (b.ack > 0 ? 1 : 0.6) : 1
     c.fillStyle = b.type === 'a' ? '#A9D6E5' : b.type === 's' ? '#6B6760' : '#E0505C'
-    c.beginPath(); c.ellipse(0, 2, b.r * 0.65, b.r * 0.9, 0, 0, TAU); c.fill()
-    c.fillStyle = '#E4E0D8'; c.beginPath(); c.arc(0, -b.r * 0.8, b.r * 0.35, 0, TAU); c.fill()
+    c.beginPath()
+    c.ellipse(0, 2, b.r * 0.65, b.r * 0.9, 0, 0, TAU)
+    c.fill()
+    c.fillStyle = '#E4E0D8'
+    c.beginPath()
+    c.arc(0, -b.r * 0.8, b.r * 0.35, 0, TAU)
+    c.fill()
     c.globalAlpha = 1
-    if (b.ack > 0) { c.strokeStyle = '#A9D6E5'; c.beginPath(); c.arc(0, 0, b.r + 6, 0, TAU * (b.ack / 800)); c.stroke() }
+    if (b.ack > 0) {
+      c.strokeStyle = '#A9D6E5'
+      c.beginPath()
+      c.arc(0, 0, b.r + 6, 0, TAU * (b.ack / 800))
+      c.stroke()
+    }
     c.restore()
   }
 
@@ -515,22 +682,46 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     const y = r.y + Math.sin(r.p) * 4
     c.save()
     c.translate(r.x, y)
-    c.strokeStyle = 'rgba(169,214,229,.6)'; c.lineWidth = 1.5; c.beginPath(); c.arc(0, 0, 24, 0, TAU); c.stroke()
+    c.strokeStyle = 'rgba(169,214,229,.6)'
+    c.lineWidth = 1.5
+    c.beginPath()
+    c.arc(0, 0, 24, 0, TAU)
+    c.stroke()
     if (r.k === 'rosa') {
       c.fillStyle = '#8E8A96'
-      for (let i = 0; i < 5; i++) { c.beginPath(); c.ellipse(Math.cos(i * 1.256) * 6, Math.sin(i * 1.256) * 6, 7, 5, i * 1.256, 0, TAU); c.fill() }
-      c.fillStyle = '#E0505C'; c.beginPath(); c.arc(0, 0, 4, 0, TAU); c.fill()
+      for (let i = 0; i < 5; i++) {
+        c.beginPath()
+        c.ellipse(Math.cos(i * 1.256) * 6, Math.sin(i * 1.256) * 6, 7, 5, i * 1.256, 0, TAU)
+        c.fill()
+      }
+      c.fillStyle = '#E0505C'
+      c.beginPath()
+      c.arc(0, 0, 4, 0, TAU)
+      c.fill()
     } else if (r.k === 'ami') {
-      c.fillStyle = '#F0B44C'; c.beginPath(); c.arc(0, 0, 12, 0, TAU); c.fill()
-      c.strokeStyle = '#8A6E36'; c.beginPath(); c.arc(0, 0, 8, 0.3, 2.6); c.moveTo(-10, -4); c.quadraticCurveTo(0, 4, 10, -4); c.stroke()
+      c.fillStyle = '#F0B44C'
+      c.beginPath()
+      c.arc(0, 0, 12, 0, TAU)
+      c.fill()
+      c.strokeStyle = '#8A6E36'
+      c.beginPath()
+      c.arc(0, 0, 8, 0.3, 2.6)
+      c.moveTo(-10, -4)
+      c.quadraticCurveTo(0, 4, 10, -4)
+      c.stroke()
     } else {
       c.rotate(-0.5)
-      c.fillStyle = '#9C978E'; c.fillRect(-15, -5, 30, 10)
-      c.fillStyle = '#3D3A36'; c.fillRect(-4, 5, 6, 8)
-      c.fillStyle = '#F0B44C'; c.fillRect(13, -6, 4, 12)
+      c.fillStyle = '#9C978E'
+      c.fillRect(-15, -5, 30, 10)
+      c.fillStyle = '#3D3A36'
+      c.fillRect(-4, 5, 6, 8)
+      c.fillStyle = '#F0B44C'
+      c.fillRect(13, -6, 4, 12)
     }
     c.restore()
-    c.fillStyle = 'rgba(237,231,220,.85)'; c.font = '500 11px "IBM Plex Mono", monospace'; c.textAlign = 'center'
+    c.fillStyle = 'rgba(237,231,220,.85)'
+    c.font = '500 11px "IBM Plex Mono", monospace'
+    c.textAlign = 'center'
     c.fillText(RELIC[r.k], r.x, y + 40)
   }
 
@@ -538,31 +729,67 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     const c = mc
     c.setTransform(DPR, 0, 0, DPR, 0, 0)
     const g = c.createRadialGradient(MW / 2, MH / 2, 20, MW / 2, MH / 2, Math.max(MW, MH) * 0.7)
-    g.addColorStop(0, '#16131D'); g.addColorStop(1, '#08070B')
-    c.fillStyle = g; c.fillRect(0, 0, MW, MH)
-    c.strokeStyle = 'rgba(74,68,88,.25)'; c.lineWidth = 1
-    for (let x = 0; x < MW; x += 48) { c.beginPath(); c.moveTo(x, 0); c.lineTo(x, MH); c.stroke() }
-    for (let y = 0; y < MH; y += 48) { c.beginPath(); c.moveTo(0, y); c.lineTo(MW, y); c.stroke() }
+    g.addColorStop(0, '#16131D')
+    g.addColorStop(1, '#08070B')
+    c.fillStyle = g
+    c.fillRect(0, 0, MW, MH)
+    c.strokeStyle = 'rgba(74,68,88,.25)'
+    c.lineWidth = 1
+    for (let x = 0; x < MW; x += 48) {
+      c.beginPath()
+      c.moveTo(x, 0)
+      c.lineTo(x, MH)
+      c.stroke()
+    }
+    for (let y = 0; y < MH; y += 48) {
+      c.beginPath()
+      c.moveTo(0, y)
+      c.lineTo(MW, y)
+      c.stroke()
+    }
     if (!G) return
     const C = G.core
-    c.fillStyle = '#1A1918'; c.strokeStyle = C.hp > 2 ? '#F0B44C' : '#E0505C'; c.lineWidth = 2
-    c.beginPath(); c.arc(C.x, C.y, C.r, 0, TAU); c.fill(); c.stroke()
+    c.fillStyle = '#1A1918'
+    c.strokeStyle = C.hp > 2 ? '#F0B44C' : '#E0505C'
+    c.lineWidth = 2
+    c.beginPath()
+    c.arc(C.x, C.y, C.r, 0, TAU)
+    c.fill()
+    c.stroke()
     c.fillStyle = '#9C978E'
     for (let k = -1; k <= 1; k++) c.fillRect(C.x - 13, C.y + k * 8 - 3, 26, 5)
     c.fillStyle = '#F0B44C'
-    for (let h = 0; h < CORE_HP; h++) { c.globalAlpha = h < C.hp ? 1 : 0.2; c.fillRect(C.x - CORE_HP * 5 + 1 + h * 10, C.y + C.r + 8, 8, 4) }
+    for (let h = 0; h < CORE_HP; h++) {
+      c.globalAlpha = h < C.hp ? 1 : 0.2
+      c.fillRect(C.x - CORE_HP * 5 + 1 + h * 10, C.y + C.r + 8, 8, 4)
+    }
     c.globalAlpha = 1
-    c.fillStyle = 'rgba(237,231,220,.8)'; c.font = '500 11px "IBM Plex Mono", monospace'; c.textAlign = 'center'
+    c.fillStyle = 'rgba(237,231,220,.8)'
+    c.font = '500 11px "IBM Plex Mono", monospace'
+    c.textAlign = 'center'
     c.fillText('PRODUÇÃO', C.x, C.y - C.r - 22)
     // A Produção usa o chapéu do caçador.
-    c.fillStyle = '#24221F'; c.strokeStyle = '#E4E0D8'; c.lineWidth = 1
-    c.beginPath(); c.ellipse(C.x, C.y - C.r + 2, 30, 5, 0, 0, TAU); c.fill(); c.stroke()
+    c.fillStyle = '#24221F'
+    c.strokeStyle = '#E4E0D8'
+    c.lineWidth = 1
+    c.beginPath()
+    c.ellipse(C.x, C.y - C.r + 2, 30, 5, 0, 0, TAU)
+    c.fill()
+    c.stroke()
     c.fillStyle = '#2E2C29'
-    c.beginPath(); c.moveTo(C.x - 14, C.y - C.r + 1); c.quadraticCurveTo(C.x - 14, C.y - C.r - 18, C.x, C.y - C.r - 19)
-    c.quadraticCurveTo(C.x + 14, C.y - C.r - 18, C.x + 14, C.y - C.r + 1); c.closePath(); c.fill(); c.stroke()
+    c.beginPath()
+    c.moveTo(C.x - 14, C.y - C.r + 1)
+    c.quadraticCurveTo(C.x - 14, C.y - C.r - 18, C.x, C.y - C.r - 19)
+    c.quadraticCurveTo(C.x + 14, C.y - C.r - 18, C.x + 14, C.y - C.r + 1)
+    c.closePath()
+    c.fill()
+    c.stroke()
     if (C.shield > 0) {
-      c.strokeStyle = `rgba(169,214,229,${Math.min(1, C.shield / 1500).toFixed(2)})`; c.lineWidth = 3
-      c.beginPath(); c.arc(C.x, C.y, C.r + 14, 0, TAU); c.stroke()
+      c.strokeStyle = `rgba(169,214,229,${Math.min(1, C.shield / 1500).toFixed(2)})`
+      c.lineWidth = 3
+      c.beginPath()
+      c.arc(C.x, C.y, C.r + 14, 0, TAU)
+      c.stroke()
     }
   }
 
@@ -573,55 +800,119 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     const A = g.aim
     const LR = lightR(g)
     const lg = c.createRadialGradient(A.x, A.y, 4, A.x, A.y, LR)
-    lg.addColorStop(0, 'rgba(240,180,76,.22)'); lg.addColorStop(1, 'rgba(240,180,76,0)')
-    c.fillStyle = lg; c.beginPath(); c.arc(A.x, A.y, LR, 0, TAU); c.fill()
+    lg.addColorStop(0, 'rgba(240,180,76,.22)')
+    lg.addColorStop(1, 'rgba(240,180,76,0)')
+    c.fillStyle = lg
+    c.beginPath()
+    c.arc(A.x, A.y, LR, 0, TAU)
+    c.fill()
     g.hunters.forEach(h => {
       const p = hunterAt(g, h)
-      c.fillStyle = '#F0B44C'; c.beginPath(); c.arc(p.x, p.y, 5, 0, TAU); c.fill()
-      c.strokeStyle = 'rgba(240,180,76,.5)'; c.lineWidth = 1
-      c.beginPath(); c.arc(p.x, p.y, 9, -Math.PI / 2, -Math.PI / 2 + TAU * (1 - Math.max(0, h.cd) / HUNTER_MS)); c.stroke()
+      c.fillStyle = '#F0B44C'
+      c.beginPath()
+      c.arc(p.x, p.y, 5, 0, TAU)
+      c.fill()
+      c.strokeStyle = 'rgba(240,180,76,.5)'
+      c.lineWidth = 1
+      c.beginPath()
+      c.arc(p.x, p.y, 9, -Math.PI / 2, -Math.PI / 2 + TAU * (1 - Math.max(0, h.cd) / HUNTER_MS))
+      c.stroke()
     })
     if (g.perks.has('suspense') && g.next && g.spawnT < SUSPENSE_MS) {
-      const n = g.next, mx = Math.max(22, Math.min(MW - 22, n.x)), my = Math.max(22, Math.min(MH - 22, n.y))
-      c.strokeStyle = '#A9D6E5'; c.lineWidth = 2; c.setLineDash([4, 4])
-      c.beginPath(); c.arc(mx, my, 14, 0, TAU); c.stroke(); c.setLineDash([])
-      c.fillStyle = '#A9D6E5'; c.font = '500 11px "IBM Plex Mono", monospace'; c.textAlign = 'center'
+      const n = g.next,
+        mx = Math.max(22, Math.min(MW - 22, n.x)),
+        my = Math.max(22, Math.min(MH - 22, n.y))
+      c.strokeStyle = '#A9D6E5'
+      c.lineWidth = 2
+      c.setLineDash([4, 4])
+      c.beginPath()
+      c.arc(mx, my, 14, 0, TAU)
+      c.stroke()
+      c.setLineDash([])
+      c.fillStyle = '#A9D6E5'
+      c.font = '500 11px "IBM Plex Mono", monospace'
+      c.textAlign = 'center'
       c.fillText('!', mx, my + 4)
     }
     g.relics.forEach(drawRelic)
     g.balls.forEach(o => {
-      c.save(); c.translate(o.x, o.y); c.rotate(o.a); c.globalAlpha = o.l < 2000 ? 0.5 : 1
-      c.fillStyle = '#F0B44C'; c.beginPath(); c.arc(0, 0, o.r, 0, TAU); c.fill()
-      c.strokeStyle = '#8A6E36'; c.lineWidth = 2; c.beginPath(); c.arc(0, 0, o.r * 0.6, 0.2, 2.8); c.moveTo(-o.r, -3); c.quadraticCurveTo(0, 6, o.r, -3); c.stroke()
+      c.save()
+      c.translate(o.x, o.y)
+      c.rotate(o.a)
+      c.globalAlpha = o.l < 2000 ? 0.5 : 1
+      c.fillStyle = '#F0B44C'
+      c.beginPath()
+      c.arc(0, 0, o.r, 0, TAU)
+      c.fill()
+      c.strokeStyle = '#8A6E36'
+      c.lineWidth = 2
+      c.beginPath()
+      c.arc(0, 0, o.r * 0.6, 0.2, 2.8)
+      c.moveTo(-o.r, -3)
+      c.quadraticCurveTo(0, 6, o.r, -3)
+      c.stroke()
       c.restore()
     })
     g.bugs.forEach(drawBug)
     if (g.held) {
-      c.strokeStyle = 'rgba(240,180,76,.6)'; c.setLineDash([4, 4])
-      c.beginPath(); c.moveTo(A.x, A.y); c.lineTo(g.held.x, g.held.y); c.stroke(); c.setLineDash([])
+      c.strokeStyle = 'rgba(240,180,76,.6)'
+      c.setLineDash([4, 4])
+      c.beginPath()
+      c.moveTo(A.x, A.y)
+      c.lineTo(g.held.x, g.held.y)
+      c.stroke()
+      c.setLineDash([])
     }
-    g.parts.forEach(p => { c.globalAlpha = Math.min(1, p.l / 20); c.fillStyle = p.c; c.fillRect(p.x, p.y, p.s, p.s) })
+    g.parts.forEach(p => {
+      c.globalAlpha = Math.min(1, p.l / 20)
+      c.fillStyle = p.c
+      c.fillRect(p.x, p.y, p.s, p.s)
+    })
     c.globalAlpha = 1
     g.fx.forEach(e => {
       if (e.k === 't') {
-        c.globalAlpha = Math.min(1, e.l / 20); c.fillStyle = e.c; c.font = '700 16px "Cormorant SC", Georgia, serif'; c.textAlign = 'center'
+        c.globalAlpha = Math.min(1, e.l / 20)
+        c.fillStyle = e.c
+        c.font = '700 16px "Cormorant SC", Georgia, serif'
+        c.textAlign = 'center'
         c.fillText(e.s, e.x, e.y)
       } else if (e.k === 's') {
-        c.globalAlpha = e.l / 14; c.strokeStyle = '#A9C3CC'; c.lineWidth = 3
-        c.beginPath(); c.arc(e.x, e.y, slashR(g) + 4 - e.l, -2.4, -0.4); c.stroke()
+        c.globalAlpha = e.l / 14
+        c.strokeStyle = '#A9C3CC'
+        c.lineWidth = 3
+        c.beginPath()
+        c.arc(e.x, e.y, slashR(g) + 4 - e.l, -2.4, -0.4)
+        c.stroke()
       } else if (e.k === 'z') {
-        c.globalAlpha = e.l / 12; c.strokeStyle = '#F0B44C'; c.lineWidth = 2
-        c.beginPath(); c.moveTo(e.x, e.y); c.lineTo(e.tx, e.ty); c.stroke()
+        c.globalAlpha = e.l / 12
+        c.strokeStyle = '#F0B44C'
+        c.lineWidth = 2
+        c.beginPath()
+        c.moveTo(e.x, e.y)
+        c.lineTo(e.tx, e.ty)
+        c.stroke()
       } else {
-        c.globalAlpha = e.l / 30; c.strokeStyle = '#F0B44C'; c.lineWidth = 4
-        c.beginPath(); c.arc(e.x, e.y, 130 - e.l * 3, 0, TAU); c.stroke()
+        c.globalAlpha = e.l / 30
+        c.strokeStyle = '#F0B44C'
+        c.lineWidth = 4
+        c.beginPath()
+        c.arc(e.x, e.y, 130 - e.l * 3, 0, TAU)
+        c.stroke()
       }
     })
     c.globalAlpha = 1
-    c.strokeStyle = g.baz ? '#F0B44C' : '#E4E0D8'; c.lineWidth = 1.5
-    c.beginPath(); c.arc(A.x, A.y, 12, 0, TAU)
-    c.moveTo(A.x - 18, A.y); c.lineTo(A.x - 8, A.y); c.moveTo(A.x + 8, A.y); c.lineTo(A.x + 18, A.y)
-    c.moveTo(A.x, A.y - 18); c.lineTo(A.x, A.y - 8); c.moveTo(A.x, A.y + 8); c.lineTo(A.x, A.y + 18)
+    c.strokeStyle = g.baz ? '#F0B44C' : '#E4E0D8'
+    c.lineWidth = 1.5
+    c.beginPath()
+    c.arc(A.x, A.y, 12, 0, TAU)
+    c.moveTo(A.x - 18, A.y)
+    c.lineTo(A.x - 8, A.y)
+    c.moveTo(A.x + 8, A.y)
+    c.lineTo(A.x + 18, A.y)
+    c.moveTo(A.x, A.y - 18)
+    c.lineTo(A.x, A.y - 8)
+    c.moveTo(A.x, A.y + 8)
+    c.lineTo(A.x, A.y + 18)
     c.stroke()
   }
 
@@ -667,7 +958,11 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     const g = G
     if (!g || !running()) return
     e.preventDefault()
-    try { canvas.setPointerCapture(e.pointerId) } catch { /* segue sem captura */ }
+    try {
+      canvas.setPointerCapture(e.pointerId)
+    } catch {
+      /* segue sem captura */
+    }
     const p = local(e)
     g.aim.x = g.aim.px = p.x
     g.aim.y = g.aim.py = p.y
@@ -680,7 +975,9 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
   function onPointerMove(e: PointerEvent) {
     const g = G
     if (!g) return
-    const p = local(e), now = performance.now(), dt = Math.max(8, now - (down ? down.last : now - 16))
+    const p = local(e),
+      now = performance.now(),
+      dt = Math.max(8, now - (down ? down.last : now - 16))
     g.aim.vx = g.aim.vx * 0.4 + ((p.x - g.aim.x) / dt) * 16 * 0.6
     g.aim.vy = g.aim.vy * 0.4 + ((p.y - g.aim.y) / dt) * 16 * 0.6
     g.aim.x = g.aim.px = p.x
@@ -706,12 +1003,24 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     const g = G
     if (!g) return
     const k = e.key.length === 1 ? e.key.toLowerCase() : e.key
-    if (k === 'r' && started && !g.paused) { e.preventDefault(); api.start(); return }
-    if (k === 'p') { e.preventDefault(); api.togglePause(); return }
+    if (k === 'r' && started && !g.paused) {
+      e.preventDefault()
+      api.start()
+      return
+    }
+    if (k === 'p') {
+      e.preventDefault()
+      api.togglePause()
+      return
+    }
     if (!running()) return
-    if (MOVE_KEYS.has(k)) { e.preventDefault(); keys[k] = true }
-    else if (k === ' ' || k === 'Enter') { e.preventDefault(); slash(g, g.aim.x, g.aim.y) }
-    else if (k === 'g' && !g.held && !e.repeat) {
+    if (MOVE_KEYS.has(k)) {
+      e.preventDefault()
+      keys[k] = true
+    } else if (k === ' ' || k === 'Enter') {
+      e.preventDefault()
+      slash(g, g.aim.x, g.aim.y)
+    } else if (k === 'g' && !g.held && !e.repeat) {
       e.preventDefault()
       const b = grabAt(g, g.aim.x, g.aim.y)
       if (b) g.held = b

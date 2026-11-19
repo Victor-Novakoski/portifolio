@@ -88,12 +88,19 @@ function lantern(c: CanvasRenderingContext2D, x: number, y: number, t: number) {
   g.addColorStop(0, `rgba(${AMBER},.6)`)
   g.addColorStop(1, `rgba(${AMBER},0)`)
   c.fillStyle = g
-  c.beginPath(); c.arc(x, y, 70 * f, 0, TAU); c.fill()
+  c.beginPath()
+  c.arc(x, y, 70 * f, 0, TAU)
+  c.fill()
   c.restore()
   c.save()
   c.translate(x, y)
   c.fillStyle = INK
-  c.beginPath(); c.moveTo(-9, -13); c.lineTo(0, -19); c.lineTo(9, -13); c.closePath(); c.fill()
+  c.beginPath()
+  c.moveTo(-9, -13)
+  c.lineTo(0, -19)
+  c.lineTo(9, -13)
+  c.closePath()
+  c.fill()
   c.fillRect(-10, -13, 20, 3)
   c.fillRect(-10, 11, 20, 3)
   c.fillStyle = `rgb(${AMBER})`
@@ -102,7 +109,12 @@ function lantern(c: CanvasRenderingContext2D, x: number, y: number, t: number) {
   c.fillRect(-3, -4, 6, 10)
   c.strokeStyle = INK
   c.lineWidth = 1.6
-  c.beginPath(); c.moveTo(0, -10); c.lineTo(0, 11); c.moveTo(-7, 0); c.lineTo(7, 0); c.stroke()
+  c.beginPath()
+  c.moveTo(0, -10)
+  c.lineTo(0, 11)
+  c.moveTo(-7, 0)
+  c.lineTo(7, 0)
+  c.stroke()
   c.restore()
 }
 
@@ -112,9 +124,13 @@ function eyes(c: CanvasRenderingContext2D, pts: Array<[number, number]>) {
     g.addColorStop(0, `rgba(${AMBER},.9)`)
     g.addColorStop(1, `rgba(${AMBER},0)`)
     c.fillStyle = g
-    c.beginPath(); c.arc(x, y, 5, 0, TAU); c.fill()
+    c.beginPath()
+    c.arc(x, y, 5, 0, TAU)
+    c.fill()
     c.fillStyle = '#FFE2A6'
-    c.beginPath(); c.arc(x, y, 1.3, 0, TAU); c.fill()
+    c.beginPath()
+    c.arc(x, y, 1.3, 0, TAU)
+    c.fill()
   })
 }
 
@@ -138,25 +154,46 @@ export function drawHunter(c: CanvasRenderingContext2D, pose: HunterPose): { lam
   c.scale(scale, scale)
 
   // capa longa, com a barra rasgada
-  p = new Path2D(); parts.push(p)
+  p = new Path2D()
+  parts.push(p)
   p.moveTo(-14, -300)
   p.bezierCurveTo(-36, -296, -50, -282, -52, -258)
   p.bezierCurveTo(-56, -190, -62, -100, -70 - sway, -2)
-  p.lineTo(-58, -26); p.lineTo(-46, -4); p.lineTo(-34, -34); p.lineTo(-20, -6); p.lineTo(-8, -28)
-  p.lineTo(6, -2); p.lineTo(18, -30); p.lineTo(32, -4); p.lineTo(46, -24); p.lineTo(58, 0); p.lineTo(66 + flap, -20)
+  p.lineTo(-58, -26)
+  p.lineTo(-46, -4)
+  p.lineTo(-34, -34)
+  p.lineTo(-20, -6)
+  p.lineTo(-8, -28)
+  p.lineTo(6, -2)
+  p.lineTo(18, -30)
+  p.lineTo(32, -4)
+  p.lineTo(46, -24)
+  p.lineTo(58, 0)
+  p.lineTo(66 + flap, -20)
   p.lineTo(74 + sway, -2)
   p.bezierCurveTo(64, -100, 58, -190, 52, -258)
   p.bezierCurveTo(50, -282, 36, -296, 14, -300)
   p.closePath()
 
   // braço do lado da luz, saindo da capa até o cajado
-  p = new Path2D(); parts.push(p)
-  p.moveTo(-46, -264); p.bezierCurveTo(-62, -250, -78, -236, -88, -224); p.lineTo(-80, -210); p.bezierCurveTo(-68, -222, -52, -236, -38, -246); p.closePath()
-  p = new Path2D(); parts.push(p)
-  p.moveTo(-98, -224); p.quadraticCurveTo(-92, -232, -84, -228); p.quadraticCurveTo(-78, -220, -82, -208); p.quadraticCurveTo(-92, -204, -98, -210); p.closePath()
+  p = new Path2D()
+  parts.push(p)
+  p.moveTo(-46, -264)
+  p.bezierCurveTo(-62, -250, -78, -236, -88, -224)
+  p.lineTo(-80, -210)
+  p.bezierCurveTo(-68, -222, -52, -236, -38, -246)
+  p.closePath()
+  p = new Path2D()
+  parts.push(p)
+  p.moveTo(-98, -224)
+  p.quadraticCurveTo(-92, -232, -84, -228)
+  p.quadraticCurveTo(-78, -220, -82, -208)
+  p.quadraticCurveTo(-92, -204, -98, -210)
+  p.closePath()
 
   // capuz: cobre a cabeça, ponta caída para trás
-  p = new Path2D(); parts.push(p)
+  p = new Path2D()
+  parts.push(p)
   p.moveTo(-24, -292)
   p.bezierCurveTo(-34, -318, -26, -350, 0, -356)
   p.bezierCurveTo(18, -358, 30, -350, 38, -338)
@@ -169,18 +206,33 @@ export function drawHunter(c: CanvasRenderingContext2D, pose: HunterPose): { lam
   c.strokeStyle = INK
   c.lineCap = 'round'
   c.lineWidth = 5
-  c.beginPath(); c.moveTo(-88, 0); c.lineTo(TOP.x, TOP.y); c.stroke()
+  c.beginPath()
+  c.moveTo(-88, 0)
+  c.lineTo(TOP.x, TOP.y)
+  c.stroke()
   c.lineWidth = 4
-  c.beginPath(); c.moveTo(TOP.x, TOP.y); c.quadraticCurveTo(TOP.x - 4, TOP.y - 18, HOOK.x, HOOK.y - 8); c.lineTo(HOOK.x, HOOK.y); c.stroke()
+  c.beginPath()
+  c.moveTo(TOP.x, TOP.y)
+  c.quadraticCurveTo(TOP.x - 4, TOP.y - 18, HOOK.x, HOOK.y - 8)
+  c.lineTo(HOOK.x, HOOK.y)
+  c.stroke()
   c.lineWidth = 1.6
-  c.beginPath(); c.moveTo(HOOK.x, HOOK.y); c.lineTo(lamp.x, lamp.y - 18); c.stroke()
+  c.beginPath()
+  c.moveTo(HOOK.x, HOOK.y)
+  c.lineTo(lamp.x, lamp.y - 18)
+  c.stroke()
 
   silhouette(c, parts, lamp, t)
 
   // abertura do capuz: rosto todo na sombra, só os olhos
   c.fillStyle = '#000'
-  c.beginPath(); c.ellipse(-4, -318, 14, 19, -0.08, 0, TAU); c.fill()
-  eyes(c, [[-9, -318], [2, -318]])
+  c.beginPath()
+  c.ellipse(-4, -318, 14, 19, -0.08, 0, TAU)
+  c.fill()
+  eyes(c, [
+    [-9, -318],
+    [2, -318],
+  ])
 
   c.save()
   c.translate(lamp.x, lamp.y)
