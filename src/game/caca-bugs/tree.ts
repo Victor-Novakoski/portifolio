@@ -25,11 +25,11 @@ export type Perk = {
   concept: string
 }
 
-// Custos por nível. Medido com um jogador forte simulado: ~45 fragmentos na 1ª parada e ~90 na 2ª
-// (os caçadores automáticos também caçam), o que dá 5 ou 6 compras. Fechar a árvore custaria 380.
-const C1 = 15
-const C2 = 30
-const C3 = 50
+// Custos por nível, baixos de propósito: a ideia é fechar a árvore (96) até a 2ª parada e testar a build cheia
+// na onda sem fim. Medido com um jogador simulado: ~40 fragmentos na 1ª parada e 80 a 100 na 2ª.
+const C1 = 4
+const C2 = 8
+const C3 = 12
 
 export const PERKS: Perk[] = [
   {
