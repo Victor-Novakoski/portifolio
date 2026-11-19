@@ -2,37 +2,43 @@ import type { ReactNode } from 'react'
 
 import type { ProjectIcon } from '@/data/projects'
 
-// O caçador das arenas: um <symbol> desenhado uma vez e reaproveitado por <use>.
+// O caçador das arenas: o mesmo de capuz e cajado da tela de título, num <symbol> reaproveitado por <use>.
 export function HunterSymbol() {
   return (
     <svg width="0" height="0" style={{ position: 'absolute' }} aria-hidden="true">
       <defs>
         <symbol id="hunter" viewBox="-110 -390 220 400">
-          <path
-            fill="#06050A"
-            stroke="#4A4458"
-            strokeWidth="2"
-            d="M-18 0 L-14 -72 L-4 -72 L-6 0 Z M6 0 L4 -72 L14 -72 L20 0 Z M-12 -308 L-40 -290 Q-44 -240 -30 -200 L-50 -72 L-22 -90 L-8 -62 L8 -90 L24 -64 L48 -76 L30 -200 Q44 -240 40 -290 L12 -308 Z M-18 -300 L-24 -330 L-6 -316 Z M18 -300 L24 -330 L6 -316 Z M36 -288 Q52 -240 54 -190 L44 -188 Q40 -235 28 -270 Z M-36 -288 Q-54 -245 -56 -200 L-46 -198 Q-42 -240 -28 -270 Z M-20 -334 Q-22 -372 0 -376 Q22 -372 20 -334 Z"
-          />
-          <circle cx="0" cy="-322" r="13" fill="#06050A" />
-          <ellipse cx="0" cy="-334" rx="48" ry="7" fill="#06050A" stroke="#4A4458" strokeWidth="2" transform="rotate(-4 0 -334)" />
-          <path d="M50 -190 L96 -16" stroke="#A9D6E5" strokeWidth="4" strokeLinecap="round" opacity=".7" />
-          <rect x="-60" y="-182" width="14" height="20" rx="2" fill="#E3C17A" opacity=".85" />
+          <g transform="translate(8 0) scale(.96)">
+            <path d="M-84 0 L-90 -372 Q-94 -390 -106 -382" fill="none" stroke="#050506" strokeWidth="5" strokeLinecap="round" />
+            <path d="M-106 -382 L-105 -366" stroke="#3D3A36" strokeWidth="1.6" />
+            <g fill="#050506" stroke="#3D3A36" strokeWidth="2">
+              <path d="M-14 -300 C-36 -296 -50 -282 -52 -258 C-56 -190 -62 -100 -70 -2 L-58 -26 L-46 -4 L-34 -34 L-20 -6 L-8 -28 L6 -2 L18 -30 L32 -4 L46 -24 L58 0 L66 -20 L74 -2 C64 -100 58 -190 52 -258 C50 -282 36 -296 14 -300 Z" />
+              <path d="M-46 -264 C-62 -250 -74 -236 -82 -224 L-74 -210 C-64 -222 -52 -236 -38 -246 Z" />
+              <circle cx="-84" cy="-218" r="8" />
+              <path d="M-24 -292 C-34 -318 -26 -350 0 -356 C18 -358 30 -350 38 -338 C46 -326 56 -316 64 -300 C50 -306 40 -308 32 -306 C30 -300 26 -294 24 -290 Z" />
+            </g>
+            <ellipse cx="-4" cy="-318" rx="14" ry="19" fill="#000" />
+            <circle cx="-9" cy="-318" r="2.4" fill="#F0B44C" />
+            <circle cx="2" cy="-318" r="2.4" fill="#F0B44C" />
+            <rect x="-112" y="-366" width="14" height="20" rx="2" fill="#F0B44C" />
+          </g>
         </symbol>
       </defs>
     </svg>
   )
 }
 
+// Marca do cabeçalho: o caçador de capuz, olhos acesos, e o cajado com a lanterna (mesmo desenho do favicon).
 export function BrandMark() {
   return (
     <svg viewBox="0 0 32 32" aria-hidden="true">
-      <rect width="32" height="32" rx="8" fill="#17151D" />
-      <path d="M5 29L27 6" stroke="#A9C3CC" strokeWidth="2.6" strokeLinecap="round" />
-      <path d="M8 22L13 27" stroke="#C9A96A" strokeWidth="2.4" />
-      <path d="M11 19 Q10.5 9 16 8.5 Q21.5 9 21 19 Z" fill="#EDE7DC" />
-      <ellipse cx="16" cy="19.5" rx="13" ry="2.6" fill="#EDE7DC" />
-      <rect x="11" y="16.5" width="10" height="1.6" fill="#D2384F" />
+      <rect width="32" height="32" rx="6" fill="#2A2927" />
+      <circle cx="9.3" cy="10.3" r="7" fill="#F0B44C" opacity=".22" />
+      <path d="M7 28V8.5Q7 6 9 6" fill="none" stroke="#0B0B0C" strokeWidth="1.8" strokeLinecap="round" />
+      <rect x="7.6" y="8" width="3.4" height="4.6" rx=".6" fill="#F0B44C" />
+      <path d="M12 28 L13.5 17 Q13 8 18.5 7 Q23 7 25 10.5 Q26.5 13 28 14 Q25.5 13.6 24 14 L25 28 Z" fill="#0B0B0C" stroke="#F0B44C" strokeWidth=".8" />
+      <circle cx="17.5" cy="15.4" r="1" fill="#F0B44C" />
+      <circle cx="19.9" cy="15.4" r="1" fill="#F0B44C" />
     </svg>
   )
 }
@@ -40,12 +46,12 @@ export function BrandMark() {
 export function BugIcon({ split = false }: { split?: boolean }) {
   return (
     <svg viewBox="0 0 28 28" aria-hidden="true">
-      <g stroke="#EDE7DC" strokeWidth="1.8" strokeLinecap="round">
+      <g stroke="#E4E0D8" strokeWidth="1.8" strokeLinecap="round">
         <path d={split ? 'M9 11 4 8M9 15H3M9 19l-5 3M19 11l5-3M19 15h6M19 19l5 3M12 6 10 3M16 6l2-3' : 'M9 11 4 8M9 15H3M9 19l-5 3M19 11l5-3M19 15h6M19 19l5 3'} />
       </g>
-      <ellipse cx="14" cy="16" rx="6" ry="8" fill="#D2384F" />
-      <circle cx="14" cy="7.5" r="3.4" fill="#EDE7DC" />
-      {split && <path d="M14 9v15" stroke="#0E0D12" strokeWidth="1.2" />}
+      <ellipse cx="14" cy="16" rx="6" ry="8" fill="#E0505C" />
+      <circle cx="14" cy="7.5" r="3.4" fill="#E4E0D8" />
+      {split && <path d="M14 9v15" stroke="#0B0B0C" strokeWidth="1.2" />}
     </svg>
   )
 }
@@ -56,7 +62,7 @@ const itemPaths: Record<ProjectIcon, ReactNode> = {
       <circle cx="24" cy="6" r="3" />
       <path d="M17 10h14l2 5H15z" />
       <rect x="16" y="15" width="16" height="20" rx="2" />
-      <rect x="20" y="19" width="8" height="12" fill="#E3C17A" stroke="none" />
+      <rect x="20" y="19" width="8" height="12" fill="#F0B44C" stroke="none" />
       <path d="M14 35h20v4H14z" />
     </>
   ),
@@ -72,7 +78,7 @@ const itemPaths: Record<ProjectIcon, ReactNode> = {
     <>
       <path d="M8 16h8l3-5h10l3 5h8v22H8z" />
       <circle cx="24" cy="26" r="7" />
-      <circle cx="24" cy="26" r="3" fill="#D2384F" stroke="none" />
+      <circle cx="24" cy="26" r="3" fill="#E0505C" stroke="none" />
     </>
   ),
   gear: (
@@ -91,7 +97,7 @@ const itemPaths: Record<ProjectIcon, ReactNode> = {
 
 export function ItemIcon({ icon }: { icon: ProjectIcon }) {
   return (
-    <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#EDE7DC" strokeWidth="2">
+    <svg viewBox="0 0 48 48" aria-hidden="true" fill="none" stroke="#E4E0D8" strokeWidth="2">
       {itemPaths[icon]}
     </svg>
   )
