@@ -1,7 +1,7 @@
 # 015. Caça-bugs com árvore de habilidades, numa partida curta e sem save
 
 - **Data:** 19/11/2026
-- **Status:** proposta (escopo à espera da aprovação do Victor; nada implementado)
+- **Status:** ativa (escopo aprovado pelo Victor em 19/11/2026)
 
 ## Contexto
 

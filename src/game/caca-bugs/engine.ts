@@ -1,14 +1,21 @@
 import { prefersReducedMotion, rnd } from '@/lib/motion'
+import { PERKS, WAVE_MS, WAVES, type PerkId } from '@/game/caca-bugs/tree'
 
-// Caça-bugs: proteger a Produção por 75 s. Golpear, agarrar e arremessar bugs; as relíquias do Sobre
-// (rosa de ferro, amigurumi, bazuca) aparecem como poderes. Portado do protótipo "Forja do Caçador".
+// Caça-bugs: proteger a Produção por 3 ondas de 40 s. Golpear, agarrar e arremessar bugs; as relíquias do Sobre
+// (rosa de ferro, amigurumi, bazuca) aparecem como poderes. Cada bug caçado vale 1 fragmento, gasto na árvore
+// de habilidades entre as ondas (decisão 015). Portado do protótipo "Forja do Caçador".
 
 type BugType = 'n' | 's' | 'a' // normal, duplicado (se divide), pede confirmação
 type Bug = { x: number; y: number; vx: number; vy: number; r: number; type: BugType; ack: number; thrown: number; w: number }
 type RelicKind = 'rosa' | 'ami' | 'baz'
 type Relic = { k: RelicKind; x: number; y: number; l: number; p: number }
 type Ball = { x: number; y: number; vx: number; vy: number; r: number; l: number; a: number }
-type Effect = { k: 't'; x: number; y: number; s: string; c: string; l: number } | { k: 's' | 'r'; x: number; y: number; l: number }
+type Effect =
+  | { k: 't'; x: number; y: number; s: string; c: string; l: number }
+  | { k: 's' | 'r'; x: number; y: number; l: number }
+  | { k: 'z'; x: number; y: number; tx: number; ty: number; l: number }
+// Caçador automático (Goroutine): gira em volta da Produção e golpeia sozinho.
+type Hunter = { a: number; cd: number }
 type Particle = { x: number; y: number; vx: number; vy: number; c: string; l: number; s: number }
 type Held = Bug | Ball
 
@@ -34,27 +41,41 @@ type Game = {
   aim: { x: number; y: number; vx: number; vy: number; px: number; py: number }
   held: Held | null
   kills: number
+  wave: number
+  frag: number
+  perks: Set<PerkId>
+  rollback: boolean
+  hunters: Hunter[]
+  shop: boolean
 }
 
-export type Result = { score: number; kills: number; survived: boolean; record: boolean; best: number }
+export type Result = { score: number; kills: number; survived: boolean; record: boolean; best: number; wave: number; perks: PerkId[]; seconds: number }
+export type Shop = { wave: number; frag: number; perks: PerkId[] }
 
 export type EngineEvents = {
-  hud(h: { score: number; time: number; core: number; relic: string }): void
+  hud(h: { score: number; time: number; core: number; relic: string; wave: number; frag: number }): void
   say(text: string): void
   paused(score: number): void
   over(result: Result): void
+  // Fim de uma onda que não é a última: o jogo para e a árvore abre.
+  shop(shop: Shop): void
 }
 
 export type Engine = {
   start(): void
   pause(paused: boolean): void
   togglePause(): void
+  buy(id: PerkId): Shop | null
+  nextWave(): void
   destroy(): void
 }
 
 const RELIC: Record<RelicKind, string> = { rosa: 'Rosa de ferro', ami: 'Amigurumi', baz: 'Bazuca' }
 export const CORE_HP = 6
 const SLASH_R = 40
+const LIGHT_R = 95
+const HUNTER_MS = 2000
+const DUR = WAVES * WAVE_MS
 const TAU = Math.PI * 2
 const MOVE_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'a', 'd', 'w', 's'])
 
@@ -89,17 +110,27 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
 
   function newGame(): Game {
     return {
-      t: 0, dur: 75000, score: 0,
+      t: 0, dur: DUR, score: 0,
       core: { x: MW / 2, y: MH / 2, r: 30, hp: CORE_HP, shield: 0 },
       bugs: [], relics: [], balls: [], fx: [], parts: [],
       combo: 0, comboT: 0, spawnT: 600, relicT: 8000, relicI: 0, baz: 0,
       over: false, paused: true, shake: 0,
       aim: { x: MW / 2, y: MH * 0.25, vx: 0, vy: 0, px: MW / 2, py: MH * 0.25 },
       held: null, kills: 0,
+      wave: 1, frag: 0, perks: new Set(), rollback: false, hunters: [], shop: false,
     }
   }
 
   const running = () => !!G && !G.over && !G.paused
+
+  // Efeitos dos nós da árvore.
+  const slashR = (g: Game) => (g.perks.has('batching') ? SLASH_R * 1.5 : SLASH_R)
+  const lightR = (g: Game) => (g.perks.has('indice') ? LIGHT_R * 1.5 : LIGHT_R)
+  const shopState = (g: Game) => ({ wave: g.wave, frag: g.frag, perks: [...g.perks] })
+
+  function hunterAt(g: Game, h: Hunter) {
+    return { x: g.core.x + Math.cos(h.a) * (g.core.r + 26), y: g.core.y + Math.sin(h.a) * (g.core.r + 26) }
+  }
 
   function spawnEnemy(g: Game) {
     const edge = Math.floor(Math.random() * 4)
@@ -133,6 +164,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     const pts = base * Math.min(g.combo, 5)
     g.score += pts
     g.kills++
+    g.frag++
     text(g, b.x, b.y - 10, `${how ? `${how} ` : ''}+${pts}${g.combo > 1 ? ` x${Math.min(g.combo, 5)}` : ''}`)
     burst(g, b.x, b.y, b.type === 'a' ? '#A9D6E5' : b.type === 's' ? '#9C978E' : '#E0505C', 8)
   }
@@ -148,7 +180,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       return
     }
     if (b.type === 'a') {
-      if (b.ack > 0) kill(g, b, 20, 'ACK')
+      if (b.ack > 0 || g.perks.has('typescript')) kill(g, b, 20, 'ACK')
       else {
         b.ack = 800
         text(g, b.x, b.y - 12, 'CONFIRME', '#A9D6E5')
@@ -175,7 +207,8 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     let any = false
     g.bugs.slice().forEach(b => {
       const dx = b.x - x, dy = b.y - y
-      if (dx * dx + dy * dy < (b.r + SLASH_R) * (b.r + SLASH_R)) { hit(g, b); any = true }
+      const R = b.r + slashR(g)
+      if (dx * dx + dy * dy < R * R) { hit(g, b); any = true }
     })
     if (!any) g.relics.slice().forEach(r => {
       const dx = r.x - x, dy = r.y - y
@@ -217,7 +250,10 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     if (isRecord) record = g.score
     on.say(`Fim da caçada. ${g.score} pontos.`)
     pushHud(g)
-    on.over({ score: g.score, kills: g.kills, survived: g.core.hp > 0, record: isRecord, best: record })
+    on.over({
+      score: g.score, kills: g.kills, survived: g.core.hp > 0, record: isRecord, best: record,
+      wave: g.wave, perks: [...g.perks], seconds: Math.round(g.t / 1000),
+    })
   }
 
   function update(g: Game, dt: number) {
@@ -227,6 +263,10 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     if (g.t >= g.dur) {
       g.t = g.dur
       return end(g)
+    }
+    if (g.t >= g.wave * WAVE_MS) {
+      g.t = g.wave * WAVE_MS
+      return endWave(g)
     }
     const a = g.aim
     if (keys.ArrowLeft || keys.a) a.x -= 7 * f
@@ -245,7 +285,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     if (g.spawnT <= 0) {
       spawnEnemy(g)
       if (g.t > 40000 && Math.random() < 0.4) spawnEnemy(g)
-      g.spawnT = Math.max(360, 1250 - (g.t / 75000) * 880)
+      g.spawnT = Math.max(360, 1250 - (g.t / DUR) * 880)
     }
     g.relicT -= dt
     if (g.relicT <= 0) {
@@ -255,7 +295,24 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     }
     if (g.comboT > 0) g.comboT -= dt
     if (c.shield > 0) c.shield -= dt
-    const spd = 1.6 + (g.t / 75000) * 2.2
+    const spd = 1.6 + (g.t / DUR) * 2.2
+    const LR = lightR(g), slow = g.perks.has('indice') ? 0.3 : 0.45
+    for (const h of g.hunters) {
+      if (!reduce) h.a += 0.02 * f
+      h.cd -= dt
+      if (h.cd > 0 || !g.bugs.length) continue
+      // Golpeia o bug mais perto da Produção.
+      let target = g.bugs[0], bd = 1e9
+      for (const b of g.bugs) {
+        const d = (b.x - c.x) ** 2 + (b.y - c.y) ** 2
+        if (d < bd && g.held !== b) { bd = d; target = b }
+      }
+      if (g.held === target) continue
+      h.cd = HUNTER_MS
+      const p = hunterAt(g, h)
+      g.fx.push({ k: 'z', x: p.x, y: p.y, tx: target.x, ty: target.y, l: 12 })
+      hit(g, target)
+    }
     for (const b of g.bugs.slice()) {
       b.w += 0.2 * f
       if (b.ack > 0) {
@@ -272,8 +329,8 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
           b.vy += ((dy / d) * 0.09 + Math.sin(b.w) * 0.05) * f
         }
         // A luz da lanterna (a mira) deixa os bugs lentos.
-        const lx = a.x - b.x, ly = a.y - b.y, lit = lx * lx + ly * ly < 95 * 95
-        const cap = lit ? spd * 0.45 : spd, sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy)
+        const lx = a.x - b.x, ly = a.y - b.y, lit = lx * lx + ly * ly < LR * LR
+        const cap = lit ? spd * slow : spd, sp = Math.sqrt(b.vx * b.vx + b.vy * b.vy)
         if (b.thrown > 0) b.thrown -= f
         else if (sp > cap) { b.vx *= cap / sp; b.vy *= cap / sp }
         if (d < c.r + b.r) {
@@ -283,6 +340,14 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
           } else {
             remove(g.bugs, b)
             c.hp--
+            if (c.hp <= 0 && g.perks.has('transacao') && !g.rollback) {
+              // Transação: o golpe fatal é desfeito uma vez.
+              g.rollback = true
+              c.hp = 2
+              text(g, c.x, c.y - 44, 'ROLLBACK', '#A9D6E5')
+              on.say('Transação: o golpe foi desfeito. A Produção volta com 2 de vida.')
+              return
+            }
             burst(g, c.x, c.y, '#E0505C', 10)
             if (!reduce) g.shake = 8
             text(g, c.x, c.y - 44, 'PRODUÇÃO -1', '#E0505C')
@@ -354,6 +419,21 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     })
     g.fx = g.fx.filter(e => e.l > 0)
     if (g.shake > 0) g.shake -= f
+  }
+
+  function endWave(g: Game) {
+    g.held = null
+    // A onda termina limpa: os bugs que sobraram fogem.
+    g.bugs.forEach(b => burst(g, b.x, b.y, '#3D3A36', 3))
+    g.bugs = []
+    g.balls = []
+    g.relics = []
+    g.paused = true
+    g.shop = true
+    draw(g)
+    pushHud(g)
+    on.say(`Fim da onda ${g.wave}. Você tem ${g.frag} fragmentos para a árvore.`)
+    on.shop(shopState(g))
   }
 
   function drawBug(b: Bug) {
@@ -444,9 +524,16 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     drawBase()
     if (g.shake > 0) c.translate(rnd(-1, 1) * g.shake * 0.5, rnd(-1, 1) * g.shake * 0.5)
     const A = g.aim
-    const lg = c.createRadialGradient(A.x, A.y, 4, A.x, A.y, 95)
+    const LR = lightR(g)
+    const lg = c.createRadialGradient(A.x, A.y, 4, A.x, A.y, LR)
     lg.addColorStop(0, 'rgba(240,180,76,.22)'); lg.addColorStop(1, 'rgba(240,180,76,0)')
-    c.fillStyle = lg; c.beginPath(); c.arc(A.x, A.y, 95, 0, TAU); c.fill()
+    c.fillStyle = lg; c.beginPath(); c.arc(A.x, A.y, LR, 0, TAU); c.fill()
+    g.hunters.forEach(h => {
+      const p = hunterAt(g, h)
+      c.fillStyle = '#F0B44C'; c.beginPath(); c.arc(p.x, p.y, 5, 0, TAU); c.fill()
+      c.strokeStyle = 'rgba(240,180,76,.5)'; c.lineWidth = 1
+      c.beginPath(); c.arc(p.x, p.y, 9, -Math.PI / 2, -Math.PI / 2 + TAU * (1 - Math.max(0, h.cd) / HUNTER_MS)); c.stroke()
+    })
     g.relics.forEach(drawRelic)
     g.balls.forEach(o => {
       c.save(); c.translate(o.x, o.y); c.rotate(o.a); c.globalAlpha = o.l < 2000 ? 0.5 : 1
@@ -467,7 +554,10 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
         c.fillText(e.s, e.x, e.y)
       } else if (e.k === 's') {
         c.globalAlpha = e.l / 14; c.strokeStyle = '#A9C3CC'; c.lineWidth = 3
-        c.beginPath(); c.arc(e.x, e.y, SLASH_R + 4 - e.l, -2.4, -0.4); c.stroke()
+        c.beginPath(); c.arc(e.x, e.y, slashR(g) + 4 - e.l, -2.4, -0.4); c.stroke()
+      } else if (e.k === 'z') {
+        c.globalAlpha = e.l / 12; c.strokeStyle = '#F0B44C'; c.lineWidth = 2
+        c.beginPath(); c.moveTo(e.x, e.y); c.lineTo(e.tx, e.ty); c.stroke()
       } else {
         c.globalAlpha = e.l / 30; c.strokeStyle = '#F0B44C'; c.lineWidth = 4
         c.beginPath(); c.arc(e.x, e.y, 130 - e.l * 3, 0, TAU); c.stroke()
@@ -484,9 +574,11 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
   function pushHud(g: Game) {
     on.hud({
       score: g.score,
-      time: Math.ceil((g.dur - g.t) / 1000),
+      time: Math.ceil((g.wave * WAVE_MS - g.t) / 1000),
       core: g.core.hp,
       relic: g.baz ? 'bazuca pronta' : g.core.shield > 0 ? 'rosa de ferro' : g.balls.length ? 'amigurumi' : 'nenhuma',
+      wave: g.wave,
+      frag: g.frag,
     })
   }
 
@@ -596,7 +688,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     },
     pause(paused) {
       const g = G
-      if (!g || g.over || g.paused === paused) return
+      if (!g || g.over || g.shop || g.paused === paused) return
       g.paused = paused
       if (paused) on.paused(g.score)
       else {
@@ -606,6 +698,32 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     },
     togglePause() {
       if (G && started) api.pause(!G.paused)
+    },
+    buy(id) {
+      const g = G
+      const perk = PERKS.find(p => p.id === id)
+      if (!g || !g.shop || !perk || g.perks.has(id) || g.frag < perk.cost) return null
+      if (perk.needs && !g.perks.has(perk.needs)) return null
+      g.frag -= perk.cost
+      g.perks.add(id)
+      if (id === 'goroutine') g.hunters = [{ a: 0, cd: HUNTER_MS }]
+      if (id === 'pool') g.hunters = [0, 1, 2].map(i => ({ a: (i * TAU) / 3, cd: HUNTER_MS + i * 400 }))
+      pushHud(g)
+      draw(g)
+      return shopState(g)
+    },
+    nextWave() {
+      const g = G
+      if (!g || !g.shop) return
+      g.shop = false
+      g.wave++
+      g.spawnT = 600
+      g.paused = false
+      Object.keys(keys).forEach(k => (keys[k] = false))
+      canvas.focus()
+      on.say(`Onda ${g.wave} de ${WAVES}.`)
+      pushHud(g)
+      run()
     },
     destroy() {
       if (raf) cancelAnimationFrame(raf)

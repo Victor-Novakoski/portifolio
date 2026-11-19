@@ -19,14 +19,14 @@ Mostrar um desenvolvedor full stack (Go + React) com personalidade (persistente,
 2. Projetos em cards de "descrição de item": Rastreia, Panda Cooking (com a demo da busca por trigramas), Revelação e dois estudos.
 3. Desafios técnicos como lutas curtas contra chefes. Cada acerto revela uma parte da ficha: o golpe (o risco), a fraqueza (a solução) e a recompensa (o resultado). "Ler sem lutar" abre tudo.
 4. Experiência, Habilidades e um Sobre com o que o Victor faz fora do código.
-5. Mini game Caça-bugs, aberto pelo cabeçalho ou pela seção dele.
+5. Mini game Caça-bugs, aberto pelo cabeçalho ou pela seção dele: 3 ondas curtas, com uma árvore de habilidades da stack (Go, React, PostgreSQL) entre as ondas (decisão 015).
 6. Contato e currículo em PDF.
 7. Para quem volta: uma faixa curta "Continuar em <seção>".
 
 ## Fora do escopo
 
 - Backend, formulário de contato com servidor, analytics de visitante.
-- Conquistas, oficina de montagem e prateleira de itens (cortados na rodada 6 do design para manter só lutar e jogar).
+- Conquistas, oficina de montagem e prateleira de itens (cortados na rodada 6 do design para manter só lutar e jogar). A árvore do Caça-bugs não reabre esse corte: vive só dentro do jogo e não é salva.
 - Qualquer dado da visita anterior além da última seção (sem horário, tempo ou contagem).
 - Telefone no site.
 
