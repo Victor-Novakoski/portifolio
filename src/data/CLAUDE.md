@@ -9,7 +9,7 @@ Todo o texto do site mora aqui. Os componentes só leem; não escreva conteúdo 
 - **Uma fonte só por chefe:** `bosses.ts` alimenta a luta, o "Ler sem lutar" e o modo de movimento reduzido. Não duplique os fragmentos em outro lugar.
 - **Ordem das seções:** `sections.ts` define a ordem, o menu de título, o cabeçalho e o "Continuar em". Mudar o `id` de uma seção quebra o retorno de quem já visitou (cai em "projetos").
 - **Sem telefone no site.** Contato é e-mail, LinkedIn, GitHub e o PDF do currículo.
-- **Currículo:** todo botão aponta para `profile.cvUrl` (`/curriculo-victor-novakoski.pdf`, em `public/`). Ao trocar o PDF, mantenha o nome do arquivo.
+- **Currículo:** todo botão aponta para `profile.cvUrl` (`/curriculo-victor-novakoski.pdf`, em `public/`). Ao trocar o PDF, mantenha o nome do arquivo. A fonte editável é `docs/curriculo/curriculo-victor-novakoski.docx`: para mudar o currículo, edite o docx e exporte para PDF com LibreOffice.
 - **Prints de projeto:** só com dados fictícios, em WebP, dentro de `src/assets/projects/`.
 - **Sobre:** só fatos que o Victor contou (props, cosplays, artesanato). Sem menção a família ou relacionamento.
 
