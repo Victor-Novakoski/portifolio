@@ -65,7 +65,7 @@ export function Bosses() {
       <div className="inner">
         <SectionHead
           id="desafios"
-          sub="Três problemas reais, cada um como um chefe. Cada golpe certo revela uma parte: o risco, a solução e o resultado. Prefere ler direto? Use “Ler sem lutar”."
+          sub="Três problemas reais, cada um como um chefe. Cada golpe certo revela uma parte da ficha: o golpe, a fraqueza e a recompensa. Prefere ler direto? Use “Ler sem lutar”."
         />
         <div className="bosses">
           {bosses.map(boss => (

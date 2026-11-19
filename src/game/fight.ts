@@ -4,7 +4,7 @@ import { prefersReducedMotion, rnd } from '@/lib/motion'
 import { runtime } from '@/lib/runtime'
 
 // Luta contra um chefe: esquivar quando o círculo fecha, segurar para carregar e soltar quando a guarda abre.
-// Cada acerto revela um fragmento (o risco, a solução, o resultado). Portado do protótipo "Forja do Caçador";
+// Cada acerto revela um fragmento da ficha (o golpe, a fraqueza, a recompensa). Portado do protótipo "Forja do Caçador";
 // o React cuida do texto e dos véus, e este módulo mexe só nas peças da arena.
 
 export type Veil = 'intro' | 'pause' | 'lose' | 'win' | 'read'
@@ -45,7 +45,7 @@ export type Fight = {
 type Phase = 'idle' | 'wind' | 'strike' | 'open' | 'ack'
 
 const ONOMATOPOEIA = ['CRAC!', 'TUM!', 'ZÁS!', 'PÁ!']
-const FRAGMENT_NAMES = ['o risco', 'a solução', 'o resultado']
+const FRAGMENT_NAMES = ['o golpe', 'a fraqueza', 'a recompensa']
 const CHARGE_MS = 700
 const HP_MAX = 3
 
@@ -121,7 +121,7 @@ export function createFight(boss: Boss, els: FightElements, on: FightEvents): Fi
     d.style.top = `${c.y - 14}px`
     layer.appendChild(d)
     later(() => d.remove(), 800)
-    const color = kind === 'bad' ? '#D2384F' : kind === 'par' ? '#A9D6E5' : '#E3C17A'
+    const color = kind === 'bad' ? '#E0505C' : kind === 'par' ? '#A9D6E5' : '#F0B44C'
     debris(layer, c.x, c.y + 20, color, kind === 'par' ? 5 : 10, arena.clientHeight - 37)
     if (onHunter) hunterKickV -= 9
     else bossKickV += kind === 'par' ? 6 : 13

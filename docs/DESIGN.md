@@ -10,23 +10,32 @@ Tema: **Forja do Caçador**, um mundo noturno de caçador soulslike. O tema mora
 4. **Todo jogo tem atalho:** "Ler sem lutar" nas lutas; o Caça-bugs é opcional e fecha com Esc.
 5. **Interação de verdade:** arrastar, arremessar, carregar o golpe. Ornamento sem interação não entra.
 
+## Visual: "HUD da Lanterna" (decisão 014)
+
+Preto quase puro, grade de células com linha de 1 px e o âmbar da lanterna como única luz quente. Cantos retos, sem sombra de card. Seções alternam `--bg` e `--bg-2` para quebrar o ritmo.
+
 ## Cores
 
-Os tokens ficam no `:root` de `src/styles/forja.css`, com o contraste medido no comentário do topo. Resumo:
+Os tokens ficam no `:root` de `src/styles/forja.css`, com o contraste medido no comentário do topo. Os nomes dos tokens vêm da versão anterior (`--gold` agora é o âmbar). Resumo:
 
 | Token | Uso |
 | --- | --- |
-| `--bg` #0E0D12, `--surface` #17151D | fundo e cards |
-| `--text` #EDE7DC, `--muted` #A8A1B3 | texto e texto secundário |
-| `--moon` #A9D6E5 | links |
-| `--gold` #E3C17A | destaque, foco, botão principal |
-| `--blood` #D2384F | só barras, ícones e texto grande (4:1); texto pequeno usa `--blood-t` |
+| `--bg` #0B0B0C, `--bg-2` #101011, `--surface` #141415 | fundo, seções alternadas e cards |
+| `--line` #2A2927, `--line-2` #3D3A36 | linhas da grade e bordas |
+| `--text` #E4E0D8, `--muted` #9C978E | texto e texto secundário |
+| `--moon` #A9D6E5 | links e mensagens da luta |
+| `--gold` #F0B44C | âmbar da lanterna: destaque, foco, botão principal, sobrescritos |
+| `--blood` #E0505C | barras de vida e nome do chefe (5,1:1 sobre o fundo) |
 
 ## Fontes
 
-- Cormorant SC: nome e títulos curtos, nunca numa frase.
-- Alegreya Sans: corpo.
-- IBM Plex Mono: fichas técnicas e HUD, no mínimo 12 px.
+- Archivo condensada (`font-stretch: 68%`), peso 800, caixa alta: nome, títulos de seção, de projeto e do menu. Nunca numa frase.
+- IBM Plex Sans: corpo.
+- IBM Plex Mono: células, sobrescritos, fichas técnicas e HUD, no mínimo 12 px.
+
+## O caçador
+
+Capuz e cajado, rosto na sombra com dois pontos âmbar, lanterna no gancho do cajado. É a fonte da luz da tela de título: contorno âmbar só do lado da lanterna. O desenho mora em `src/scene/hunter.ts`; a arena e a marca usam a mesma silhueta em SVG (`src/components/icons.tsx`, `public/favicon.svg`).
 
 ## Movimento
 
@@ -34,6 +43,7 @@ Os tokens ficam no `:root` de `src/styles/forja.css`, com o contraste medido no 
 - O botão Pausar do cabeçalho congela animações CSS e os loops de canvas.
 - Loops infinitos só quando a seção está visível e a aba está aberta.
 - A "ficha que se imprime" roda uma vez por sessão e só usa `translate`.
+- Os sobrescritos das seções acendem (borda âmbar) quando a seção entra na tela.
 
 ## Acessibilidade
 

@@ -1,7 +1,7 @@
 # 004. Tema "Forja do Caçador", na versão enxuta
 
 - **Data:** 24/10/2026
-- **Status:** ativa (substitui a 003)
+- **Status:** ativa (substitui a 003); o visual e o chapéu mudaram na 014
 
 ## Contexto
 
