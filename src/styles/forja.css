@@ -305,7 +305,6 @@ footer .inner{display:flex;flex-wrap:wrap;gap:16px;align-items:center;justify-co
 
 /* Física no título, botão do mini game, destroços */
 .title .hud{position:relative;z-index:1}
-.title canvas.props{position:absolute;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;display:block}
 .sr-f{position:absolute;left:-9999px;top:auto}
 .sr-f:focus{position:static;left:auto;margin:10px 8px 0 0}
 .mgtop{min-height:44px;min-width:44px;padding:0 12px;border:1px solid var(--line-2);background:none;color:var(--text);font:500 .8rem/1 var(--f-mono);cursor:pointer;display:inline-flex;gap:8px;align-items:center;justify-content:center}

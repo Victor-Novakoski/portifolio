@@ -15,17 +15,11 @@ function goToMenu() {
 export function TitleScreen() {
   const titleRef = useRef<HTMLElement>(null)
   const skyRef = useRef<HTMLCanvasElement>(null)
-  const propsRef = useRef<HTMLCanvasElement>(null)
-  const hudRef = useRef<HTMLDivElement>(null)
   const sceneRef = useRef<TitleScene | null>(null)
 
-  // Canvas do céu, do caçador e da lanterna.
+  // Canvas do céu e do caçador com a lanterna.
   useEffect(() => {
-    const scene = mountTitleScene(titleRef.current!, {
-      sky: skyRef.current!,
-      props: propsRef.current!,
-      hud: hudRef.current!,
-    })
+    const scene = mountTitleScene(titleRef.current!, { sky: skyRef.current! })
     sceneRef.current = scene
     return () => {
       scene.destroy()
@@ -85,9 +79,8 @@ export function TitleScreen() {
   return (
     <section className="title" id="topo" ref={titleRef} aria-label="Apresentação">
       <canvas ref={skyRef} aria-hidden="true" />
-      <canvas className="props" ref={propsRef} aria-hidden="true" />
       <div className="hud wrap">
-        <div className="inner hud-l" ref={hudRef}>
+        <div className="inner hud-l">
           <ul className="cells" aria-label="Status">
             <li>{profile.status.base}</li>
             <li className="on">{profile.status.availability}</li>

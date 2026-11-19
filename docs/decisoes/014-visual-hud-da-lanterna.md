@@ -17,5 +17,5 @@ O Victor gostava da ideia da Forja, mas não do visual: seções iguais (linha f
 
 ## Consequência
 
-- Uma única lanterna é a fonte da luz da tela de título. A lanterna na corda (Verlet) ainda existe e aguarda decisão.
+- Uma única lanterna é a fonte da luz da tela de título: a lanterna na corda (Verlet) saiu, e a do cajado virou a peça interativa (arrastar e soltar para balançar no gancho; "Balançar a lanterna" e o segredo "luz" dão um empurrão).
 - Cores e fontes moram nos tokens de `src/styles/forja.css`; o contraste medido está no comentário do topo.

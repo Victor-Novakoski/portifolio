@@ -1,17 +1,15 @@
 import { prefersReducedMotion, rnd } from '@/lib/motion'
 import { runtime } from '@/lib/runtime'
-import { drawHunter } from '@/scene/hunter'
+import { drawHunter, hunterHook } from '@/scene/hunter'
 
-// Tela de título: céu, lua, montanhas, névoa e brasas num canvas, e por cima, noutro canvas,
-// o caçador (desenhado em hunter.ts) e, no outro canvas, uma lanterna pendurada numa corda (Verlet).
+// Tela de título: céu, lua, montanhas, névoa, brasas e o caçador (desenhado em hunter.ts) num canvas.
+// A lanterna no gancho do cajado é um pêndulo: dá para pegar, arrastar e soltar para ela balançar.
 // Portado do protótipo "Forja do Caçador" quase sem mudança de lógica.
 
 type Point = { x: number; y: number }
 type Ember = Point & { vx: number; vy: number; r: number; p: number }
 type Fog = Point & { r: number; v: number }
 type Ridge = { c: string; pts: Array<[number, number]> }
-type RopeNode = Point & { ox: number; oy: number }
-type Grab = 'lamp' | null
 
 export type TitleScene = {
   destroy(): void
@@ -20,16 +18,13 @@ export type TitleScene = {
 
 type Options = {
   sky: HTMLCanvasElement
-  props: HTMLCanvasElement
-  hud: HTMLElement
 }
 
 const TAU = Math.PI * 2
 
-export function mountTitleScene(title: HTMLElement, { sky, props, hud }: Options): TitleScene {
+export function mountTitleScene(title: HTMLElement, { sky }: Options): TitleScene {
   const reduce = prefersReducedMotion()
   const ctx = sky.getContext('2d')
-  const pctx = props.getContext('2d')
   const noop = () => {}
   if (!ctx) return { destroy: noop, swingLamp: noop }
 
@@ -44,10 +39,15 @@ export function mountTitleScene(title: HTMLElement, { sky, props, hud }: Options
   let raf = 0
   const t0 = performance.now()
   let visible = true
-  // Pêndulo da lanterna do caçador: oscilação base + impulso amortecido do swingLamp.
+  // Pêndulo da lanterna do caçador: oscilação base + impulso amortecido (swingLamp, arrastar e soltar).
   let pend = 0
   let pendVel = 0
   let lastT = 0
+  // Onde o caçador e a lanterna ficaram no último quadro, para o toque achar a lanterna.
+  const pose = { x: 0, y: 0, scale: 1 }
+  const lampAt = { x: -999, y: -999 }
+  let grabbed = false
+  const gp = { x: 0, y: 0, vx: 0, vy: 0, t: 0 }
 
   // ---------- Céu ----------
   function build() {
@@ -103,17 +103,28 @@ export function mountTitleScene(title: HTMLElement, { sky, props, hud }: Options
       r.pts.forEach(p => c.lineTo(p[0], p[1]))
       c.lineTo(W + 40, H); c.closePath(); c.fill()
     })
-    // Pêndulo: mola com amortecimento, só avança com o tempo da animação.
-    const dt = Math.max(0, Math.min(0.05, t - lastT))
-    lastT = t
-    pendVel += -25 * pend * dt
-    pendVel *= Math.exp(-1.8 * dt)
-    pend += pendVel * dt
-    const lampAngle = reduce ? 0 : Math.sin(t * 1.6) * 0.22 + Math.sin(t * 3.1) * 0.04 + pend
     const s = (small ? H * 0.36 : H * 0.62) / 410
     const hx = mx - (small ? 0 : mr * 0.2)
     const hy = H * (small ? 0.97 : 0.95)
-    drawHunter(c, { x: hx, y: hy, scale: s, t, lampAngle })
+    Object.assign(pose, { x: hx, y: hy, scale: s })
+    // Pêndulo: mola com amortecimento, só avança com o tempo da animação.
+    const dt = Math.max(0, Math.min(0.05, t - lastT))
+    lastT = t
+    const base = Math.sin(t * 1.6) * 0.22 + Math.sin(t * 3.1) * 0.04
+    if (grabbed) {
+      // Segurando: a lanterna aponta do gancho para o dedo ou o mouse.
+      const hook = hunterHook(pose)
+      const held = Math.max(-1.3, Math.min(1.3, Math.atan2(gp.x - hook.x, gp.y - hook.y)))
+      pend = held - base
+      pendVel = 0
+    } else {
+      pendVel += -25 * pend * dt
+      pendVel *= Math.exp(-1.8 * dt)
+      pend += pendVel * dt
+    }
+    const lampAngle = reduce ? 0 : base + pend
+    const { lamp } = drawHunter(c, { x: hx, y: hy, scale: s, t, lampAngle })
+    lampAt.x = lamp.x; lampAt.y = lamp.y
     fog.forEach(f => {
       f.x += f.v
       if (f.x - f.r > W) f.x = -f.r
@@ -147,130 +158,28 @@ export function mountTitleScene(title: HTMLElement, { sky, props, hud }: Options
     raf = 0
     if (runtime.get().paused || !visible || document.hidden) return
     draw((ts - t0) / 1000)
-    propsStep()
-    propsDraw()
     raf = requestAnimationFrame(loop)
   }
   function kick() {
     if (!raf && !reduce && !runtime.get().paused && visible) raf = requestAnimationFrame(loop)
   }
 
-  // ---------- Lanterna na corda ----------
-  const zone = { l: 0, t: 0, r: 0, b: 0 }
-  const ROPE_N = 8
-  let rope: RopeNode[] = []
-  let segL = 20
-  let grabbed: Grab = null
-  const gp = { x: 0, y: 0, vx: 0, vy: 0, t: 0, sx: 0, sy: 0 }
-
-  function propsBuild() {
-    if (!pctx) return
-    const r = title.getBoundingClientRect()
-    props.width = Math.round(r.width * DPR)
-    props.height = Math.round(r.height * DPR)
-    pctx.setTransform(DPR, 0, 0, DPR, 0, 0)
-    let right = 0
-    let bottom = 0
-    Array.from(hud.children).forEach(el => {
-      const b = el.getBoundingClientRect()
-      if (!b.height) return
-      right = Math.max(right, b.right - r.left)
-      bottom = Math.max(bottom, b.bottom - r.top)
-    })
-    if (r.width >= 760) Object.assign(zone, { l: right + 24, t: 0, r: r.width, b: r.height - 4 })
-    else Object.assign(zone, { l: 0, t: bottom + 16, r: r.width, b: r.height - 4 })
-    const ax = r.width >= 760 ? zone.l + 70 : r.width * 0.16
-    const ay = zone.t
-    segL = r.width >= 760 ? 24 : 15
-    rope = []
-    for (let i = 0; i < ROPE_N; i++) rope.push({ x: ax, y: ay + i * segL, ox: ax, oy: ay + i * segL })
-  }
-
-  function clampZ(p: Point, m: number) {
-    p.x = Math.max(zone.l + m, Math.min(zone.r - m, p.x))
-    p.y = Math.max(zone.t + m, Math.min(zone.b - m, p.y))
-  }
-
-  function propsStep() {
-    if (!rope.length) return
-    for (let i = 1; i < rope.length; i++) {
-      const p = rope[i]
-      const vx = (p.x - p.ox) * 0.99, vy = (p.y - p.oy) * 0.99
-      p.ox = p.x; p.oy = p.y
-      p.x += vx; p.y += vy + 0.45
-    }
-    const L = rope[rope.length - 1]
-    const holdLamp = () => {
-      if (grabbed !== 'lamp') return
-      L.x = gp.x; L.y = gp.y
-      clampZ(L, 10)
-    }
-    holdLamp()
-    for (let k = 0; k < 8; k++) {
-      rope[0].x = rope[0].ox; rope[0].y = rope[0].oy
-      for (let j = 0; j < rope.length - 1; j++) {
-        const a = rope[j], b = rope[j + 1]
-        const dx = b.x - a.x, dy = b.y - a.y, d = Math.sqrt(dx * dx + dy * dy) || 1, df = (d - segL) / d
-        if (j === 0) { b.x -= dx * df; b.y -= dy * df }
-        else { a.x += dx * df * 0.5; a.y += dy * df * 0.5; b.x -= dx * df * 0.5; b.y -= dy * df * 0.5 }
-      }
-      holdLamp()
-    }
-    for (let q = 1; q < rope.length; q++) clampZ(rope[q], 6)
-  }
-
-  function propsDraw() {
-    if (!pctx) return
-    const c = pctx
-    c.clearRect(0, 0, props.width, props.height)
-    c.save()
-    c.beginPath(); c.rect(zone.l, zone.t, zone.r - zone.l, zone.b - zone.t); c.clip()
-    if (rope.length) {
-      const L = rope[rope.length - 1], P = rope[rope.length - 2]
-      const ang = Math.atan2(L.y - P.y, L.x - P.x)
-      c.save()
-      c.globalCompositeOperation = 'lighter'
-      const beam = c.createRadialGradient(L.x, L.y, 4, L.x, L.y, 260)
-      beam.addColorStop(0, 'rgba(240,180,76,.22)'); beam.addColorStop(1, 'rgba(240,180,76,0)')
-      c.fillStyle = beam; c.beginPath(); c.moveTo(L.x, L.y); c.arc(L.x, L.y, 260, ang - 0.38, ang + 0.38); c.closePath(); c.fill()
-      const glow = c.createRadialGradient(L.x, L.y, 2, L.x, L.y, 46)
-      glow.addColorStop(0, 'rgba(240,180,76,.45)'); glow.addColorStop(1, 'rgba(240,180,76,0)')
-      c.fillStyle = glow; c.beginPath(); c.arc(L.x, L.y, 46, 0, TAU); c.fill()
-      c.restore()
-      c.strokeStyle = '#4A4458'; c.lineWidth = 2
-      c.beginPath(); c.moveTo(rope[0].x, rope[0].y)
-      for (let i = 1; i < rope.length; i++) c.lineTo(rope[i].x, rope[i].y)
-      c.stroke()
-      c.save()
-      c.translate(L.x, L.y); c.rotate(ang - Math.PI / 2)
-      c.fillStyle = '#050506'; c.fillRect(-10, -2, 20, 4); c.fillRect(-9, 22, 18, 4)
-      c.fillStyle = '#F0B44C'; c.fillRect(-7, 2, 14, 20)
-      c.strokeStyle = '#050506'; c.lineWidth = 2; c.strokeRect(-7, 2, 14, 20)
-      c.beginPath(); c.moveTo(0, 2); c.lineTo(0, 22); c.stroke()
-      c.restore()
-    }
-    c.restore()
-  }
-
+  // ---------- Lanterna do cajado ----------
   function local(e: { clientX: number; clientY: number }): Point {
     const r = title.getBoundingClientRect()
     return { x: e.clientX - r.left, y: e.clientY - r.top }
   }
 
-  function hitProp(p: Point): Grab {
-    if (reduce || !pctx || !rope.length) return null
-    const L = rope[rope.length - 1]
-    const dx = p.x - L.x, dy = p.y - L.y
-    if (dx * dx + dy * dy < 34 * 34) return 'lamp'
-    return null
+  function hitLamp(p: Point) {
+    if (reduce) return false
+    const r = Math.max(28, 46 * pose.scale)
+    const dx = p.x - lampAt.x, dy = p.y - lampAt.y
+    return dx * dx + dy * dy < r * r
   }
 
   function swingLamp() {
-    if (reduce || !rope.length) return
-    const L = rope[rope.length - 1]
-    const dir = Math.random() < 0.5 ? -1 : 1
-    L.ox = L.x + dir * 22
-    pendVel += dir * 3
+    if (reduce) return
+    pendVel += (Math.random() < 0.5 ? -1 : 1) * 3
     kick()
   }
 
@@ -288,7 +197,7 @@ export function mountTitleScene(title: HTMLElement, { sky, props, hud }: Options
     const p = track(e)
     pt.x = p.x; pt.y = p.y
     if (grabbed) return
-    title.classList.toggle('grab', !onControl(e) && !!hitProp(p))
+    title.classList.toggle('grab', !onControl(e) && hitLamp(p))
   }
   function onPointerLeave() {
     if (grabbed) return
@@ -299,16 +208,15 @@ export function mountTitleScene(title: HTMLElement, { sky, props, hud }: Options
   function onTouchStart(e: TouchEvent) {
     const t = e.touches[0]
     if (!t || onControl(e)) return
-    if (hitProp(local(t))) e.preventDefault()
+    if (hitLamp(local(t))) e.preventDefault()
   }
   function onPointerDown(e: PointerEvent) {
     if (onControl(e)) return
     const p = local(e)
-    gp.x = gp.sx = p.x; gp.y = gp.sy = p.y; gp.vx = gp.vy = 0; gp.t = performance.now()
-    const h = hitProp(p)
-    if (h) {
+    gp.x = p.x; gp.y = p.y; gp.vx = gp.vy = 0; gp.t = performance.now()
+    if (hitLamp(p)) {
       e.preventDefault()
-      grabbed = h
+      grabbed = true
       title.classList.remove('grab')
       title.classList.add('grabbing')
       try { title.setPointerCapture(e.pointerId) } catch { /* sem captura, segue igual */ }
@@ -321,27 +229,23 @@ export function mountTitleScene(title: HTMLElement, { sky, props, hud }: Options
   }
   function release() {
     if (!grabbed) return
-    const L = rope[rope.length - 1]
-    L.ox = L.x - Math.max(-30, Math.min(30, gp.vx))
-    L.oy = L.y - Math.max(-30, Math.min(30, gp.vy))
-    grabbed = null
+    // Soltar com o ponteiro em movimento dá velocidade ao pêndulo (gp.vx é px por quadro de 16 ms).
+    const len = Math.max(20, 40 * pose.scale)
+    pendVel = Math.max(-6, Math.min(6, (gp.vx * 60) / len))
+    grabbed = false
     title.classList.remove('grabbing')
   }
 
   // ---------- Montagem ----------
   build()
-  propsBuild()
   draw(0)
-  propsDraw()
 
   let resizeT = 0
   const ro = new ResizeObserver(() => {
     window.clearTimeout(resizeT)
     resizeT = window.setTimeout(() => {
       build()
-      propsBuild()
       draw(now())
-      propsDraw()
     }, 120)
   })
   ro.observe(title)
