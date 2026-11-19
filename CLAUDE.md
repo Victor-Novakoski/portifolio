@@ -12,12 +12,14 @@ React 19, TypeScript e Vite 6, com CSS puro (`src/styles/forja.css`) e canvas 2D
 
 ```bash
 yarn install --frozen-lockfile
-yarn dev        # http://localhost:5173 (?volta=1 simula quem volta)
-yarn lint       # eslint
-yarn build      # typecheck (tsc nos dois tsconfig) + vite build
+yarn dev          # http://localhost:5173 (?volta=1 simula quem volta)
+yarn lint         # eslint
+yarn format       # prettier --write (src e configs em ts/js)
+yarn format:check # a CI roda este; falha se algo não estiver formatado
+yarn build        # typecheck (tsc nos dois tsconfig) + vite build
 ```
 
-Não há testes automatizados (ver docs/decisoes/011). A CI roda lint e build em todo PR.
+Não há testes automatizados (ver docs/decisoes/011). A CI roda format:check, lint e build em todo PR.
 
 ## Como se orientar
 
@@ -33,6 +35,7 @@ Não há testes automatizados (ver docs/decisoes/011). A CI roda lint e build em
 - Todo `useEffect` que cria listener, observer, timer ou `requestAnimationFrame` desfaz tudo no cleanup. O StrictMode roda os efeitos duas vezes no dev e esconde vazamentos.
 - `localStorage` e `sessionStorage` só por `src/lib/storage.ts` (`safeGet`/`safeSet`): em aba anônima eles lançam erro.
 - Alvos de toque de 44 px, foco visível e tudo usável pelo teclado.
+- Formatação pelo Prettier (`.prettierrc.json`: sem ponto e vírgula, aspas simples, linha de 140). Rode `yarn format` antes de commitar; a CI barra com `yarn format:check`. CSS fica fora (escrito compacto de propósito).
 - Imports com o alias `@/` (aponta para `src/`).
 - Textos do site em português do Brasil. Código e identificadores em inglês; comentários em português.
 - Dados pessoais e de trabalho: ver `src/data/CLAUDE.md` (sigilo da Galileu, nada de número inventado).

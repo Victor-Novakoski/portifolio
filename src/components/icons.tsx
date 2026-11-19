@@ -36,7 +36,12 @@ export function BrandMark() {
       <circle cx="9.3" cy="10.3" r="7" fill="#F0B44C" opacity=".22" />
       <path d="M7 28V8.5Q7 6 9 6" fill="none" stroke="#0B0B0C" strokeWidth="1.8" strokeLinecap="round" />
       <rect x="7.6" y="8" width="3.4" height="4.6" rx=".6" fill="#F0B44C" />
-      <path d="M12 28 L13.5 17 Q13 8 18.5 7 Q23 7 25 10.5 Q26.5 13 28 14 Q25.5 13.6 24 14 L25 28 Z" fill="#0B0B0C" stroke="#F0B44C" strokeWidth=".8" />
+      <path
+        d="M12 28 L13.5 17 Q13 8 18.5 7 Q23 7 25 10.5 Q26.5 13 28 14 Q25.5 13.6 24 14 L25 28 Z"
+        fill="#0B0B0C"
+        stroke="#F0B44C"
+        strokeWidth=".8"
+      />
       <circle cx="17.5" cy="15.4" r="1" fill="#F0B44C" />
       <circle cx="19.9" cy="15.4" r="1" fill="#F0B44C" />
     </svg>
@@ -47,7 +52,13 @@ export function BugIcon({ split = false }: { split?: boolean }) {
   return (
     <svg viewBox="0 0 28 28" aria-hidden="true">
       <g stroke="#E4E0D8" strokeWidth="1.8" strokeLinecap="round">
-        <path d={split ? 'M9 11 4 8M9 15H3M9 19l-5 3M19 11l5-3M19 15h6M19 19l5 3M12 6 10 3M16 6l2-3' : 'M9 11 4 8M9 15H3M9 19l-5 3M19 11l5-3M19 15h6M19 19l5 3'} />
+        <path
+          d={
+            split
+              ? 'M9 11 4 8M9 15H3M9 19l-5 3M19 11l5-3M19 15h6M19 19l5 3M12 6 10 3M16 6l2-3'
+              : 'M9 11 4 8M9 15H3M9 19l-5 3M19 11l5-3M19 15h6M19 19l5 3'
+          }
+        />
       </g>
       <ellipse cx="14" cy="16" rx="6" ry="8" fill="#E0505C" />
       <circle cx="14" cy="7.5" r="3.4" fill="#E4E0D8" />

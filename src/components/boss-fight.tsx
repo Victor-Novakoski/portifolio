@@ -76,9 +76,12 @@ export function BossFight({ boss, allDefeated, onWin }: Props) {
     fightRef.current = fight
 
     // A luta pausa sozinha quando a arena sai da tela.
-    const io = new IntersectionObserver(entries => {
-      if (!entries[0].isIntersecting) fight.pause()
-    }, { threshold: 0.2 })
+    const io = new IntersectionObserver(
+      entries => {
+        if (!entries[0].isIntersecting) fight.pause()
+      },
+      { threshold: 0.2 }
+    )
     io.observe(arenaRef.current!)
 
     return () => {
@@ -213,7 +216,13 @@ export function BossFight({ boss, allDefeated, onWin }: Props) {
                   type="button"
                   onClick={() => fightRef.current?.start()}
                 >
-                  {veil === 'intro' ? 'Lutar' : veil === 'lose' ? 'Tentar de novo' : veil === 'read' ? 'Lutar mesmo assim' : 'Lutar de novo'}
+                  {veil === 'intro'
+                    ? 'Lutar'
+                    : veil === 'lose'
+                      ? 'Tentar de novo'
+                      : veil === 'read'
+                        ? 'Lutar mesmo assim'
+                        : 'Lutar de novo'}
                 </button>
               )}
               {(veil === 'intro' || veil === 'pause' || veil === 'lose') && (
@@ -277,7 +286,9 @@ function veilMessage(veil: Veil, boss: Boss, allDefeated: boolean) {
     case 'lose':
       return 'Errar, entender, tentar de novo. Os fragmentos que você revelou continuam abertos.'
     case 'win':
-      return allDefeated ? 'Os três chefes caíram. Sobrou bug? O Caça-bugs está logo ali.' : 'O golpe, a fraqueza e a recompensa estão abertos logo abaixo.'
+      return allDefeated
+        ? 'Os três chefes caíram. Sobrou bug? O Caça-bugs está logo ali.'
+        : 'O golpe, a fraqueza e a recompensa estão abertos logo abaixo.'
     case 'read':
       return 'O golpe, a fraqueza e a recompensa estão logo abaixo.'
   }
