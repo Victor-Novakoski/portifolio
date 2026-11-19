@@ -49,9 +49,10 @@ export function CacaBugsCall({ best }: { best: number }) {
           </svg>
           <div>
             <p>
-              Proteja a Produção por duas ondas de 40 segundos e uma terceira sem fim, até ela cair. Golpeie os bugs, agarre um e arremesse contra os outros. Entre as ondas, gaste os bugs caçados numa árvore de habilidades com Go, React, PostgreSQL e infra. As peças reais do Sobre
-              aparecem como relíquias: a rosa de ferro protege, o amigurumi vira uma bola que quica e a bazuca faz o próximo golpe
-              explodir.
+              Proteja a Produção por duas ondas de 40 segundos e uma terceira sem fim, até ela cair. Golpeie os bugs, agarre um e arremesse
+              contra os outros. Entre as ondas, gaste os bugs caçados numa árvore de habilidades com Go, React, PostgreSQL e infra. As peças
+              reais do Sobre aparecem como relíquias: a rosa de ferro protege, o amigurumi vira uma bola que quica e a bazuca faz o próximo
+              golpe explodir.
             </p>
             <div className="row">
               <button className="btn gold" type="button" onClick={openGame} onPointerEnter={preloadGame} onFocus={preloadGame}>
