@@ -15,7 +15,7 @@ Todo o texto do site mora aqui. Os componentes só leem; não escreva conteúdo 
 
 ## Armadilhas conhecidas
 
-- O Rastreia ainda aparece como "Código sob pedido · sem link público". O repositório vai ser aberto; quando abrir, troque a nota pelo link (há issue para isso).
+- Cada card de `projects.ts` vira âncora pelo `id` (`/#rastreia`, citada no currículo). Não mude esses `id`s sem trocar o currículo. A rolagem é refeita após a montagem e o carregamento das fontes (`useProjectAnchor` em `projects.tsx`), e `.item` tem `scroll-margin-top` por causa do cabeçalho fixo. O Rastreia já tem o link do repositório (público, decisão 013).
 - O Revelação é jogo de diversão, não projeto de carreira, mas o card fica (`wide: true` ocupa a linha inteira no desktop).
 
 ## Ver também

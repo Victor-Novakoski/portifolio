@@ -1,16 +1,50 @@
+import { useEffect } from 'react'
+
 import { ItemIcon } from '@/components/icons'
 import { SearchDemo } from '@/components/search-demo'
 import { SectionHead } from '@/components/section-head'
 import { projects } from '@/data/projects'
 
+// Card aberto por âncora (/#rastreia, citada no currículo). O navegador tenta rolar antes de o
+// React desenhar a página e as fontes mudam a altura do que vem antes; por isso rola de novo
+// depois da montagem e quando as fontes chegam. Qualquer gesto do visitante cancela.
+function useProjectAnchor() {
+  useEffect(() => {
+    const id = decodeURIComponent(window.location.hash.slice(1))
+    if (!projects.some(p => p.id === id)) return
+    let active = true
+    const events = ['wheel', 'touchstart', 'keydown', 'pointerdown'] as const
+    const stop = () => {
+      active = false
+      events.forEach(type => window.removeEventListener(type, stop, { capture: true }))
+    }
+    const go = () => {
+      if (active) document.getElementById(id)?.scrollIntoView({ block: 'start' })
+    }
+    events.forEach(type => window.addEventListener(type, stop, { capture: true, passive: true }))
+    go()
+    document.fonts?.ready.then(go)
+    const t = window.setTimeout(() => {
+      go()
+      stop()
+    }, 1500)
+    return () => {
+      window.clearTimeout(t)
+      stop()
+    }
+  }, [])
+}
+
 export function Projects() {
+  useProjectAnchor()
+
   return (
     <section className="block wrap" id="projetos" aria-labelledby="h-projetos">
       <div className="inner">
         <SectionHead id="projetos" sub="Dois projetos completos, um jogo e dois estudos, cada um com a descrição do item e a ficha técnica." />
         <div className="inv">
           {projects.map(p => (
-            <article key={p.id} className={`item card ${p.main ? 'main' : 'study'}${p.wide ? ' wide' : ''}`}>
+            <article key={p.id} id={p.id} className={`item card ${p.main ? 'main' : 'study'}${p.wide ? ' wide' : ''}`}>
               <div className="ih">
                 <span className="ico" aria-hidden="true">
                   <ItemIcon icon={p.icon} />

@@ -105,6 +105,9 @@ section.block{padding-block:72px;border-top:1px solid var(--line);scroll-margin-
 
 /* Projetos: ficha técnica em células */
 .inv{display:grid;gap:16px}
+/* Cada card tem âncora própria (#rastreia, citada no currículo): folga para o cabeçalho fixo. */
+.item{scroll-margin-top:72px}
+.item:target{border-color:var(--gold)}
 @media (min-width:860px){.inv{grid-template-columns:1fr 1fr}.item.wide{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;column-gap:28px;align-content:start}.item.wide>*{grid-column:1}.item.wide>.shot{grid-column:2;grid-row:1/span 6;align-self:start;margin:0}}
 .ih{display:flex;gap:14px;align-items:center;margin-bottom:10px}
 .ico{flex:none;width:52px;height:52px;display:grid;place-items:center;background:var(--bg);border:1px solid var(--line-2)}
