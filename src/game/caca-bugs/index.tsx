@@ -25,10 +25,12 @@ export default function CacaBugs({ onBest, onClose }: Props) {
   const engineRef = useRef<Engine | null>(null)
   const scoreRef = useRef<HTMLElement>(null)
   const timeRef = useRef<HTMLElement>(null)
+  const timeLabelRef = useRef<HTMLElement>(null)
   const coreRef = useRef<HTMLElement>(null)
   const relicRef = useRef<HTMLElement>(null)
   const waveRef = useRef<HTMLElement>(null)
   const fragRef = useRef<HTMLElement>(null)
+  const fragCellRef = useRef<HTMLElement>(null)
   // A árvore fica fora do `card` para que comprar um nó não roube o foco do botão.
   const [shop, setShop] = useState<Shop | null>(null)
   const [card, setCard] = useState<Card>({ kind: 'intro' })
@@ -44,8 +46,11 @@ export default function CacaBugs({ onBest, onClose }: Props) {
     root.style.overflow = 'hidden'
 
     const engine = mountEngine(canvasRef.current!, readBest(), {
-      hud({ score, time, core, relic, wave, frag }) {
-        waveRef.current!.textContent = `${wave} de ${WAVES}`
+      hud({ score, time, endless, core, relic, wave, frag }) {
+        timeLabelRef.current!.textContent = endless ? 'Sobrevivendo' : 'Tempo'
+        // Na onda sem fim não há mais parada na árvore: os fragmentos saem do HUD.
+        fragCellRef.current!.hidden = endless
+        waveRef.current!.textContent = endless ? `${wave}, sem fim` : `${wave} de ${WAVES}`
         fragRef.current!.textContent = String(frag)
         scoreRef.current!.textContent = String(score)
         timeRef.current!.textContent = `${time} s`
@@ -121,9 +126,9 @@ export default function CacaBugs({ onBest, onClose }: Props) {
           Onda <strong ref={waveRef}>{`1 de ${WAVES}`}</strong>
         </span>
         <span className="st">
-          Tempo <strong ref={timeRef}>{`${WAVE_MS / 1000} s`}</strong>
+          <span ref={timeLabelRef}>Tempo</span> <strong ref={timeRef}>{`${WAVE_MS / 1000} s`}</strong>
         </span>
-        <span className="st mg-frag">
+        <span className="st mg-frag" ref={fragCellRef}>
           Fragmentos <strong ref={fragRef}>0</strong>
         </span>
         <span className="st">
@@ -150,8 +155,8 @@ export default function CacaBugs({ onBest, onClose }: Props) {
                   <h2>Caça-bugs</h2>
                   {reduce && <p className="warn">Aviso: este jogo tem movimento rápido na tela. O tremor de câmera fica desligado.</p>}
                   <p>
-                    Proteja a <strong>Produção</strong>, no centro, por {WAVES} ondas de {WAVE_MS / 1000} segundos. Ela usa o chapéu do
-                    caçador: 6 de vida.
+                    Proteja a <strong>Produção</strong>, no centro. Ela usa o chapéu do caçador: 6 de vida. As {WAVES - 1} primeiras ondas
+                    duram {WAVE_MS / 1000} segundos; a onda {WAVES} não tem fim e fica cada vez mais difícil, até a Produção cair.
                   </p>
                   <p>
                     Cada bug caçado vale 1 <strong>fragmento</strong>. Entre as ondas, gaste os fragmentos na árvore de habilidades: Go,
@@ -196,10 +201,11 @@ export default function CacaBugs({ onBest, onClose }: Props) {
               )}
               {card.kind === 'over' && (
                 <>
-                  <h2>{card.result.survived ? 'A Produção resistiu' : 'A Produção caiu'}</h2>
+                  <h2>{card.result.wave >= WAVES ? `${card.result.endless} segundos na onda sem fim` : 'A Produção caiu'}</h2>
                   <p className="big">{card.result.score} pontos</p>
                   <p>
-                    {card.result.kills} bugs caçados em {card.result.seconds} s, até a onda {card.result.wave} de {WAVES}.{' '}
+                    {card.result.kills} bugs caçados em {card.result.seconds} s de partida
+                    {card.result.wave < WAVES ? `, até a onda ${card.result.wave} de ${WAVES}` : ''}.{' '}
                     {card.result.record ? 'Novo recorde neste navegador.' : `Recorde: ${card.result.best}.`}
                   </p>
                   {card.result.perks.length ? (
@@ -216,7 +222,7 @@ export default function CacaBugs({ onBest, onClose }: Props) {
                   ) : (
                     <p className="build">Build: nenhum nó, só o golpe.</p>
                   )}
-                  <p>{card.result.survived ? 'Persistência paga.' : 'Errar, entender, tentar de novo.'}</p>
+                  <p>{card.result.wave >= WAVES ? 'Persistência paga.' : 'Errar, entender, tentar de novo.'}</p>
                   <div className="row">
                     <button className="btn gold" type="button" onClick={start}>
                       Jogar de novo (R)

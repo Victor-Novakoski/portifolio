@@ -1,7 +1,7 @@
 # 015. Caça-bugs com árvore de habilidades, numa partida curta e sem save
 
 - **Data:** 19/11/2026
-- **Status:** ativa (escopo aprovado pelo Victor em 19/11/2026; ampliado no mesmo dia para 12 nós e visual em bolhas)
+- **Status:** ativa (escopo aprovado pelo Victor em 19/11/2026; ampliado no mesmo dia para 12 nós, visual em bolhas e onda 3 sem fim)
 
 ## Contexto
 
@@ -9,24 +9,32 @@ O Victor quer o Caça-bugs mais divertido, no estilo incremental, com árvore de
 
 ## Decisão
 
-**Uma partida em 3 ondas de 40 s, com a árvore entre as ondas.** Cada bug caçado vale 1 fragmento. No fim das ondas 1 e 2, o jogo pausa e abre a árvore num cartão do próprio `<dialog>`: o jogador gasta os fragmentos ou pula. Comprar no meio da ação ficou de fora, porque no celular o dedo está ocupado golpeando.
+**Uma partida em 3 ondas, com a árvore entre as ondas.** As ondas 1 e 2 duram 40 s. Cada bug caçado vale 1 fragmento, inclusive os que os caçadores automáticos derrubam. No fim das ondas 1 e 2, o jogo pausa e abre a árvore num cartão do próprio `<dialog>`: o jogador gasta os fragmentos ou pula. Comprar no meio da ação ficou de fora, porque no celular o dedo está ocupado golpeando.
 
-**A árvore tem 12 nós em 4 ramos de 3, com a stack real do Victor.** Cada nó pede o anterior do mesmo ramo. Os efeitos usam mecânicas que o jogo já tem (golpe, luz da lanterna, vida da Produção, bugs pálidos, combo), sem inimigo novo. Os custos sobem por nível: 5, 9 e 14 fragmentos. Com os ~40 a 55 fragmentos das duas paradas, dá umas 5 ou 6 compras; ninguém compra tudo (custaria 112), então cada partida tem uma build diferente.
+**A onda 3 não tem fim.** Ela serve para aproveitar a build: continua até a Produção cair. A dificuldade sobe com os segundos dentro dela:
+- os bugs nascem cada vez mais rápido, de 660 ms até 170 ms entre um e outro;
+- a chance de nascerem dois de uma vez sobe;
+- os bugs ficam mais rápidos;
+- os bugs pálidos e duplicados ficam mais comuns.
+
+O HUD troca o tempo restante pelo tempo sobrevivido e esconde os fragmentos, que não têm mais onde ser gastos. A tela final mostra os segundos na onda sem fim, os pontos, o tempo de partida e a build. O recorde continua na mesma chave (`forja.recorde`).
+
+**A árvore tem 12 nós em 4 ramos de 3, com a stack real do Victor.** Cada nó pede o anterior do mesmo ramo. Os efeitos usam mecânicas que o jogo já tem (golpe, luz da lanterna, vida da Produção, bugs pálidos, combo), sem inimigo novo. Os custos sobem por nível: 15, 30 e 50 fragmentos. Os primeiros custos (5, 9 e 14) deixavam fechar a árvore toda na segunda parada. Um jogador forte simulado (golpeando o bug mais perto da Produção a cada 150 a 400 ms) junta uns 40 a 48 fragmentos na primeira parada e 90 a 110 na segunda, porque os caçadores automáticos também caçam. Com esses custos, ele faz 2 compras na primeira parada e 3 ou 4 na segunda: 5 ou 6 no total. Fechar a árvore custaria 380, então cada partida tem uma build diferente.
 
 | Ramo | Nó (custo) | Efeito no jogo | Por que lembra o conceito |
 | --- | --- | --- | --- |
-| Go | **Goroutine** (5) | Um caçador automático golpeia, a cada 2 s, o bug mais perto da Produção. | Trabalho concorrente rodando sozinho. |
-| Go | **Worker pool** (9) | Passam a ser 3 caçadores automáticos. | Várias goroutines dividindo a fila. |
-| Go | **Channels** (14) | O golpe do caçador automático passa adiante para o bug mais perto: 1 acerto em cadeia. | Uma goroutine entrega o trabalho para a próxima. |
-| React | **Batching** (5) | O golpe acerta uma área 50% maior. | Várias atualizações num render só. |
-| React | **TypeScript** (9) | Bugs pálidos morrem num golpe, sem pedir confirmação. | O erro é pego antes de rodar. |
-| React | **Suspense** (14) | Mostra, 1 s antes, de que ponto da borda vem o próximo bug. | Um aviso enquanto o resto ainda carrega. |
-| PostgreSQL | **Índice** (5) | A luz da lanterna cobre 50% mais área e deixa os bugs mais lentos. | A busca deixa de varrer tudo. |
-| PostgreSQL | **Transação** (9) | Uma vez por partida, desfaz o golpe que derrubaria a Produção: ela volta com 2 de vida. | Rollback. |
-| PostgreSQL | **Vacuum** (14) | A cada 8 s, limpa os bugs pálidos da tela. | O autovacuum recolhe o que ficou para trás. |
-| Infra | **Docker** (5) | No começo de cada onda, a Produção recupera 2 de vida (até 6). | Subir o contêiner de novo, limpo. |
-| Infra | **Redis** (9) | O combo dura o dobro do tempo. | Cache: o que é quente fica à mão. |
-| Infra | **RabbitMQ** (14) | O bug que chega na Produção volta para a borda, no máximo 1 a cada 8 s. | A mensagem volta para a fila em vez de se perder. |
+| Go | **Goroutine** (15) | Um caçador automático golpeia, a cada 2 s, o bug mais perto da Produção. | Trabalho concorrente rodando sozinho. |
+| Go | **Worker pool** (30) | Passam a ser 3 caçadores automáticos. | Várias goroutines dividindo a fila. |
+| Go | **Channels** (50) | O golpe do caçador automático passa adiante para o bug mais perto: 1 acerto em cadeia. | Uma goroutine entrega o trabalho para a próxima. |
+| React | **Batching** (15) | O golpe acerta uma área 50% maior. | Várias atualizações num render só. |
+| React | **TypeScript** (30) | Bugs pálidos morrem num golpe, sem pedir confirmação. | O erro é pego antes de rodar. |
+| React | **Suspense** (50) | Mostra, 1 s antes, de que ponto da borda vem o próximo bug. | Um aviso enquanto o resto ainda carrega. |
+| PostgreSQL | **Índice** (15) | A luz da lanterna cobre 50% mais área e deixa os bugs mais lentos. | A busca deixa de varrer tudo. |
+| PostgreSQL | **Transação** (30) | Uma vez por partida, desfaz o golpe que derrubaria a Produção: ela volta com 2 de vida. | Rollback. |
+| PostgreSQL | **Vacuum** (50) | A cada 8 s, limpa os bugs pálidos da tela. | O autovacuum recolhe o que ficou para trás. |
+| Infra | **Docker** (15) | No começo de cada onda, a Produção recupera 2 de vida (até 6). | Subir o contêiner de novo, limpo. |
+| Infra | **Redis** (30) | O combo dura o dobro do tempo. | Cache: o que é quente fica à mão. |
+| Infra | **RabbitMQ** (50) | O bug que chega na Produção volta para a borda, no máximo 1 a cada 8 s. | A mensagem volta para a fila em vez de se perder. |
 
 Três efeitos mudaram em relação ao pedido, para ficarem simples e úteis:
 
@@ -45,7 +53,6 @@ Sem biblioteca. Com movimento reduzido, as bolhas ficam paradas.
 
 **Descrição antes de comprar.** Passar o mouse ou o foco numa bolha mostra, no painel abaixo do grafo, o nome, o ramo, o custo, o efeito, o conceito e o que o nó pede. Clicar ou apertar Enter compra. No toque, o primeiro toque mostra e o segundo, na mesma bolha, compra. Cada bolha é um `<button>` de 46 px com foco visível, e a compra é anunciada por `aria-live`. No celular, o grafo fica mais alto e em pé, e o painel e o botão da próxima onda ficam presos embaixo.
 
-**Tela final** com a build (os nós comprados, com a frase de cada um), pontos, bugs caçados, tempo e a onda alcançada. O recorde continua como hoje.
 
 ### Fica de fora
 
@@ -64,12 +71,13 @@ Sem biblioteca. Com movimento reduzido, as bolhas ficam paradas.
 
 ## Critério de pronto
 
-- Partida inteira em até 2,5 min, com 2 paradas na árvore; dá para pular a árvore.
+- As ondas 1 e 2 duram 40 s cada, com 2 paradas na árvore; dá para pular a árvore.
+- A onda 3 continua até a Produção cair e termina sozinha mesmo com a build cheia: quem joga bem dura de 1 a 3 min nela. Nos testes simulados, os jogadores duraram 29, 60 e 94 s com 5 ou 6 nós.
 - Cada um dos 12 nós tem efeito que se vê na arena, e a frase dele aparece no painel da árvore e na tela final.
-- Uma partida normal dá umas 5 ou 6 compras, e ninguém compra os 12.
+- Jogando bem, dá umas 5 ou 6 compras, e ninguém fecha a árvore.
 - Mouse: passar por cima mostra a descrição, e clicar compra. Teclado: Tab mostra, e Enter compra. Toque: o primeiro toque mostra, e o segundo compra.
 - Bolhas com 46 px, foco visível e compra anunciada por `aria-live`; o grafo cabe a 390 px sem rolagem horizontal e sem nome cortado.
-- Esc e a aba escondida funcionam com a árvore aberta; P e R não fazem nada nela. O Pausar do cabeçalho fica atrás do diálogo modal.
+- Esc e a aba escondida funcionam com a árvore aberta; P e R não fazem nada nela. Na onda sem fim, P, o botão Pausar do jogo, Esc e a aba escondida pausam como nas outras. O Pausar do cabeçalho fica atrás do diálogo modal.
 - Com movimento reduzido, a partida joga sem tremor e as bolhas ficam paradas.
 - Nenhuma chave nova no storage; o jogo continua num chunk separado (conferir na saída do `yarn build`).
 - `yarn lint` e `yarn build` passam; teste à mão no desktop e a 390 px. O `src/game/CLAUDE.md` e o PRD atualizados.
@@ -80,4 +88,10 @@ Médio para grande: um PR, cerca de dois dias. São ondas e os 12 efeitos no `en
 
 ## Consequência
 
-Se a partida passar de ~3 min ou a árvore precisar de save para ter graça, é sinal de que a ideia virou um incremental completo: aí vale um projeto à parte, não crescer o Caça-bugs.
+A partida não tem mais teto de 2,5 min, e isso continua cabendo no Caça-bugs:
+- o jogo é opcional e fecha com Esc a qualquer momento;
+- as duas primeiras ondas seguem curtas;
+- a onda sem fim termina sozinha, porque a dificuldade sobe até a build cheia não dar conta;
+- nada é salvo além do recorde.
+
+Se a onda 3 precisar de save, de progresso entre partidas ou de durar muito mais que alguns minutos para ter graça, a ideia virou um incremental completo. Aí vale um projeto à parte, não crescer o Caça-bugs.

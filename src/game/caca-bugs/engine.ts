@@ -21,7 +21,6 @@ type Held = Bug | Ball
 
 type Game = {
   t: number
-  dur: number
   score: number
   core: { x: number; y: number; r: number; hp: number; shield: number }
   bugs: Bug[]
@@ -54,11 +53,13 @@ type Game = {
 }
 type Spawn = { x: number; y: number; type: BugType }
 
-export type Result = { score: number; kills: number; survived: boolean; record: boolean; best: number; wave: number; perks: PerkId[]; seconds: number }
+// `endless`: segundos sobrevividos na onda 3, que não tem fim.
+export type Result = { score: number; kills: number; record: boolean; best: number; wave: number; perks: PerkId[]; seconds: number; endless: number }
 export type Shop = { wave: number; frag: number; perks: PerkId[] }
 
 export type EngineEvents = {
-  hud(h: { score: number; time: number; core: number; relic: string; wave: number; frag: number }): void
+  // Na onda sem fim, `time` é o tempo sobrevivido; antes, o que falta da onda.
+  hud(h: { score: number; time: number; endless: boolean; core: number; relic: string; wave: number; frag: number }): void
   say(text: string): void
   paused(score: number): void
   over(result: Result): void
@@ -83,7 +84,11 @@ const HUNTER_MS = 2000
 const VACUUM_MS = 8000
 const MQ_MS = 8000
 const SUSPENSE_MS = 1000
+// Escala da dificuldade nas ondas com tempo. A última onda não tem fim (decisão 015): continua até a Produção cair.
 const DUR = WAVES * WAVE_MS
+const ENDLESS_AT = (WAVES - 1) * WAVE_MS
+// Segundos dentro da onda sem fim (0 antes dela). A dificuldade sobe com isso até a build cheia não dar conta.
+const endlessS = (g: { t: number }) => Math.max(0, g.t - ENDLESS_AT) / 1000
 const TAU = Math.PI * 2
 const MOVE_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'a', 'd', 'w', 's'])
 
@@ -118,7 +123,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
 
   function newGame(): Game {
     return {
-      t: 0, dur: DUR, score: 0,
+      t: 0, score: 0,
       core: { x: MW / 2, y: MH / 2, r: 30, hp: CORE_HP, shield: 0 },
       bugs: [], relics: [], balls: [], fx: [], parts: [],
       combo: 0, comboT: 0, spawnT: 600, relicT: 8000, relicI: 0, baz: 0,
@@ -151,7 +156,9 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     else if (edge === 1) { x = MW + 20; y = rnd(0, MH) }
     else if (edge === 2) { x = rnd(0, MW); y = MH + 20 }
     else { x = -20; y = rnd(0, MH) }
-    const type: BugType = roll < Math.min(0.3, 0.1 + t / 250) ? 's' : roll < Math.min(0.5, 0.2 + t / 200) ? 'a' : 'n'
+    const e = endlessS(g)
+    const sCap = Math.min(0.35, 0.3 + e / 600), aCap = Math.min(0.75, 0.5 + e / 240)
+    const type: BugType = roll < Math.min(sCap, 0.1 + t / 250) ? 's' : roll < Math.min(aCap, 0.2 + t / 200) ? 'a' : 'n'
     return { x, y, type }
   }
 
@@ -266,8 +273,8 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     on.say(`Fim da caçada. ${g.score} pontos.`)
     pushHud(g)
     on.over({
-      score: g.score, kills: g.kills, survived: g.core.hp > 0, record: isRecord, best: record,
-      wave: g.wave, perks: [...g.perks], seconds: Math.round(g.t / 1000),
+      score: g.score, kills: g.kills, record: isRecord, best: record,
+      wave: g.wave, perks: [...g.perks], seconds: Math.round(g.t / 1000), endless: Math.floor(endlessS(g)),
     })
   }
 
@@ -275,11 +282,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     const f = dt / 16.67
     const c = g.core
     g.t += dt
-    if (g.t >= g.dur) {
-      g.t = g.dur
-      return end(g)
-    }
-    if (g.t >= g.wave * WAVE_MS) {
+    if (g.wave < WAVES && g.t >= g.wave * WAVE_MS) {
       g.t = g.wave * WAVE_MS
       return endWave(g)
     }
@@ -299,8 +302,9 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     g.spawnT -= dt
     if (g.spawnT <= 0) {
       spawnEnemy(g)
-      if (g.t > 40000 && Math.random() < 0.4) spawnEnemy(g)
-      g.spawnT = Math.max(360, 1250 - (g.t / DUR) * 880)
+      const e = endlessS(g)
+      if (g.t > WAVE_MS && Math.random() < Math.min(0.9, 0.4 + e / 300)) spawnEnemy(g)
+      g.spawnT = e > 0 ? Math.max(170, 660 * Math.pow(0.99, e)) : Math.max(360, 1250 - (g.t / DUR) * 880)
     }
     g.relicT -= dt
     if (g.relicT <= 0) {
@@ -310,7 +314,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     }
     if (g.comboT > 0) g.comboT -= dt
     if (c.shield > 0) c.shield -= dt
-    const spd = 1.6 + (g.t / DUR) * 2.2
+    const spd = 1.6 + (g.t / DUR) * 2.2 + endlessS(g) * 0.008
     const LR = lightR(g), slow = g.perks.has('indice') ? 0.3 : 0.45
     if (g.mqT > 0) g.mqT -= dt
     if (g.perks.has('vacuum')) {
@@ -624,7 +628,8 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
   function pushHud(g: Game) {
     on.hud({
       score: g.score,
-      time: Math.ceil((g.wave * WAVE_MS - g.t) / 1000),
+      time: g.wave < WAVES ? Math.ceil((g.wave * WAVE_MS - g.t) / 1000) : Math.floor(endlessS(g)),
+      endless: g.wave >= WAVES,
       core: g.core.hp,
       relic: g.baz ? 'bazuca pronta' : g.core.shield > 0 ? 'rosa de ferro' : g.balls.length ? 'amigurumi' : 'nenhuma',
       wave: g.wave,
