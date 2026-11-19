@@ -15,9 +15,9 @@ Mostrar um desenvolvedor full stack (Go + React) com personalidade (persistente,
 
 ## O que o site tem
 
-1. Tela de título em canvas com o caçador, o chapéu arremessável (peça real do cosplay) e a lanterna, mais um menu de seções.
+1. Tela de título em canvas com o caçador de capuz e cajado e a lanterna, mais um menu de seções em grade.
 2. Projetos em cards de "descrição de item": Rastreia, Panda Cooking (com a demo da busca por trigramas), Revelação e dois estudos.
-3. Desafios técnicos como lutas curtas contra chefes. Cada acerto revela o risco, a solução e o resultado. "Ler sem lutar" abre tudo.
+3. Desafios técnicos como lutas curtas contra chefes. Cada acerto revela uma parte da ficha: o golpe (o risco), a fraqueza (a solução) e a recompensa (o resultado). "Ler sem lutar" abre tudo.
 4. Experiência, Habilidades e um Sobre com o que o Victor faz fora do código.
 5. Mini game Caça-bugs, aberto pelo cabeçalho ou pela seção dele.
 6. Contato e currículo em PDF.

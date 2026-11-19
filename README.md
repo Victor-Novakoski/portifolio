@@ -6,12 +6,12 @@ Portfólio de Victor Novakoski, desenvolvedor full stack (Go, React, TypeScript 
 
 **No ar:** https://portifolio-victor-novakoski.vercel.app
 
-O tema é a "Forja do Caçador": a tela de título tem um caçador com chapéu e lanterna (o chapéu é a primeira peça de um cosplay real e dá para arremessar), cada desafio técnico é uma luta curta contra um chefe e o mini game Caça-bugs fecha a visita antes do contato. Quem só quer ler tem "Ler sem lutar", e tudo funciona com teclado e com movimento reduzido.
+O tema é a "Forja do Caçador": a tela de título tem um caçador de capuz com uma lanterna pendurada no cajado, cada desafio técnico é uma luta curta contra um chefe e o mini game Caça-bugs fecha a visita antes do contato. Quem só quer ler tem "Ler sem lutar", e tudo funciona com teclado e com movimento reduzido.
 
 ## O que tem no site
 
 - Projetos: Rastreia, Panda Cooking (com uma demo da busca por trigramas) e o jogo Revelação, mais dois estudos
-- Desafios técnicos como lutas contra chefes: cada acerto revela o risco, a solução e o resultado
+- Desafios técnicos como lutas contra chefes: cada acerto revela uma parte da ficha do chefe: o golpe, a fraqueza e a recompensa
 - Experiência, habilidades e um Sobre com o que faço fora do código
 - Mini game Caça-bugs, carregado só quando alguém clica em jogar
 - Contato e currículo em PDF
