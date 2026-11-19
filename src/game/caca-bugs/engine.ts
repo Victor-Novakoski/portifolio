@@ -47,7 +47,12 @@ type Game = {
   rollback: boolean
   hunters: Hunter[]
   shop: boolean
+  // Próximo bug já sorteado (Suspense mostra de onde ele vem).
+  next: Spawn | null
+  vacT: number
+  mqT: number
 }
+type Spawn = { x: number; y: number; type: BugType }
 
 export type Result = { score: number; kills: number; survived: boolean; record: boolean; best: number; wave: number; perks: PerkId[]; seconds: number }
 export type Shop = { wave: number; frag: number; perks: PerkId[] }
@@ -75,6 +80,9 @@ export const CORE_HP = 6
 const SLASH_R = 40
 const LIGHT_R = 95
 const HUNTER_MS = 2000
+const VACUUM_MS = 8000
+const MQ_MS = 8000
+const SUSPENSE_MS = 1000
 const DUR = WAVES * WAVE_MS
 const TAU = Math.PI * 2
 const MOVE_KEYS = new Set(['ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown', 'a', 'd', 'w', 's'])
@@ -118,6 +126,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       aim: { x: MW / 2, y: MH * 0.25, vx: 0, vy: 0, px: MW / 2, py: MH * 0.25 },
       held: null, kills: 0,
       wave: 1, frag: 0, perks: new Set(), rollback: false, hunters: [], shop: false,
+      next: null, vacT: VACUUM_MS, mqT: 0,
     }
   }
 
@@ -132,7 +141,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     return { x: g.core.x + Math.cos(h.a) * (g.core.r + 26), y: g.core.y + Math.sin(h.a) * (g.core.r + 26) }
   }
 
-  function spawnEnemy(g: Game) {
+  function rollSpawn(g: Game): Spawn {
     const edge = Math.floor(Math.random() * 4)
     const t = g.t / 1000
     const roll = Math.random()
@@ -143,6 +152,12 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     else if (edge === 2) { x = rnd(0, MW); y = MH + 20 }
     else { x = -20; y = rnd(0, MH) }
     const type: BugType = roll < Math.min(0.3, 0.1 + t / 250) ? 's' : roll < Math.min(0.5, 0.2 + t / 200) ? 'a' : 'n'
+    return { x, y, type }
+  }
+
+  function spawnEnemy(g: Game) {
+    const { x, y, type } = g.next ?? rollSpawn(g)
+    g.next = rollSpawn(g)
     g.bugs.push({ x, y, vx: 0, vy: 0, r: type === 's' ? 22 : 15, type, ack: 0, thrown: 0, w: rnd(0, 6) })
   }
 
@@ -160,7 +175,7 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     if (!remove(g.bugs, b)) return
     if (g.held === b) g.held = null
     g.combo = g.comboT > 0 ? g.combo + 1 : 1
-    g.comboT = 1500
+    g.comboT = g.perks.has('redis') ? 3000 : 1500
     const pts = base * Math.min(g.combo, 5)
     g.score += pts
     g.kills++
@@ -297,6 +312,16 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
     if (c.shield > 0) c.shield -= dt
     const spd = 1.6 + (g.t / DUR) * 2.2
     const LR = lightR(g), slow = g.perks.has('indice') ? 0.3 : 0.45
+    if (g.mqT > 0) g.mqT -= dt
+    if (g.perks.has('vacuum')) {
+      g.vacT -= dt
+      if (g.vacT <= 0) {
+        g.vacT = VACUUM_MS
+        const pale = g.bugs.filter(b => b.type === 'a')
+        pale.forEach(b => kill(g, b, 10, 'VACUUM'))
+        if (pale.length) on.say(`Vacuum limpou ${pale.length} bugs pálidos.`)
+      }
+    }
     for (const h of g.hunters) {
       if (!reduce) h.a += 0.02 * f
       h.cd -= dt
@@ -312,6 +337,18 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       const p = hunterAt(g, h)
       g.fx.push({ k: 'z', x: p.x, y: p.y, tx: target.x, ty: target.y, l: 12 })
       hit(g, target)
+      if (g.perks.has('channels')) {
+        // Channels: o golpe passa adiante para o bug mais perto do primeiro.
+        let near: Bug | null = null, nd = 160 * 160
+        for (const b of g.bugs) {
+          const d = (b.x - target.x) ** 2 + (b.y - target.y) ** 2
+          if (b !== target && g.held !== b && d < nd) { nd = d; near = b }
+        }
+        if (near) {
+          g.fx.push({ k: 'z', x: target.x, y: target.y, tx: near.x, ty: near.y, l: 12 })
+          hit(g, near)
+        }
+      }
     }
     for (const b of g.bugs.slice()) {
       b.w += 0.2 * f
@@ -337,6 +374,12 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
           if (c.shield > 0) {
             b.vx = (-dx / d) * 9; b.vy = (-dy / d) * 9
             b.x = c.x - (dx / d) * (c.r + b.r + 1); b.y = c.y - (dy / d) * (c.r + b.r + 1)
+          } else if (g.perks.has('rabbitmq') && g.mqT <= 0) {
+            // RabbitMQ: o bug volta para a borda em vez de acertar a Produção.
+            g.mqT = MQ_MS
+            const back = rollSpawn(g)
+            b.x = back.x; b.y = back.y; b.vx = 0; b.vy = 0
+            text(g, c.x, c.y - 44, 'DE VOLTA À FILA', '#A9D6E5')
           } else {
             remove(g.bugs, b)
             c.hp--
@@ -534,6 +577,13 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       c.strokeStyle = 'rgba(240,180,76,.5)'; c.lineWidth = 1
       c.beginPath(); c.arc(p.x, p.y, 9, -Math.PI / 2, -Math.PI / 2 + TAU * (1 - Math.max(0, h.cd) / HUNTER_MS)); c.stroke()
     })
+    if (g.perks.has('suspense') && g.next && g.spawnT < SUSPENSE_MS) {
+      const n = g.next, mx = Math.max(22, Math.min(MW - 22, n.x)), my = Math.max(22, Math.min(MH - 22, n.y))
+      c.strokeStyle = '#A9D6E5'; c.lineWidth = 2; c.setLineDash([4, 4])
+      c.beginPath(); c.arc(mx, my, 14, 0, TAU); c.stroke(); c.setLineDash([])
+      c.fillStyle = '#A9D6E5'; c.font = '500 11px "IBM Plex Mono", monospace'; c.textAlign = 'center'
+      c.fillText('!', mx, my + 4)
+    }
     g.relics.forEach(drawRelic)
     g.balls.forEach(o => {
       c.save(); c.translate(o.x, o.y); c.rotate(o.a); c.globalAlpha = o.l < 2000 ? 0.5 : 1
@@ -718,6 +768,8 @@ export function mountEngine(canvas: HTMLCanvasElement, best: number, on: EngineE
       g.shop = false
       g.wave++
       g.spawnT = 600
+      g.vacT = VACUUM_MS
+      if (g.perks.has('docker')) g.core.hp = Math.min(CORE_HP, g.core.hp + 2)
       g.paused = false
       Object.keys(keys).forEach(k => (keys[k] = false))
       canvas.focus()

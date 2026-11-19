@@ -19,40 +19,49 @@ dialog.mg::backdrop{background:#0B0B0C}
 .mg-card .warn{color:var(--blood-t)}
 .mg-card .big{font:700 2.6rem/1 var(--f-disp);font-stretch:68%;text-transform:uppercase;color:var(--text);margin:6px 0}
 .mg-bar .st.mg-frag strong{color:var(--gold)}
-/* Árvore de habilidades (decisão 015): 3 ramos em células de 1 px, âmbar só no que dá para aprender. */
+/* Árvore de habilidades (decisão 015): bolhas que flutuam em volta do Caçador, como o grafo do Obsidian. */
 .mg-card.wide{max-width:860px;width:100%}
-.mg-card .frag-n{color:var(--gold);font-weight:600}
-.mg-tree{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border:1px solid var(--line);margin-top:12px}
-.mg-branch{border-left:1px solid var(--line);display:flex;flex-direction:column}
-.mg-branch:first-child{border-left:0}
-.mg-branch h3{margin:0;padding:8px 12px;border-bottom:1px solid var(--line);font:500 .78rem/1.2 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.mg-node{all:unset;box-sizing:border-box;display:flex;flex-direction:column;gap:6px;min-height:44px;padding:12px;border-bottom:1px solid var(--line);cursor:pointer;color:var(--text);position:relative}
-.mg-node:last-child{border-bottom:0}
-.mg-node + .mg-node::before{content:"";position:absolute;top:-1px;left:22px;width:1px;height:10px;background:var(--line-2);transform:translateY(-100%)}
-.mg-node .nm{font:700 1.2rem/1 var(--f-disp);font-stretch:68%;text-transform:uppercase;display:flex;justify-content:space-between;gap:8px}
-.mg-node .cost{font:500 .8rem/1.2 var(--f-mono);color:var(--muted)}
-.mg-node .ef{font-size:.9rem;line-height:1.35;color:var(--muted)}
-.mg-node .st{font:500 .78rem/1.2 var(--f-mono);color:var(--muted)}
-.mg-node[aria-disabled="true"]{cursor:default}
-.mg-node[aria-disabled="true"]:not(.owned) .nm{color:var(--muted)}
-.mg-node.ready{box-shadow:inset 2px 0 0 var(--gold)}
-.mg-node.ready .st,.mg-node.ready .cost{color:var(--gold)}
-.mg-node.ready:hover{background:#1A1917}
-.mg-node.owned{background:#1A1712}
-.mg-node.owned .nm{color:var(--gold)}
-.mg-node.owned .st{color:var(--text)}
-.mg-node:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
+.mg-card .mg-frag-n{color:var(--gold);font-weight:600}
+.mg-graph{position:relative;height:340px;margin-top:8px;border:1px solid var(--line);background:radial-gradient(circle at 50% 50%,#1A1712,#141415 60%);overflow:hidden}
+.mg-links{position:absolute;inset:0;pointer-events:none}
+.mg-link{stroke:var(--line-2);stroke-width:1.5}
+.mg-link.locked{stroke-dasharray:4 4}
+.mg-link.ready,.mg-link.poor{stroke:#6E5A35}
+.mg-link.owned{stroke:var(--gold);stroke-width:2}
+.mg-root{position:absolute;width:64px;height:64px;margin:-32px 0 0 -32px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:var(--gold);color:#0B0B0C;font:700 .82rem/1 var(--f-disp);font-stretch:68%;text-transform:uppercase;box-shadow:0 0 0 6px rgba(240,180,76,.15)}
+.mg-branch-tag{position:absolute;font:500 .7rem/1 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);pointer-events:none;white-space:nowrap}
+.mg-bub{position:absolute;width:46px;height:46px;padding:0;border-radius:50%;border:2px solid var(--gold);background:#141415;color:var(--gold);cursor:pointer;font:600 .85rem/1 var(--f-mono);display:flex;align-items:center;justify-content:center;will-change:transform}
+.mg-bub .nm{position:absolute;top:calc(100% + 4px);left:50%;transform:translateX(-50%);width:88px;text-align:center;font:600 .78rem/1.1 var(--f-disp);font-stretch:68%;text-transform:uppercase;color:var(--text);pointer-events:none}
+.mg-bub.ready{box-shadow:0 0 0 4px rgba(240,180,76,.18)}
+.mg-bub.ready:hover{background:#2A2114}
+.mg-bub.poor{border-color:rgba(240,180,76,.55);color:var(--muted)}
+.mg-bub.locked{border:2px dashed var(--line-2);color:var(--muted);cursor:default}
+.mg-bub.locked .nm{color:var(--muted)}
+.mg-bub.owned{background:var(--gold);color:#0B0B0C;cursor:default}
+.mg-bub.owned .nm{color:var(--gold)}
+.mg-bub.poor,.mg-bub.locked{cursor:default}
+.mg-bub.shown{outline:1px solid var(--text);outline-offset:4px}
+.mg-bub:focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+.mg-info{min-height:96px;border:1px solid var(--line);border-top:0;padding:10px 12px;background:#101011}
+.mg-info p{margin:0 0 4px;font-size:.95rem}
+.mg-info .hd{display:flex;flex-wrap:wrap;gap:4px 10px;align-items:baseline}
+.mg-info .hd b{font:700 1.2rem/1 var(--f-disp);font-stretch:68%;text-transform:uppercase;color:var(--gold)}
+.mg-info .hd span{font:500 .78rem/1.2 var(--f-mono);color:var(--muted)}
+.mg-info .hd .tag.ready{color:var(--gold)}
+.mg-info .hd .tag.owned{color:var(--text)}
+.mg-info .concept{color:var(--muted);font-size:.88rem}
 .mg-card ul.build{list-style:none;padding:0;border-top:1px solid var(--line);margin:8px 0 12px}
 .mg-card ul.build li{padding:6px 0;border-bottom:1px solid var(--line);margin:0}
 .mg-card ul.build b{color:var(--gold)}
 .mg-card ul.build span{color:var(--muted);font:500 .8rem var(--f-mono)}
 @media (max-width:640px){
-  .mg-tree{grid-template-columns:1fr}
-  .mg-branch{border-left:0;border-top:1px solid var(--line)}
-  .mg-branch:first-child{border-top:0}
   .mg-card{padding:16px}
-  /* No celular a árvore é mais alta que a tela: o cartão começa no topo e o botão da próxima onda fica preso embaixo. */
+  .mg-graph{height:560px}
+  .mg-branch-tag{display:none}
+  .mg-bub .nm{width:80px;font-size:.72rem}
+  /* No celular a árvore é mais alta que a tela: o cartão começa no topo, e a descrição e o botão da próxima onda ficam presos embaixo. */
   .mg-veil:has(.mg-card.wide){align-items:flex-start}
-  .mg-card.wide .row{position:sticky;bottom:-16px;margin:12px -16px -16px;padding:12px 16px;background:#141415;border-top:1px solid var(--line)}
-  .mg-node .ef{font-size:.85rem}
+  .mg-foot{position:sticky;bottom:-16px;margin:0 -16px -16px;padding:0 16px 12px;background:#141415}
+  .mg-info{min-height:0}
+  .mg-foot .row{margin-top:10px}
 }

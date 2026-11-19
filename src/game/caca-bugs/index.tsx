@@ -155,7 +155,7 @@ export default function CacaBugs({ onBest, onClose }: Props) {
                   </p>
                   <p>
                     Cada bug caçado vale 1 <strong>fragmento</strong>. Entre as ondas, gaste os fragmentos na árvore de habilidades: Go,
-                    React e PostgreSQL viram poderes.
+                    React, PostgreSQL e infra viram poderes.
                   </p>
                   <ul>
                     <li>Clique ou toque num bug para golpear. Arraste e arremesse um bug contra os outros: derruba os dois.</li>

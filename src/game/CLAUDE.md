@@ -13,12 +13,13 @@ As lutas contra os chefes (`fight.ts`) e o mini game Caça-bugs (`caca-bugs/`). 
 - **Caça-bugs fica num chunk separado.** Nada fora de `caca-bugs/` pode importar dele de forma estática; use `lib/game-loader.ts` (`loadGame`/`preloadGame`). O CSS dele mora dentro do chunk (`caca-bugs.css`).
 - **`<dialog>` com `showModal()`** dá o foco preso e o Esc. Não escreva focus trap à mão. Ao fechar, o foco volta para quem abriu (`CacaBugsHost`).
 - O recorde vai em `localStorage` pela chave `forja.recorde`, sempre com `safeGet`/`safeSet`.
-- **Ondas e árvore (decisão 015):** 3 ondas de 40 s (`WAVES`, `WAVE_MS` em `caca-bugs/tree.ts`). Cada bug caçado vale 1 fragmento. No fim de uma onda o motor limpa a arena, para (`g.shop`) e chama `on.shop`; o React mostra `skill-tree.tsx` e chama `engine.buy(id)` e `engine.nextWave()`. Com a árvore aberta, P e R não fazem nada. Os nós e custos moram em `tree.ts`; o efeito de cada um está no motor (procure `g.perks.has`). A árvore nunca vai para o storage.
+- **Ondas e árvore (decisão 015):** 3 ondas de 40 s (`WAVES`, `WAVE_MS` em `caca-bugs/tree.ts`). Cada bug caçado vale 1 fragmento. No fim de uma onda o motor limpa a arena, para (`g.shop`) e chama `on.shop`; o React mostra `skill-tree.tsx` (grafo em bolhas: hover ou foco mostra o painel, clique ou Enter compra, no toque são dois toques) e chama `engine.buy(id)` e `engine.nextWave()`. Com a árvore aberta, P e R não fazem nada. Os nós e custos moram em `tree.ts`; o efeito de cada um está no motor (procure `g.perks.has`). A árvore nunca vai para o storage.
 
 ## Armadilhas conhecidas
 
 - O CSS global (`forja.css`) já usa classes curtas como `.fx` e `.frag`. No jogo, prefira o prefixo `mg-` para não herdar `position:absolute` ou borda sem querer.
 - A árvore guarda o estado da loja fora do `card` do React: o efeito que foca o primeiro botão roda a cada troca de `card`, e comprar um nó não pode roubar o foco.
+- O grafo da árvore flutua com um `requestAnimationFrame` próprio, que escreve `transform` e as pontas das linhas direto no DOM, sem state. Com movimento reduzido ele nem começa.
 - No painel do navegador do app escondido, o `requestAnimationFrame` quase não roda e o jogo parece travado. Para testar uma partida inteira, use um Chrome headless.
 - O StrictMode monta, desmonta e monta de novo no dev. Se um listener ficar sem cleanup, o golpe conta em dobro só no `yarn dev`.
 - Luta e mini game na mesma página disputam as mesmas teclas: confira o dono ativo antes de `preventDefault`.
