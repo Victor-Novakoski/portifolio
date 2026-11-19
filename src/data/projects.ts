@@ -40,8 +40,7 @@ export const projects: Project[] = [
       { label: 'Mensageria', value: 'RabbitMQ com outbox' },
       { label: 'Front', value: 'React + TypeScript, PWA' },
     ],
-    note: 'Código sob pedido · sem link público',
-    links: [],
+    links: [{ label: 'Código no GitHub', href: 'https://github.com/Victor-Novakoski/rastreia' }],
   },
   {
     id: 'panda-cooking',
