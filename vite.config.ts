@@ -14,8 +14,8 @@ function absoluteMeta(): Plugin {
       return [
         { tag: 'link', attrs: { rel: 'canonical', href: `${siteUrl}/` }, injectTo: 'head' },
         { tag: 'meta', attrs: { property: 'og:url', content: `${siteUrl}/` }, injectTo: 'head' },
-        { tag: 'meta', attrs: { property: 'og:image', content: `${siteUrl}/og.png` }, injectTo: 'head' },
-        { tag: 'meta', attrs: { name: 'twitter:image', content: `${siteUrl}/og.png` }, injectTo: 'head' },
+        { tag: 'meta', attrs: { property: 'og:image', content: `${siteUrl}/og.png?v=2` }, injectTo: 'head' },
+        { tag: 'meta', attrs: { name: 'twitter:image', content: `${siteUrl}/og.png?v=2` }, injectTo: 'head' },
       ]
     },
   }
