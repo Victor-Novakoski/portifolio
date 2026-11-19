@@ -42,7 +42,7 @@ dialog.mg::backdrop{background:#0B0B0C}
 .mg-node.owned .nm{color:var(--gold)}
 .mg-node.owned .st{color:var(--text)}
 .mg-node:focus-visible{outline:2px solid var(--gold);outline-offset:-2px}
-.mg-card ul.build{list-style:none;padding:0;border-top:1px solid var(--line);margin:8px 0 0}
+.mg-card ul.build{list-style:none;padding:0;border-top:1px solid var(--line);margin:8px 0 12px}
 .mg-card ul.build li{padding:6px 0;border-bottom:1px solid var(--line);margin:0}
 .mg-card ul.build b{color:var(--gold)}
 .mg-card ul.build span{color:var(--muted);font:500 .8rem var(--f-mono)}
