@@ -165,12 +165,18 @@ export default function CacaBugs({ onBest, onClose }: Props) {
                   <ul>
                     <li>Clique ou toque num bug para golpear. Arraste e arremesse um bug contra os outros: derruba os dois.</li>
                     <li>A luz da lanterna (o seu cursor) deixa os bugs lentos.</li>
-                    <li>Bugs duplicados se dividem como O Desincronizado. Bugs pálidos pedem confirmação: dois golpes rápidos, como O Mensageiro.</li>
                     <li>
-                      Relíquias do Sobre: <strong>rosa de ferro</strong> protege a Produção, <strong>amigurumi</strong> vira uma bola que quica e
-                      esmaga, <strong>bazuca</strong> faz o próximo golpe explodir.
+                      Bugs duplicados se dividem como O Desincronizado. Bugs pálidos pedem confirmação: dois golpes rápidos, como O
+                      Mensageiro.
                     </li>
-                    <li>Teclado: setas movem a lanterna, Espaço golpeia, segure G para agarrar e solte para arremessar. P pausa, R recomeça, Esc sai.</li>
+                    <li>
+                      Relíquias do Sobre: <strong>rosa de ferro</strong> protege a Produção, <strong>amigurumi</strong> vira uma bola que
+                      quica e esmaga, <strong>bazuca</strong> faz o próximo golpe explodir.
+                    </li>
+                    <li>
+                      Teclado: setas movem a lanterna, Espaço golpeia, segure G para agarrar e solte para arremessar. P pausa, R recomeça,
+                      Esc sai.
+                    </li>
                   </ul>
                   <div className="row">
                     <button className="btn gold" type="button" onClick={start}>

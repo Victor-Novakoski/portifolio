@@ -42,8 +42,8 @@ export function useCurrentSection() {
 function jolt(section: HTMLElement) {
   const inner = section.querySelector<HTMLElement>('.inner')
   if (!inner?.animate || prefersReducedMotion() || document.documentElement.classList.contains('paused')) return
-  inner.animate(
-    [{ transform: 'translateY(10px) skewY(.6deg)' }, { transform: 'translateY(-3px)', offset: 0.55 }, { transform: 'none' }],
-    { duration: 300, easing: 'ease-out' }
-  )
+  inner.animate([{ transform: 'translateY(10px) skewY(.6deg)' }, { transform: 'translateY(-3px)', offset: 0.55 }, { transform: 'none' }], {
+    duration: 300,
+    easing: 'ease-out',
+  })
 }

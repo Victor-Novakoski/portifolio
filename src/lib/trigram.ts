@@ -29,7 +29,11 @@ export function searchRecipes(query: string, recipes: string[]) {
   if (!q) return []
   return recipes
     .map(name => {
-      let score = Math.max(...unaccent(name).split(' ').map(word => similarity(q, word)))
+      let score = Math.max(
+        ...unaccent(name)
+          .split(' ')
+          .map(word => similarity(q, word))
+      )
       if (unaccent(name).includes(unaccent(q))) score = Math.max(score, 0.6)
       return { name, score }
     })

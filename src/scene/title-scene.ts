@@ -86,22 +86,33 @@ export function mountTitleScene(title: HTMLElement, { sky }: Options): TitleScen
     const c = ctx!
     const small = W < 760
     const bg = c.createLinearGradient(0, 0, 0, H)
-    bg.addColorStop(0, '#0B0B0C'); bg.addColorStop(1, '#141312')
-    c.fillStyle = bg; c.fillRect(0, 0, W, H)
+    bg.addColorStop(0, '#0B0B0C')
+    bg.addColorStop(1, '#141312')
+    c.fillStyle = bg
+    c.fillRect(0, 0, W, H)
     const mx = small ? W * 0.66 : W * 0.72
     const my = small ? H * 0.6 : H * 0.32
     const mr = Math.min(W, H) * (small ? 0.17 : 0.14)
     const halo = c.createRadialGradient(mx, my, mr * 0.8, mx, my, mr * 3)
-    halo.addColorStop(0, 'rgba(169,214,229,.10)'); halo.addColorStop(1, 'rgba(169,214,229,0)')
-    c.fillStyle = halo; c.fillRect(0, 0, W, H)
+    halo.addColorStop(0, 'rgba(169,214,229,.10)')
+    halo.addColorStop(1, 'rgba(169,214,229,0)')
+    c.fillStyle = halo
+    c.fillRect(0, 0, W, H)
     const moon = c.createRadialGradient(mx - mr * 0.3, my - mr * 0.3, mr * 0.1, mx, my, mr)
-    moon.addColorStop(0, '#D9E2E4'); moon.addColorStop(1, '#8EA4AC')
-    c.fillStyle = moon; c.beginPath(); c.arc(mx, my, mr, 0, TAU); c.fill()
+    moon.addColorStop(0, '#D9E2E4')
+    moon.addColorStop(1, '#8EA4AC')
+    c.fillStyle = moon
+    c.beginPath()
+    c.arc(mx, my, mr, 0, TAU)
+    c.fill()
     ridges.forEach(r => {
       c.fillStyle = r.c
-      c.beginPath(); c.moveTo(-20, H)
+      c.beginPath()
+      c.moveTo(-20, H)
       r.pts.forEach(p => c.lineTo(p[0], p[1]))
-      c.lineTo(W + 40, H); c.closePath(); c.fill()
+      c.lineTo(W + 40, H)
+      c.closePath()
+      c.fill()
     })
     const s = (small ? H * 0.36 : H * 0.62) / 410
     const hx = mx - (small ? 0 : mr * 0.2)
@@ -124,31 +135,47 @@ export function mountTitleScene(title: HTMLElement, { sky }: Options): TitleScen
     }
     const lampAngle = reduce ? 0 : base + pend
     const { lamp } = drawHunter(c, { x: hx, y: hy, scale: s, t, lampAngle })
-    lampAt.x = lamp.x; lampAt.y = lamp.y
+    lampAt.x = lamp.x
+    lampAt.y = lamp.y
     fog.forEach(f => {
       f.x += f.v
       if (f.x - f.r > W) f.x = -f.r
-      const dx = f.x - pt.x, dy = f.y - pt.y, d = Math.sqrt(dx * dx + dy * dy)
+      const dx = f.x - pt.x,
+        dy = f.y - pt.y,
+        d = Math.sqrt(dx * dx + dy * dy)
       const push = d < 220 ? (220 - d) / 220 : 0
       const g = c.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r)
-      g.addColorStop(0, `rgba(169,214,229,${0.07 * (1 - push * 0.8)})`); g.addColorStop(1, 'rgba(169,214,229,0)')
-      c.fillStyle = g; c.fillRect(f.x - f.r, f.y - f.r, f.r * 2, f.r * 2)
+      g.addColorStop(0, `rgba(169,214,229,${0.07 * (1 - push * 0.8)})`)
+      g.addColorStop(1, 'rgba(169,214,229,0)')
+      c.fillStyle = g
+      c.fillRect(f.x - f.r, f.y - f.r, f.r * 2, f.r * 2)
     })
     if (reduce) return
     embers.forEach(e => {
-      const dx = e.x - pt.x, dy = e.y - pt.y, d2 = dx * dx + dy * dy
+      const dx = e.x - pt.x,
+        dy = e.y - pt.y,
+        d2 = dx * dx + dy * dy
       if (d2 < 14400) {
-        const d = Math.sqrt(d2) || 1, f = ((120 - d) / 120) * 0.6
-        e.vx += (dx / d) * f; e.vy += (dy / d) * f
+        const d = Math.sqrt(d2) || 1,
+          f = ((120 - d) / 120) * 0.6
+        e.vx += (dx / d) * f
+        e.vy += (dy / d) * f
       }
-      e.vx *= 0.94; e.vy = e.vy * 0.94 + -0.35 * 0.06
-      e.x += e.vx + Math.sin(t + e.p) * 0.2; e.y += e.vy
-      if (e.y < -10) { e.y = H + 10; e.x = rnd(0, W) }
+      e.vx *= 0.94
+      e.vy = e.vy * 0.94 + -0.35 * 0.06
+      e.x += e.vx + Math.sin(t + e.p) * 0.2
+      e.y += e.vy
+      if (e.y < -10) {
+        e.y = H + 10
+        e.x = rnd(0, W)
+      }
       if (e.x < -10) e.x = W + 10
       if (e.x > W + 10) e.x = -10
       const a = 0.45 + 0.35 * Math.sin(t * 1.5 + e.p)
       c.fillStyle = `rgba(240,180,76,${a.toFixed(2)})`
-      c.beginPath(); c.arc(e.x, e.y, e.r, 0, TAU); c.fill()
+      c.beginPath()
+      c.arc(e.x, e.y, e.r, 0, TAU)
+      c.fill()
     })
   }
 
@@ -173,7 +200,8 @@ export function mountTitleScene(title: HTMLElement, { sky }: Options): TitleScen
   function hitLamp(p: Point) {
     if (reduce) return false
     const r = Math.max(28, 46 * pose.scale)
-    const dx = p.x - lampAt.x, dy = p.y - lampAt.y
+    const dx = p.x - lampAt.x,
+      dy = p.y - lampAt.y
     return dx * dx + dy * dy < r * r
   }
 
@@ -185,17 +213,22 @@ export function mountTitleScene(title: HTMLElement, { sky }: Options): TitleScen
 
   // ---------- Ponteiro ----------
   function track(e: PointerEvent) {
-    const p = local(e), ts = performance.now(), dt = Math.max(8, ts - gp.t)
+    const p = local(e),
+      ts = performance.now(),
+      dt = Math.max(8, ts - gp.t)
     gp.vx = gp.vx * 0.4 + ((p.x - gp.x) / dt) * 16 * 0.6
     gp.vy = gp.vy * 0.4 + ((p.y - gp.y) / dt) * 16 * 0.6
-    gp.x = p.x; gp.y = p.y; gp.t = ts
+    gp.x = p.x
+    gp.y = p.y
+    gp.t = ts
     return p
   }
   const onControl = (e: Event) => !!(e.target as Element | null)?.closest('a,button')
 
   function onPointerMove(e: PointerEvent) {
     const p = track(e)
-    pt.x = p.x; pt.y = p.y
+    pt.x = p.x
+    pt.y = p.y
     if (grabbed) return
     title.classList.toggle('grab', !onControl(e) && hitLamp(p))
   }
@@ -213,13 +246,20 @@ export function mountTitleScene(title: HTMLElement, { sky }: Options): TitleScen
   function onPointerDown(e: PointerEvent) {
     if (onControl(e)) return
     const p = local(e)
-    gp.x = p.x; gp.y = p.y; gp.vx = gp.vy = 0; gp.t = performance.now()
+    gp.x = p.x
+    gp.y = p.y
+    gp.vx = gp.vy = 0
+    gp.t = performance.now()
     if (hitLamp(p)) {
       e.preventDefault()
       grabbed = true
       title.classList.remove('grab')
       title.classList.add('grabbing')
-      try { title.setPointerCapture(e.pointerId) } catch { /* sem captura, segue igual */ }
+      try {
+        title.setPointerCapture(e.pointerId)
+      } catch {
+        /* sem captura, segue igual */
+      }
       kick()
       return
     }
