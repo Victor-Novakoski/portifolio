@@ -1,7 +1,7 @@
 import rastreiaShot from '@/assets/projects/rastreia.webp'
 import revelacaoShot from '@/assets/projects/revelacao.webp'
 
-export type ProjectIcon = 'lantern' | 'grimoire' | 'camera' | 'gear' | 'scroll'
+export type ProjectIcon = 'lantern' | 'grimoire' | 'camera'
 
 export type Project = {
   id: string
@@ -83,26 +83,6 @@ export const projects: Project[] = [
       { label: 'Fotos', value: 'CLI em Go, acervo em domínio público' },
     ],
     links: [{ label: 'Código no GitHub', href: 'https://github.com/Victor-Novakoski/revelacao' }],
-  },
-  {
-    id: 'motors-shop',
-    name: 'Motors Shop',
-    kind: 'Item de estudo',
-    icon: 'gear',
-    summary: 'Loja de anúncios de veículos feita durante o curso.',
-    flavor: 'Primeira peça forjada no treino. Ainda pesada, mas foi com ela que aprendi a segurar a lâmina.',
-    sheet: [{ label: 'Stack', value: 'React, Node, Express' }],
-    links: [{ label: 'Código no GitHub', href: 'https://github.com/Victor-Novakoski/Motors-Shop-Front' }],
-  },
-  {
-    id: 'contacts',
-    name: 'Contacts',
-    kind: 'Item de estudo',
-    icon: 'scroll',
-    summary: 'Agenda de contatos: o primeiro CRUD completo.',
-    flavor: 'Pergaminho de treino. Criar, ler, atualizar e apagar, até virar reflexo.',
-    sheet: [{ label: 'Stack', value: 'CRUD completo' }],
-    links: [{ label: 'Código no GitHub', href: 'https://github.com/Victor-Novakoski/contacts-front' }],
   },
 ]
 

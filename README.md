@@ -10,7 +10,7 @@ O tema é a "Forja do Caçador": a tela de título tem um caçador de capuz com 
 
 ## O que tem no site
 
-- Projetos: Rastreia, Panda Cooking (com uma demo da busca por trigramas) e o jogo Revelação, mais dois estudos
+- Projetos: Rastreia, Panda Cooking (com uma demo da busca por trigramas) e o jogo Revelação
 - Desafios técnicos como lutas contra chefes: cada acerto revela uma parte da ficha do chefe: o golpe, a fraqueza e a recompensa
 - Experiência, habilidades e um Sobre com o que faço fora do código
 - Mini game Caça-bugs, carregado só quando alguém clica em jogar

@@ -32,7 +32,7 @@ export const regions: Region[] = [
     title: 'Desenvolvedor Full Stack',
     org: 'Galileu Sistemas e Soluções',
     when: 'jun 2023 → hoje',
-    summary: 'Go, PostgreSQL, Angular e go-swagger.',
+    summary: 'Go, PostgreSQL, go-swagger e um framework interno de front-end.',
     now: true,
   },
   {
